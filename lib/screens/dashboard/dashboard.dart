@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
+import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:qurbani/screens/dashboard/calendar_bottomsheet.dart';
 import 'package:qurbani/screens/dashboard/service_type_bottomsheet.dart';
 import 'package:qurbani/screens/names/names.dart';
@@ -20,6 +22,9 @@ class Dashboard extends StatefulWidget {
     {'title' : 'Camel', 'price': 'MVR 1700', 'icon' : Icons.adjust_sharp }
   ];
 
+  final DashboardController dashboardController = Get.put(DashboardController());
+
+
   @override
   _DashboardState createState() => _DashboardState();
 }
@@ -30,19 +35,20 @@ class _DashboardState extends State<Dashboard> {
   String _requestedService;
   DateTime _requestServiceDate;
 
-  void _onDateSelectedCallback(int date){
-    _requestServiceDate = DateTime(_year, _month, date);
-    showModalBottomSheet(shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(8.0),
-      ),
-    ), context: context, builder: (context){
-      return RequestForm(requestedServiceDate: _requestServiceDate, requestedService: _requestedService,);
-    });
+  void _onDateSelectedCallback(){
+//    _requestServiceDate = DateTime(_year, _month, date);
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestForm()));//(requestedServiceDate: _requestServiceDate, requestedService: _requestedService)));
+//    showModalBottomSheet(shape: RoundedRectangleBorder(
+//      borderRadius: BorderRadius.vertical(
+//        top: Radius.circular(8.0),
+//      ),
+//    ), context: context, builder: (context){
+//      return RequestForm(requestedServiceDate: _requestServiceDate, requestedService: _requestedService,);
+//    });
   }
 
-  void _onServiceTypeSelectedCallback(String serviceType){
-    _requestedService = serviceType;
+  void _onServiceTypeSelectedCallback(){
+//    _requestedService = serviceType;
     showModalBottomSheet(shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(8.0),
