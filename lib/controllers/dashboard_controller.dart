@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DashboardController extends GetxController{
   String serviceType;
   DateTime serviceDate;
   String childName;
   int contactNo;
-  int serviceQuantity = 1.obs as int;
-  String receiptPath =''.obs as String;
-  double totalPrice = 0.0.obs as double;
+  RxInt serviceQuantity = 1.obs;
+  RxString receiptPath =''.obs;
+  RxDouble totalPrice = 0.0.obs;
   TextEditingController childNameController;
   TextEditingController contactNumberController;
   double unitPrice;
-
+  RxInt serviceDay = DateTime.now().day.obs;
+  RxString childNameFieldError = ''.obs;
+  RxString contactNumberFieldError = ''.obs;
+  RxString receiptUploadFieldError = ''.obs;
+  final imagePicker = ImagePicker();
 
   @override
   void onInit() {
@@ -37,21 +42,58 @@ class DashboardController extends GetxController{
 
   void setUnitPrice(double price){
     unitPrice = price;
+    setTotalPrice();
   }
 
   void setTotalPrice(){
-    totalPrice = unitPrice * serviceQuantity;
+    print('Quantity is $serviceQuantity');
+    totalPrice.value = unitPrice * serviceQuantity.value;
   }
 
   void setRequestedServiceDate(int day){
      int year = DateTime.now().year;
      int month = DateTime.now().month;
-    serviceDate = DateTime(year, month+1, day);
+    serviceDate = DateTime(year, month, day);
+     setServiceDay(day);
   }
-
 
   void setServiceQuantity(int quantity){
-    serviceQuantity = quantity;
+    print('hello word quantity: $quantity');
+    serviceQuantity.value = quantity;
+    setTotalPrice();
   }
 
+  void setServiceDay(int day){
+    serviceDay.value = day;
+  }
+
+  void onChangedChildNameTextField(String value){
+    childNameFieldError.value = '';
+  }
+
+  void onChangedContactNumberTextField(String value){
+    contactNumberFieldError.value = '';
+  }
+
+  void submitRequestForm(){
+    if(childNameController.text.isEmpty){
+      childNameFieldError.value = 'Child\'s name is required!';
+    }
+    if(contactNumberController.text.isEmpty){
+      contactNumberFieldError.value = 'Contact number is required!';
+    }
+    if(receiptPath.value.isEmpty){
+      receiptUploadFieldError.value = 'No receipt found!';
+    }
+  }
+
+  void clearErrors(){
+    receiptUploadFieldError.value = '';
+  }
+
+  void pickReceiptImage() async{
+    final PickedFile pickedImage = await imagePicker.getImage(source: ImageSource.gallery);
+    receiptPath.value = pickedImage.path;
+    receiptUploadFieldError.value = '';
+  }
 }

@@ -2,7 +2,9 @@
     package="com.qurbani.qurbani">
    <application
         android:label="qurbani"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
+       >
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

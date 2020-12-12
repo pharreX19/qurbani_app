@@ -46,7 +46,7 @@ class MainCard extends StatelessWidget {
               child: Column(
                 children: [
                   // Center(child: Text(title))
-                ],
+                ]
               ),
             ),
           ),
