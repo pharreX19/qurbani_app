@@ -93,7 +93,9 @@ class DashboardController extends GetxController{
 
   void pickReceiptImage() async{
     final PickedFile pickedImage = await imagePicker.getImage(source: ImageSource.gallery);
-    receiptPath.value = pickedImage.path;
-    receiptUploadFieldError.value = '';
+    if(pickedImage.path.isNotEmpty){
+      receiptPath.value = pickedImage.path;
+      receiptUploadFieldError.value = '';
+    }
   }
 }

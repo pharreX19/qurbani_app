@@ -54,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
         top: Radius.circular(8.0),
       ),
     ), context: context, builder: (context){
-      return CalendarBottomSheet(month: _month-1, year: _year, onDateSelectedCallback: _onDateSelectedCallback,);
+      return CalendarBottomSheet(onDateSelectedCallback: _onDateSelectedCallback,);
     });
   }
 
@@ -73,6 +73,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(

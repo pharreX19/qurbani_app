@@ -3,16 +3,22 @@ import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
 
-class CalendarBottomSheet extends StatelessWidget {
+class CalendarBottomSheet extends StatefulWidget {
   final Function onDateSelectedCallback;
-  final int month;
-  final int year;
-  CalendarBottomSheet({this.onDateSelectedCallback, this.month, this.year});
+  CalendarBottomSheet({this.onDateSelectedCallback});
 
+  @override
+  _CalendarBottomSheetState createState() => _CalendarBottomSheetState();
+}
+
+class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
   final List<String> _days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   final List<int> _daysCount = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   final List<String> _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  // int today = DateTime.now().day;
+  int _month;
+  int _year;
+  bool _nextMonthButtonEnabled = true;
+  bool _previousMonthButtonEnabled = false;
 
   List<int> _generateDates({@required int month, @required int year}){
     List<int>dates = [];
@@ -39,35 +45,70 @@ class CalendarBottomSheet extends StatelessWidget {
       monthStartDayIndex--;
     }
   }
-  
+
   void _onServiceDateSelected(int day){
     // setState(() {
     //   today = day;
     // });
     Get.find<DashboardController>().setRequestedServiceDate(day);
-    onDateSelectedCallback();
+    widget.onDateSelectedCallback();
+  }
+
+  void _setNextMonth(){
+    setState(() {
+    if(_month == 11){
+        _month = 0;
+        _year = _year + 1;
+
+    }else{
+      _month = _month +1;
+    }
+    _nextMonthButtonEnabled = false;
+    _previousMonthButtonEnabled = true;
+    });
+  }
+
+  void _setPreviousMonth(){
+    setState(() {
+    if(_month == 0){
+      _month = 11;
+        _year = _year - 1;
+    }else{
+      _month = _month - 1;
+    }
+    _nextMonthButtonEnabled = true;
+    _previousMonthButtonEnabled = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _month = DateTime.now().month -1;
+    _year = DateTime.now().year;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<int> _dates = _generateDates(month: month, year: year);
+    List<int> _dates = _generateDates(month: _month, year: _year);
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.blockSizeVertical * 2,
       ),
-      height: SizeConfig.blockSizeVertical * 44,
+      height: SizeConfig.blockSizeVertical * 55,
       child: Column(
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                      left: SizeConfig.blockSizeHorizontal * 9,
+//                      left: SizeConfig.blockSizeHorizontal * 9,
                       bottom: SizeConfig.blockSizeHorizontal * 2
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(_getMonthName(month)),
-                      SizedBox(width: SizeConfig.blockSizeHorizontal * 2,),
-                      Text('${year}')
+                      IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: _previousMonthButtonEnabled ? _setPreviousMonth : null,),
+                      Text('${_getMonthName(_month)} $_year'),
+                      IconButton(icon: Icon(Icons.arrow_forward_ios), onPressed: _nextMonthButtonEnabled ? _setNextMonth : null)
                     ],
                   ),
                 ),

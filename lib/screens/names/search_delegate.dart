@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
 class Search extends SearchDelegate{
-  final List<String> searchSuggestions;
-  final List<String> recentSearches = ['Search One', 'Search two'];
-  String selectedResult;
+  final List<dynamic> searchSuggestions;
+  final List<dynamic> recentSearches = [
+    {
+      'name' : 'Test Name 0',
+      'meaning': 'Test Meaning',
+      'gender' : 'male',
+      'is_favorited': false
+    }
+  ];
+  Map<String, dynamic> selectedResult;
 
   Search({this.searchSuggestions});
 
@@ -27,20 +34,26 @@ class Search extends SearchDelegate{
   Widget buildResults(BuildContext context) {
     return Container(
       child: Center(
-          child: Text(selectedResult)
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(selectedResult['name']),
+              Text(selectedResult['meaning'])
+            ],
+          )
       )
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> suggestionList = [];
-    query.isEmpty ? suggestionList = recentSearches : suggestionList.addAll(searchSuggestions.where((element) => element.contains(query)));
+    List<dynamic> suggestionList = [];
+    query.isEmpty ? suggestionList = recentSearches : suggestionList.addAll(searchSuggestions.where((element) => element['name'].contains(query)));
     return ListView.builder(
       itemCount: suggestionList.length,
       itemBuilder: (context, int index){
         return ListTile(
-          title: Text(suggestionList[index]),
+          title: Text(suggestionList[index]['name']),
           onTap: (){
             selectedResult = suggestionList[index];
             showResults(context);
