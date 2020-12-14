@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:qurbani/config/size_config.dart';
+import 'package:qurbani/screens/authentication/login.dart';
 import 'package:qurbani/screens/dashboard/dashboard.dart';
+import 'package:qurbani/screens/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Dashboard(),
+      home: Login(),
     );
   }
 }
@@ -64,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
