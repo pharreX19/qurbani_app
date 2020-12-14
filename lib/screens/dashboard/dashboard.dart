@@ -6,6 +6,7 @@ import 'package:qurbani/screens/dashboard/calendar_bottomsheet.dart';
 import 'package:qurbani/screens/dashboard/service_type_bottomsheet.dart';
 import 'package:qurbani/screens/names/names.dart';
 import 'package:qurbani/screens/request/request_form.dart';
+import 'package:qurbani/widgets/common/main_layout.dart';
 import 'package:qurbani/widgets/dashboard/main_card.dart';
 
 class Dashboard extends StatefulWidget {
@@ -74,13 +75,9 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.blockSizeHorizontal * 3,
-          ),
+        child: MainLayout(
           child: Column(
             children: [
-              SizedBox(height: SizeConfig.blockSizeVertical * 3,),
               Row(
                 children: [
                   Text('Hello, Guest!'),
@@ -89,18 +86,26 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
               SizedBox(height: SizeConfig.blockSizeVertical * 3,),
-              ...widget._mainCardContent.map((element) => Padding(
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeHorizontal * 1),
-                child: MainCard(title: element['title'], imagePath: element['path'], detailsPage: element['detail-page'],),
-              )),
-              SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-              Align(
-                alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
-                    child: Text('QURBANI SERVICES'),
-                  )),
-              SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+              Expanded(
+                child: Column(
+                  children: [
+                    ...widget._mainCardContent.map((element) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeHorizontal * 1),
+                        child: MainCard(title: element['title'], imagePath: element['path'], detailsPage: element['detail-page'],),
+                      ),
+                    )),
+                    SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+//                    Align(
+//                        alignment: Alignment.centerLeft,
+//                        child: Padding(
+//                          padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
+//                          child: Text('QURBANI SERVICES'),
+//                        )),
+                  ],
+                ),
+              ),
+//              SizedBox(height: SizeConfig.blockSizeVertical * 1,),
               Wrap(
                 alignment: WrapAlignment.center,
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,

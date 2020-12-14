@@ -20,13 +20,13 @@ class _HomeState extends State<Home> {
   int _currentIndex = 0;
 
   void _onCurrentIndexChanged(int index){
-    showDialog(context: context, builder: (context){
-      return AlertDialog(
-        insetPadding: EdgeInsets.all(10),
-        title: Text('Please login to continue'),
-        content: Login(),
-      );
-    });
+//    showDialog(context: context, builder: (context){
+//      return AlertDialog(
+//        insetPadding: EdgeInsets.all(10),
+//        title: Text('Please login to continue'),
+//        content: Login(),
+//      );
+//    });
     setState(() {
       _currentIndex = index;
     });
@@ -37,6 +37,8 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.teal,
+        unselectedItemColor: Colors.grey,
         onTap: _onCurrentIndexChanged,
         items: [
           BottomNavigationBarItem(label: 'Dashboard', icon: Icon(Icons.dashboard_customize)),
