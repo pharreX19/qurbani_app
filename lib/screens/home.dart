@@ -37,6 +37,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
         selectedItemColor: Colors.teal,
         unselectedItemColor: Colors.grey,
         onTap: _onCurrentIndexChanged,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qurbani/config/size_config.dart';
-import 'package:qurbani/screens/upload_images_videos.dart';
+import 'package:qurbani/screens/image_video_upload/upload_images_videos.dart';
 
 class RequestOptionsBottomSheet extends StatefulWidget {
   @override
@@ -8,6 +8,8 @@ class RequestOptionsBottomSheet extends StatefulWidget {
 }
 
 class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
+
+  bool _hideCompleted = true;
 
   void _downloadReceipt(){
     Navigator.of(context).pop();
@@ -22,7 +24,7 @@ class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 1),
-      height: SizeConfig.blockSizeVertical * 27,
+      height: SizeConfig.blockSizeVertical * 29,
       child: Column(
         children: [
           ListTile(
@@ -38,9 +40,13 @@ class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
           Divider(),
           ListTile(
             leading: Icon(Icons.list),
-            title: Text('Show incomplete'),
-            trailing: Icon(Icons.check),
-            onTap: (){},
+            title: Text('Hide completed'),
+            trailing: _hideCompleted ?  Icon(Icons.check) : null,
+            onTap: (){
+              setState(() {
+                _hideCompleted = !_hideCompleted;
+              });
+            },
           ),
         ],
       )
