@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/screens/authentication/login.dart';
-import 'package:qurbani/screens/dashboard/dashboard.dart';
-import 'package:qurbani/screens/requests/requests.dart';
+import 'package:qurbani/screens/dashboard/admin/dashboard.dart' as admin;
+import 'package:qurbani/screens/dashboard/user/dashboard.dart' as user;
+import 'package:qurbani/screens/requests/admin/requests.dart' as admin;
+import 'package:qurbani/screens/requests/user/requests.dart' as user;
 import 'package:qurbani/screens/settings/settings.dart';
 
 class Home extends StatefulWidget {
@@ -12,8 +14,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Widget> _screens = [
-    Dashboard(),
-    Requests(),
+    admin.Dashboard(),
+    user.Dashboard(),
+    admin.Requests(),
+    user.Requests(),
     Settings()
   ];
 
@@ -43,6 +47,8 @@ class _HomeState extends State<Home> {
         onTap: _onCurrentIndexChanged,
         items: [
           BottomNavigationBarItem(label: 'Dashboard', icon: Icon(Icons.dashboard_customize)),
+          BottomNavigationBarItem(label: 'Dashboard', icon: Icon(Icons.dashboard_customize)),
+          BottomNavigationBarItem(label: 'Requests', icon: Icon(Icons.playlist_add_check_sharp)),
           BottomNavigationBarItem(label: 'Requests', icon: Icon(Icons.playlist_add_check_sharp)),
           BottomNavigationBarItem(label: 'Settings', icon: Icon(Icons.settings)),
         ],

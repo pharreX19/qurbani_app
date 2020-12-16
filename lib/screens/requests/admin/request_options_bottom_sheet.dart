@@ -17,7 +17,8 @@ class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
   }
 
   void _uploadImagesOrVideos(){
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => UploadImagesVideos()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UploadImagesVideos()));
+
   }
 
   @override

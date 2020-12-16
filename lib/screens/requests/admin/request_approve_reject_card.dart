@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qurbani/config/size_config.dart';
-import 'package:qurbani/screens/requests/request_approve_reject_button.dart';
-import 'package:qurbani/screens/requests/request_options_bottom_sheet.dart';
+import 'package:qurbani/screens/requests/admin/request_approve_reject_button.dart';
+import 'package:qurbani/screens/requests/admin/request_options_bottom_sheet.dart';
 
 class RequestApproveRejectCard extends StatelessWidget {
   final bool isSelected;

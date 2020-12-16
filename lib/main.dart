@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/screens/authentication/login.dart';
-import 'package:qurbani/screens/dashboard/dashboard.dart';
+import 'package:qurbani/screens/dashboard/user/dashboard.dart';
 import 'package:qurbani/screens/home.dart';
 
 void main() {

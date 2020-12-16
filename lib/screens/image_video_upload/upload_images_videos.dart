@@ -1,3 +1,4 @@
+// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 //import 'package:file_picker/file_picker.dart';
 import 'package:qurbani/config/size_config.dart';
@@ -15,6 +16,16 @@ class _UploadImagesVideosState extends State<UploadImagesVideos> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.teal,),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          ),
+        ),
         resizeToAvoidBottomInset: false,
         body: MainLayout(
           child:
@@ -65,7 +76,7 @@ class _UploadImagesVideosState extends State<UploadImagesVideos> {
                       ),
                       child: IconButton(
                         onPressed: () async{
-//                          final FilePickerResult pickedImage = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.custom, allowedExtensions: ['jpg', 'png']);
+                         // final FilePickerResult pickedImage = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.custom, allowedExtensions: ['jpg', 'png']);
                         },
                         icon: Icon(Icons.video_call, size: SizeConfig.blockSizeHorizontal * 10, color: Colors.grey[400],),
                       ),
