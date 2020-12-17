@@ -121,7 +121,7 @@ class _DashboardState extends State<Dashboard> {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey[100],
+                color: Colors.grey[300],
                 offset: Offset(0, -1),
                 blurRadius: 4.0,
                 spreadRadius: 1.0
@@ -137,13 +137,17 @@ class _DashboardState extends State<Dashboard> {
               Center(
                 child: Container(
                   margin: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 2),
-                  width: SizeConfig.blockSizeHorizontal * 15,
+                  width: SizeConfig.blockSizeHorizontal * 10,
                   height: SizeConfig.blockSizeVertical * 0.4,
                   decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: Colors.grey[400],
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 1),
+                child: Text('Upcoming Requests'),
               ),
               Expanded(
                 child: ListView.builder(

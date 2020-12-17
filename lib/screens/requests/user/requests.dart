@@ -11,11 +11,12 @@ class Requests extends StatefulWidget {
 }
 
 class _RequestsState extends State<Requests> {
-  PageController _pageController = PageController();
+  PageController _pageController = PageController(viewportFraction: 0.9);
   final List<Map<String, dynamic>> requestStats = [
     {'title': 'Pending', 'icon': Icons.bar_chart, 'count': 2},
     {'title': 'Completed', 'icon': Icons.insert_chart_outlined, 'count': 6}
   ];
+  var _currentPageValue = 0.0;
 
   Widget _buildRequestStats(){
     return Row(
@@ -42,17 +43,54 @@ class _RequestsState extends State<Requests> {
       children: [
       Container(
         height: SizeConfig.blockSizeVertical * 30,
-        child: PageView(
+        child: PageView.builder(
         controller: _pageController,
-        children: [
-          Text('Hello man'),
-          Text('Hello man'),
-          Text('Hello man')
-        ],
+        physics: BouncingScrollPhysics(),
+        itemCount: 4,
+          itemBuilder: (context, int index){
+          if(index == _currentPageValue.floor()){
+            return Transform(
+              transform: Matrix4.identity()..rotateX(_currentPageValue - index),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1),
+                decoration: BoxDecoration(
+                    color: index % 2 == 0 ? Colors.red : Colors.black45
+                ),
+              ),
+            );
+          } else if(index == _currentPageValue.floor() + 1){
+            return Transform(
+              transform: Matrix4.identity()..rotateX(_currentPageValue - index),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1),
+                decoration: BoxDecoration(
+                    color: index % 2 == 0 ? Colors.red : Colors.black45
+                ),
+              ),
+            );
+          } else{
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1),
+              decoration: BoxDecoration(
+                  color: index % 2 == 0 ? Colors.red : Colors.black45
+              ),
+            );
+          }
+          },
         ),
       ),
       ],
     );
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      setState(() {
+        _currentPageValue = _pageController.page;
+      });
+    });
   }
 
   @override
