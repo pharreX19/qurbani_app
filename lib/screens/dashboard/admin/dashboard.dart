@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
+import 'package:qurbani/controllers/homeController.dart';
 import 'package:qurbani/screens/dashboard/admin/monthly_sales_chart.dart';
 import 'package:qurbani/screens/dashboard/admin/weekly_sales_chart.dart';
 import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
 import 'package:qurbani/screens/dashboard/user/service_type_bottomsheet.dart';
 import 'package:qurbani/screens/names/names.dart';
 import 'package:qurbani/screens/request/request_form.dart';
+import 'package:qurbani/screens/requests/admin/requests.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 import 'package:qurbani/widgets/dashboard/main_card.dart';
 
@@ -160,7 +162,7 @@ class _DashboardState extends State<Dashboard> {
                       subtitle: Text('13 December 2020'),
                       trailing: Icon(Icons.arrow_forward_ios_rounded),
                       onTap: (){
-                        print('Details Page');
+                        Get.find<HomeController>().setCurrentIndex(2);
                       },
                     );
                   },

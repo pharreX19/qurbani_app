@@ -57,6 +57,7 @@ class RequestForm extends StatelessWidget {
                   children: [
                     Obx((){
                       return TextField(
+                          enabled: Get.find<DashboardController>().childName == null ? true : false,
                           maxLength: 100,
                           keyboardType: TextInputType.name,
                           onChanged: Get.find<DashboardController>().onChangedChildNameTextField,
@@ -73,7 +74,7 @@ class RequestForm extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(4.0)
                               ),
                               floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              hintText: 'Child Name',
+                              hintText: Get.find<DashboardController>().childName ?? 'Child Name',
                               hintStyle: TextStyle(color: Colors.grey[500]),
                               counterText: '',
                               errorText: Get.find<DashboardController>().childNameFieldError.value == '' ? null :

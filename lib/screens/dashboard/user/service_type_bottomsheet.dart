@@ -4,8 +4,8 @@ import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
 
 class ServiceTypeBottomSheet extends StatelessWidget {
-  final Function callback;
-  ServiceTypeBottomSheet({this.callback});
+//  final Function callback;
+  ServiceTypeBottomSheet();
 
   final List<Map<String, dynamic>> _serviceName = [
     {'title': 'Sadaqah', 'icon': Icons.workspaces_outline},
@@ -17,8 +17,8 @@ class ServiceTypeBottomSheet extends StatelessWidget {
   void _serviceTypeSelected(BuildContext context, String serviceType){
 //    callback(selectedServiceName);
     Navigator.pop(context);
-    Get.find<DashboardController>().setRequestedServiceType(serviceType);
-    callback();
+    Get.find<DashboardController>().onServiceTypeSelectedCallback(context, serviceType);
+//    callback();
   }
 
   @override

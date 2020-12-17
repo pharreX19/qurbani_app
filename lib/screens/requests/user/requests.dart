@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/screens/requests/admin/request_approve_reject_button.dart';
 import 'package:qurbani/screens/requests/admin/request_approve_reject_card.dart';
+import 'package:qurbani/screens/requests/user/request_page_view.dart';
 import 'package:qurbani/widgets/common/custom_app_bar.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 
@@ -39,47 +40,27 @@ class _RequestsState extends State<Requests> {
   }
 
   Widget _buildRequestList() {
-    return Column(
-      children: [
-      Container(
-        height: SizeConfig.blockSizeVertical * 30,
-        child: PageView.builder(
-        controller: _pageController,
-        physics: BouncingScrollPhysics(),
-        itemCount: 4,
-          itemBuilder: (context, int index){
-          if(index == _currentPageValue.floor()){
-            return Transform(
+    return Expanded(
+      child: PageView.builder(
+      controller: _pageController,
+      physics: BouncingScrollPhysics(),
+      itemCount: 4,
+        itemBuilder: (context, int index){
+        if(index == _currentPageValue.floor() + 1){
+          return Transform(
+            transform: Matrix4.identity()..rotateX(_currentPageValue - index),
+              child: RequestPageView()
+          );
+        }
+        else{
+          return Transform(
               transform: Matrix4.identity()..rotateX(_currentPageValue - index),
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1),
-                decoration: BoxDecoration(
-                    color: index % 2 == 0 ? Colors.red : Colors.black45
-                ),
-              ),
-            );
-          } else if(index == _currentPageValue.floor() + 1){
-            return Transform(
-              transform: Matrix4.identity()..rotateX(_currentPageValue - index),
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1),
-                decoration: BoxDecoration(
-                    color: index % 2 == 0 ? Colors.red : Colors.black45
-                ),
-              ),
-            );
-          } else{
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1),
-              decoration: BoxDecoration(
-                  color: index % 2 == 0 ? Colors.red : Colors.black45
-              ),
-            );
-          }
-          },
-        ),
+              child: RequestPageView()
+
+          );
+        }
+        },
       ),
-      ],
     );
   }
   

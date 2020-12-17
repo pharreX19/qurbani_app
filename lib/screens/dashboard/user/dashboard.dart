@@ -11,9 +11,9 @@ import 'package:qurbani/widgets/dashboard/main_card.dart';
 
 class Dashboard extends StatefulWidget {
   final List<Map<String, dynamic>> _mainCardContent = [
-    {'title': 'Information', 'path': 'assets/images/information.jpg', 'detail-page' : Names(tag: 'Information', imagepath: 'assets/images/information.jpg',)},
-    {'title': 'Names', 'path': 'assets/images/names.jpg' , 'detail-page' : Names(tag: 'Names', imagepath: 'assets/images/names.jpg',)},
-    {'title': 'FAQ', 'path': 'assets/images/information.jpg', 'detail-page' : Names(tag: 'FAQ', imagepath: 'assets/images/names.jpg',)},
+    {'title': 'Information', 'path': 'assets/images/information.jpg', 'detail-page' : Names(tag: 'Information', imagePath: 'assets/images/information.jpg',)},
+    {'title': 'Names', 'path': 'assets/images/names.jpg' , 'detail-page' : Names(tag: 'Names', imagePath: 'assets/images/names.jpg',)},
+    {'title': 'FAQ', 'path': 'assets/images/information.jpg', 'detail-page' : Names(tag: 'FAQ', imagePath: 'assets/images/names.jpg',)},
   ];
 
   final List<Map<String, dynamic>> _serviceIcons = [
@@ -31,41 +31,47 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _month = DateTime.now().month;
-  int _year = DateTime.now().year;
-  String _requestedService;
-  DateTime _requestServiceDate;
-
-  void _onDateSelectedCallback(){
-//    _requestServiceDate = DateTime(_year, _month, date);
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestForm()));//(requestedServiceDate: _requestServiceDate, requestedService: _requestedService)));
+//  int _month = DateTime.now().month;
+//  int _year = DateTime.now().year;
+//  String _requestedService;
+//  DateTime _requestServiceDate;
+//
+//  void _onDateSelectedCallback(){
+////    _requestServiceDate = DateTime(_year, _month, date);
+//    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestForm()));//(requestedServiceDate: _requestServiceDate, requestedService: _requestedService)));
+////    showModalBottomSheet(shape: RoundedRectangleBorder(
+////      borderRadius: BorderRadius.vertical(
+////        top: Radius.circular(8.0),
+////      ),
+////    ), context: context, builder: (context){
+////      return RequestForm(requestedServiceDate: _requestServiceDate, requestedService: _requestedService,);
+////    });
+//  }
+//
+//  void _onServiceTypeSelectedCallback(){
+////    _requestedService = serviceType;
 //    showModalBottomSheet(shape: RoundedRectangleBorder(
 //      borderRadius: BorderRadius.vertical(
 //        top: Radius.circular(8.0),
 //      ),
 //    ), context: context, builder: (context){
-//      return RequestForm(requestedServiceDate: _requestServiceDate, requestedService: _requestedService,);
+//      return CalendarBottomSheet(onDateSelectedCallback: _onDateSelectedCallback,);
 //    });
-  }
+//  }
 
-  void _onServiceTypeSelectedCallback(){
-//    _requestedService = serviceType;
-    showModalBottomSheet(shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(8.0),
-      ),
-    ), context: context, builder: (context){
-      return CalendarBottomSheet(onDateSelectedCallback: _onDateSelectedCallback,);
-    });
+@override
+  void initState() {
+    super.initState();
   }
 
   void _onServiceTapped(BuildContext context){
+    widget.dashboardController.childName = null;
     showModalBottomSheet(shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(8.0),
       ),
     ), context: context, builder: (context){
-      return ServiceTypeBottomSheet(callback: _onServiceTypeSelectedCallback);
+      return ServiceTypeBottomSheet();
     });
     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => ServiceRequetForm()));
   }

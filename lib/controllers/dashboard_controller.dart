@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
+import 'package:qurbani/screens/request/request_form.dart';
 
 class DashboardController extends GetxController{
   String serviceType;
@@ -31,6 +33,36 @@ class DashboardController extends GetxController{
     childNameController.dispose();
     contactNumberController.dispose();
     super.dispose();
+  }
+
+  void onServiceTypeSelectedCallback(BuildContext context, String serviceName){
+//    _requestedService = serviceType;
+    setRequestedServiceType(serviceName);
+    showModalBottomSheet(shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(8.0),
+      ),
+    ), context: context, builder: (context){
+      return CalendarBottomSheet(onDateSelectedCallback: (){
+        _onDateSelectedCallback(context);
+      },);
+    });
+  }
+
+  void _onDateSelectedCallback(BuildContext context){
+//    _requestServiceDate = DateTime(_year, _month, date);
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestForm()));//(requestedServiceDate: _requestServiceDate, requestedService: _requestedService)));
+//    showModalBottomSheet(shape: RoundedRectangleBorder(
+//      borderRadius: BorderRadius.vertical(
+//        top: Radius.circular(8.0),
+//      ),
+//    ), context: context, builder: (context){
+//      return RequestForm(requestedServiceDate: _requestServiceDate, requestedService: _requestedService,);
+//    });
+  }
+
+  void setChildName(String name){
+    childName = name;
   }
 
 

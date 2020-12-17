@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/names_controller.dart';
+import 'package:qurbani/screens/names/name_details_bottom_sheet.dart';
 import 'package:qurbani/screens/names/search_delegate.dart';
 
 class Names extends StatefulWidget {
   final String tag;
-  final String imagepath;
+  final String imagePath;
   final NamesController _namesController = Get.put(NamesController());
+  final Function continueWithAqeeqahCallback;
 
-  Names({this.tag, this.imagepath});
+  Names({this.tag, this.imagePath, this.continueWithAqeeqahCallback});
   @override
   _NamesState createState() => _NamesState();
 }
@@ -18,24 +20,7 @@ void _viewNameDetails(BuildContext context, Map<String, dynamic> name){
   showModalBottomSheet(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0))),
       context: context, builder: (context){
-    return Container(
-      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
-      height: SizeConfig.blockSizeVertical * 25,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(name['name']),
-          SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-          Text('Name in arabic'),
-          SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-          Text('Name in dhivehi'),
-          SizedBox(height: SizeConfig.blockSizeVertical * 2.5,),
-          Align(
-            alignment: Alignment.centerLeft,
-              child: Text(name['meaning']))
-        ],
-      ),
-    );
+    return NameDetailsBottomSheet(name: name['name'], meaning: name['meaning'],);
   });
 }
 
@@ -125,7 +110,7 @@ class _NamesState extends State<Names> {
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text('Baby Name'),
-                  background: Hero(tag: widget.tag, child: Image.asset(widget.imagepath, fit: BoxFit.cover,)),
+                  background: Hero(tag: widget.tag, child: Image.asset(widget.imagePath, fit: BoxFit.cover,)),
                 ),
                 bottom: TabBar(
                   tabs: [

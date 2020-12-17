@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
+import 'package:qurbani/controllers/homeController.dart';
 import 'package:qurbani/screens/authentication/login.dart';
 import 'package:qurbani/screens/dashboard/admin/dashboard.dart' as admin;
 import 'package:qurbani/screens/dashboard/user/dashboard.dart' as user;
@@ -8,6 +10,7 @@ import 'package:qurbani/screens/requests/user/requests.dart' as user;
 import 'package:qurbani/screens/settings/settings.dart';
 
 class Home extends StatefulWidget {
+  final HomeController _homeController = Get.put(HomeController());
   @override
   _HomeState createState() => _HomeState();
 }
@@ -39,12 +42,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: Obx((){
+        return _screens[Get.find<HomeController>().currentIndex.value];
+      }),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
         selectedItemColor: Colors.teal,
         unselectedItemColor: Colors.grey,
-        onTap: _onCurrentIndexChanged,
+        onTap: Get.find<HomeController>().setCurrentIndex,
         items: [
           BottomNavigationBarItem(label: 'Dashboard', icon: Icon(Icons.dashboard_customize)),
           BottomNavigationBarItem(label: 'Dashboard', icon: Icon(Icons.dashboard_customize)),
