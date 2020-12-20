@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
@@ -69,7 +70,7 @@ class _LoginState extends State<Login> {
                           icon: Icons.phone_in_talk,
                           errorText: data.contactNumberFieldError.value == '' ? null : data.contactNumberFieldError.value,
                           onChanged: data.onChangedContactNumberTextField,
-                          maxLength: 10,
+                          maxLength: 20,
                           keyboardType: TextInputType.number,
                         ),
                         SizedBox(

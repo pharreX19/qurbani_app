@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,6 +27,7 @@ class DashboardController extends GetxController{
     super.onInit();
     childNameController = TextEditingController();
     contactNumberController = TextEditingController();
+    getAllServices();
   }
 
   @override
@@ -33,6 +35,10 @@ class DashboardController extends GetxController{
     childNameController.dispose();
     contactNumberController.dispose();
     super.dispose();
+  }
+  
+  getAllServices() async{
+    FirebaseFirestore.instance.collection('services').get().then((value) => print(value.docs));
   }
 
   void onServiceTypeSelectedCallback(BuildContext context, String serviceName){

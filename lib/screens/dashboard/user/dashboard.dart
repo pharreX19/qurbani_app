@@ -92,20 +92,24 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
               SizedBox(height: SizeConfig.blockSizeVertical * 3,),
-              Column(
-                children: [
-                  ...widget._mainCardContent.map((element) => Padding(
-                    padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeHorizontal * 1),
-                    child: MainCard(title: element['title'], imagePath: element['path'], detailsPage: element['detail-page'],),
-                  )),
-                  // SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+              Expanded(
+                child: Column(
+                  children: [
+                    ...widget._mainCardContent.map((element) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: SizeConfig.blockSizeHorizontal * 2),
+                        child: MainCard(title: element['title'], imagePath: element['path'], detailsPage: element['detail-page'],),
+                      ),
+                    )),
+                    // SizedBox(height: SizeConfig.blockSizeVertical * 2,),
 //                    Align(
 //                        alignment: Alignment.centerLeft,
 //                        child: Padding(
 //                          padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
 //                          child: Text('QURBANI SERVICES'),
 //                        )),
-                ],
+                  ],
+                ),
               ),
 //              SizedBox(height: SizeConfig.blockSizeVertical * 1,),
               Wrap(

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:qurbani/controllers/homeController.dart';
+import 'package:qurbani/screens/calendar/calendar_view.dart';
 import 'package:qurbani/screens/dashboard/admin/monthly_sales_chart.dart';
 import 'package:qurbani/screens/dashboard/admin/weekly_sales_chart.dart';
 import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
@@ -36,7 +37,9 @@ class _DashboardState extends State<Dashboard> {
           children: [
             Text('Hello, Admin!'),
             Spacer(),
-            IconButton(icon: Icon(Icons.today)),
+            IconButton(icon: Icon(Icons.today), onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CalendarView()));
+            },),
             IconButton(icon: Icon(Icons.notifications_active_outlined)),
           ],
         ),

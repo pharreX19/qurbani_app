@@ -1,10 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/screens/authentication/login.dart';
 import 'package:qurbani/screens/dashboard/user/dashboard.dart';
 import 'package:qurbani/screens/home.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "948707408958",
+    "firebase_url": "https://qurbani-app-15b00-default-rtdb.firebaseio.com",
+    "project_id": "qurbani-app-15b00",
+    "storage_bucket": "qurbani-app-15b00.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948707408958:android:189478a14752d7cb28256f",
+        "android_client_info": {
+          "package_name": "com.qurbani.qurbani"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "948707408958-74hpi3ha0sp745q5ofsnud5t3qbsjgfh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qurbani.qurbani",
+            "certificate_hash": "4701cc4f51d0d421696972822b85070df76b5560"
+          }
+        },
+        {
+          "client_id": "948707408958-9d92ptvcse99kf02k6qgbt83v6ci1ep1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCju7J5a6IS9DScwWOqIoWS3ogLT2c_kek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "948707408958-9d92ptvcse99kf02k6qgbt83v6ci1ep1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

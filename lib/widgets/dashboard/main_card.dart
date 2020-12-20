@@ -26,7 +26,7 @@ class MainCard extends StatelessWidget {
                 horizontal: SizeConfig.blockSizeHorizontal * 2
             ),
             width: SizeConfig.blockSizeHorizontal * 93,
-            height: SizeConfig.blockSizeHorizontal * 42,
+//            height: SizeConfig.blockSizeHorizontal * 42,
             decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -36,7 +36,7 @@ class MainCard extends StatelessWidget {
             tag: title,
             child: Container(
               width: SizeConfig.blockSizeHorizontal * 100,
-              height: SizeConfig.blockSizeHorizontal * 43,
+//              height: SizeConfig.blockSizeHorizontal * 43,
               padding: EdgeInsets.symmetric(vertical : SizeConfig.blockSizeHorizontal * 12.5),
               decoration: BoxDecoration(
                 image: DecorationImage(image: AssetImage(imagePath), fit: BoxFit.cover),
@@ -52,7 +52,7 @@ class MainCard extends StatelessWidget {
           ),
           Container(
             width: SizeConfig.blockSizeHorizontal * 100,
-            height: SizeConfig.blockSizeHorizontal * 43,
+//            height: SizeConfig.blockSizeHorizontal * 43,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                   colors: [

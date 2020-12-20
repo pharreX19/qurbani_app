@@ -5,6 +5,7 @@ import 'package:qurbani/controllers/homeController.dart';
 import 'package:qurbani/screens/authentication/login.dart';
 import 'package:qurbani/screens/dashboard/admin/dashboard.dart' as admin;
 import 'package:qurbani/screens/dashboard/user/dashboard.dart' as user;
+import 'package:qurbani/screens/new_questions_names/new_question_name.dart';
 import 'package:qurbani/screens/requests/admin/requests.dart' as admin;
 import 'package:qurbani/screens/requests/user/requests.dart' as user;
 import 'package:qurbani/screens/settings/settings.dart';
@@ -21,7 +22,8 @@ class _HomeState extends State<Home> {
     user.Dashboard(),
     admin.Requests(),
     user.Requests(),
-    Settings()
+    Settings(),
+    NewQuestionName()
   ];
 
   int _currentIndex = 0;
@@ -56,6 +58,8 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(label: 'Requests', icon: Icon(Icons.playlist_add_check_sharp)),
           BottomNavigationBarItem(label: 'Requests', icon: Icon(Icons.playlist_add_check_sharp)),
           BottomNavigationBarItem(label: 'Settings', icon: Icon(Icons.settings)),
+          BottomNavigationBarItem(label: 'Settings', icon: Icon(Icons.feedback)),
+
         ],
       ),
     );
