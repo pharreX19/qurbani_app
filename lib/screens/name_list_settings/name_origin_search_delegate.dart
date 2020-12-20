@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:qurbani/controllers/name_settings_controller.dart';
 
-class Search extends SearchDelegate{
+class NameOriginSearchDelegate extends SearchDelegate{
   final List<dynamic> searchSuggestions;
-  final List<dynamic> recentSearches = [
-    {
-      'name' : 'Test Name 0',
-      'meaning': 'Test Meaning',
-      'gender' : 'male',
-      'is_favorited': false
-    }
-  ];
-  Map<String, dynamic> selectedResult;
+  final List<dynamic> recentSearches = ['Arabic', 'Hebrew', 'Turkish'];
+  String selectedResult;
 
-  Search({this.searchSuggestions});
+  NameOriginSearchDelegate({this.searchSuggestions});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -33,35 +28,36 @@ class Search extends SearchDelegate{
   @override
   Widget buildResults(BuildContext context) {
     return Container(
-      child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(selectedResult['name']),
-              Text(selectedResult['meaning'])
-            ],
-          )
-      )
+        child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(selectedResult)
+              ],
+            )
+        )
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     List<dynamic> suggestionList = [];
-    query.isEmpty ? suggestionList = recentSearches : suggestionList.addAll(searchSuggestions.where((element) => element['name'].contains(query)));
+    query.isEmpty ? suggestionList = recentSearches : suggestionList.addAll(searchSuggestions.where((element) => element.contains(query)));
     return ListView.builder(
       itemCount: suggestionList.length,
       itemBuilder: (context, int index){
         return ListTile(
-          title: Text(suggestionList[index]['name']),
+          title: Text(suggestionList[index]),
           onTap: (){
             selectedResult = suggestionList[index];
-            showResults(context);
+            Get.find<NameSettingsController>().name['origin'] = selectedResult;
+            Navigator.pop(context, selectedResult);
+            // showResults(context);
           },
         );
       },
     );
 
   }
-  
+
 }

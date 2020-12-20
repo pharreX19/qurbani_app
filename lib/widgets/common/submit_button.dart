@@ -15,7 +15,9 @@ class SubmitButton extends StatelessWidget {
       height: SizeConfig.blockSizeVertical * 5,
       child: RaisedButton.icon(
         onPressed: (){
-
+          if(submitCallback != null){
+            submitCallback();
+          }
         },
         label: Text(title),
         icon: Icon(icon),

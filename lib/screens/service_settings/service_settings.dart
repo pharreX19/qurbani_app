@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
+import 'package:qurbani/controllers/service_settings_controller.dart';
+import 'package:qurbani/screens/settings/settings.dart';
 import 'package:qurbani/widgets/common/custom_text_field.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 import 'package:qurbani/widgets/common/submit_button.dart';
@@ -13,13 +16,16 @@ class ServiceSettings extends StatefulWidget {
 }
 
 class _ServiceSettingsState extends State<ServiceSettings> {
-  bool _isServiceActivated = true;
+  // bool _isServiceActivated = true;
   final List<String> _services = [
     'Cow', 'Camel', 'Sheep', 'Goat', 'Others', '+'
   ];
+  // final TextEditingController serviceTypeController = TextEditingController();
+  final TextEditingController servicePriceController = TextEditingController();
 
   int _selectedIndex = 0;
   String _submitButtonText = 'Update Service';
+  IconData _submitButtonIcon = Icons.check;
 
   Widget _buildServiceUpdateForm(){
     return Card(
@@ -31,40 +37,55 @@ class _ServiceSettingsState extends State<ServiceSettings> {
             bottom: SizeConfig.blockSizeHorizontal * 4
         ),
         child: Column(
-          children: [
-            CustomTextField(
-              hintText: _services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
-              enabled: true,
-
-            ),
-            SizedBox(
-              height: SizeConfig.blockSizeVertical * 2,
-            ),
-            CustomTextField(
-              enabled: true,
-              hintText: '1700',
-              leading: Padding(
-                padding: EdgeInsets.only(
-                    right: SizeConfig.blockSizeHorizontal * 2),
-                child: Text('MVR'),
+            children: [
+             Obx((){
+               print(Get.find<ServiceSettingsController>().selectedServiceType);
+               return  CustomTextField(
+                 // controller: Get.find<ServiceSettingsController>().serviceTypeController,
+                 hintText: Get.find<ServiceSettingsController>().selectedServiceType['name'],//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
+                 enabled: false,
+                 onChanged: Get.find<ServiceSettingsController>().onServiceTypeChanged,
+               );
+             }),
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 2,
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.blockSizeVertical * 2,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Service Status'),
-                Switch(activeColor: Colors.teal, value: _isServiceActivated, onChanged: (value) {
-                  setState(() {
-                    _isServiceActivated = value;
-                  });
-                }),
-              ],
-            ),
-          ],
-        ),
+              Obx((){
+                return CustomTextField(
+                  controller: servicePriceController,
+                  // controller: Get.find<ServiceSettingsController>().servicePriceController,
+                  enabled: true,
+                  hintText: Get.find<ServiceSettingsController>().selectedServiceType.value['price'].toString(),
+                  onChanged: Get.find<ServiceSettingsController>().onServicePriceChanged,
+
+                  // leading: Padding(
+                  //   padding: EdgeInsets.only(
+                  //       right: SizeConfig.blockSizeHorizontal * 2),
+                  //   child: Text('MVR'),
+                  // ),
+                );
+              }),
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Service Status'),
+                 Obx((){
+                   return  Switch(activeColor: Colors.teal,
+                       value: Get.find<ServiceSettingsController>().selectedServiceType.value['isActive'],
+                       onChanged: (value) {
+                         // setState(() {
+                           Get.find<ServiceSettingsController>().updateSelectedService('isActive', value);
+                         // _isServiceActivated = value;
+                         // });
+                       });
+                 })
+                ],
+              ),
+            ],
+          )
       ),
     );
   }
@@ -79,27 +100,35 @@ class _ServiceSettingsState extends State<ServiceSettings> {
           SizedBox(height: SizeConfig.blockSizeVertical * 2,),
           Wrap(
             children: [
-              ..._services.map((service){
+              ...Get.find<ServiceSettingsController>().serviceTypes.map((service){
                 return InkWell(
                   onTap: (){
-                    setState(() {
-                      _selectedIndex = _services.indexOf(service);
-                      if(_services[_selectedIndex] == '+'){
-                        _isServiceActivated = false;
-                        _submitButtonText = 'Create Service';
-                      }
-                    });
+                    // setState(() {
+                    //   _selectedIndex = _services.indexOf(service);
+                    servicePriceController.clear();
+                    Get.find<ServiceSettingsController>().selectedServiceType.assignAll(service);
+                      // if(_services[_selectedIndex] == '+'){
+                      //   // _isServiceActivated = false;
+                      //   _submitButtonText = 'Create Service';
+                      //   _submitButtonIcon = Icons.save;
+                      // }else{
+                      //   _submitButtonText = 'Update Service';
+                      //   _submitButtonIcon = Icons.check;
+                      // }
+                    // });
                   },
-                  child: Container(
-                      height: SizeConfig.blockSizeVertical * 5,
-                      decoration: BoxDecoration(
-                          color: service == _services[_selectedIndex] ? Colors.teal.shade50 : Colors.transparent,
-                          border: Border.all(color: Colors.teal.shade100),
-                          borderRadius: BorderRadius.circular(10.0)
-                      ),
-                      width: SizeConfig.blockSizeVertical * 10,
-                      margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1, vertical: SizeConfig.blockSizeVertical * 1),
-                      child: Center(child: Text(service))),
+                  child: Obx((){
+                    return Container(
+                        height: SizeConfig.blockSizeVertical * 5,
+                        decoration: BoxDecoration(
+                            color: service ==  Get.find<ServiceSettingsController>().selectedServiceType.value ? Colors.teal.shade50 : Colors.transparent,
+                            border: Border.all(color: Colors.teal.shade100),
+                            borderRadius: BorderRadius.circular(10.0)
+                        ),
+                        width: SizeConfig.blockSizeVertical * 10,
+                        margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1, vertical: SizeConfig.blockSizeVertical * 1),
+                        child: Center(child: Text(service['name'])));
+                  })
                 );
               })
             ],
@@ -107,6 +136,11 @@ class _ServiceSettingsState extends State<ServiceSettings> {
         ],
       ),
     );
+  }
+
+  _submitCallback(){
+    Get.find<ServiceSettingsController>().updateService();
+    servicePriceController.clear();
   }
 
   @override
@@ -118,7 +152,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.title),
+            Text(Get.find<ServiceSettingsController>().service.value),
             SizedBox(
               height: SizeConfig.blockSizeVertical * 3,
             ),
@@ -129,7 +163,12 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                   right: SizeConfig.blockSizeHorizontal * 1,
                   top: SizeConfig.blockSizeHorizontal * 3
               ),
-              child: SubmitButton(title: _submitButtonText, icon: Icons.check,),
+              child: SubmitButton(
+                title: _submitButtonText,
+                icon: _submitButtonIcon,
+                submitCallback: _submitCallback
+                ,
+              ),
             ),
             _buildServiceTypes(),
           ],

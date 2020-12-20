@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/names_controller.dart';
 import 'package:qurbani/screens/names/name_details_bottom_sheet.dart';
-import 'package:qurbani/screens/names/search_delegate.dart';
+import 'package:qurbani/screens/names/name_search_delegate.dart';
 
 class Names extends StatefulWidget {
   final String tag;
@@ -99,7 +99,7 @@ class _NamesState extends State<Names> {
                   Padding(
                     padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 3),
                     child: IconButton(icon: Icon(searchCloseIcon), onPressed: (){
-                        showSearch(context: context, delegate: Search(searchSuggestions: Get.find<NamesController>().nameList));
+                        showSearch(context: context, delegate: NameSearchDelegate(searchSuggestions: Get.find<NamesController>().nameList));
                     },),
                   ),
                 ],
