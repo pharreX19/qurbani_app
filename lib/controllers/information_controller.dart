@@ -1,17 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:qurbani/services/api_service.dart';
 
 class InformationController extends GetxController{
-  RxList<dynamic> information = [].obs;
+  final Query informationCollection = FirebaseFirestore.instance.collection('information');
 
-@override
-  void onInit() {
-    super.onInit();
-    fetchAllInformation();
-  }
 
-  Future<void> fetchAllInformation() async{
-    dynamic response = await ApiService.instance.fetchAllInformation('information');
-    information.assignAll(response);
+  Stream<QuerySnapshot> get information{
+    return informationCollection.snapshots();
+
   }
 }

@@ -31,8 +31,6 @@ class Dashboard extends StatefulWidget {
     {'name': 'Others', 'icon': Icons.palette_outlined},
   ];
 
-  final DashboardController dashboardController = Get.put(DashboardController());
-
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -67,10 +65,10 @@ class _DashboardState extends State<Dashboard> {
 //    });
 //  }
 
-@override
-  void initState() {
-    super.initState();
-  }
+//@override
+//  void initState() {
+//    super.initState();
+//  }
 
   List<Map<String, dynamic>> generateServiceTypes(String serviceType){
     if(serviceType.toLowerCase() != 'goat'){
@@ -80,7 +78,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void _onServiceTapped(BuildContext context, String serviceType){
-    widget.dashboardController.childName = null;
+//    widget.dashboardController.childName = null;
     showModalBottomSheet(shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(8.0),

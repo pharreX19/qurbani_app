@@ -31,9 +31,9 @@ class ServiceSettingsController extends GetxController{
       dynamic response = await ApiService.instance.updateServiceType(
           'services/${service['id']}/${service['name'].toString().toLowerCase()}/${selectedServiceType['id']}', selectedServiceType.value);
       servicePriceController.text = '';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Service type updated successfully!'),));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Service type updated successfully!'),));
     }catch(e){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));
     }
   }
 }

@@ -133,9 +133,9 @@ class NameSettingsController extends GetxController{
     if (checkValidation()) {
       try{
         await ApiService.instance.updateName('names/$id', name);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name updated successfully'),));
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Name updated successfully'),));
       }catch(e){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occured, try again'),));
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text('An error occured, try again'),));
       }
     }
   }

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
-import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
-import 'package:qurbani/screens/dashboard/user/dashboard.dart';
-import 'package:qurbani/screens/request/request_form.dart';
+
 
 class NameDetailsBottomSheet extends StatelessWidget {
   final Map<String, dynamic> name;
@@ -37,7 +35,9 @@ class NameDetailsBottomSheet extends StatelessWidget {
           InkWell(
             onTap: (){
               Navigator.of(context).pop();
-              Get.find<DashboardController>().setChildName(name['meaning']);
+              Get.find<DashboardController>().childName = name['name_en'];
+              Get.find<DashboardController>().contactNo = '7654321';
+              Get.find<DashboardController>().serviceQuantity.value = 2;
               Get.find<DashboardController>().onServiceTypeSelectedCallback(context, 'Aqeeqah');
             },
             child: Padding(

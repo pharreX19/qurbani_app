@@ -59,7 +59,7 @@ class RequestForm extends StatelessWidget {
                     Obx((){
                       return CustomTextField(
                         suffixIcon: Icons.person,
-                        hintText: 'Child\'s Name',
+                        hintText: Get.find<DashboardController>().childName ??  'Child\'s Name',
                         onChanged: Get.find<DashboardController>().onChangedChildNameTextField,
                         errorText: Get.find<DashboardController>().childNameFieldError.value,
                       );
@@ -93,7 +93,7 @@ class RequestForm extends StatelessWidget {
                     Obx((){
                       return CustomTextField(
                         suffixIcon: Icons.person,
-                        hintText: 'Contact Number',
+                        hintText:  Get.find<DashboardController>().contactNo ??  'Contact Number',
                         onChanged: Get.find<DashboardController>().onChangedContactNumberTextField,
                         errorText: Get.find<DashboardController>().contactNumberFieldError.value,
                       );

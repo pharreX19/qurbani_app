@@ -15,7 +15,7 @@ class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
 
   void _downloadReceipt(){
     Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Downloading bank receipt'),));
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Downloading bank receipt'),));
   }
 
   void _uploadImagesOrVideos(){

@@ -93,7 +93,7 @@ class _AddNameState extends State<AddName> {
                                   // gender['checked'] = value;
                                 });
                               },
-                              fillColor: MaterialStateProperty.all(Colors.teal),
+//                              fillColor: MaterialStateProperty.all(Colors.teal),
                               materialTapTargetSize: MaterialTapTargetSize.padded,
                             ),
                             title: Text(gender),

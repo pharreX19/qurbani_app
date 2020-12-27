@@ -46,9 +46,9 @@ class QuestionsAndNamesController extends GetxController{
         });
         questionOrName = '';
         textEditingController.text = '';
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Submitted successfully!'),));
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Submitted successfully!'),));
       }catch(e){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));
       }
     }
   }

@@ -56,9 +56,9 @@ class RequestsController extends GetxController {
   Future<void> updateRequestStatus(BuildContext context, String id, String status) async{
     try{
       dynamic response  = await ApiService.instance.updateRequest('requests/$id', {'status' : status});
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Status updated successfully'),));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Status updated successfully'),));
     }catch(e){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again'),));
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again'),));
     }
   }
 

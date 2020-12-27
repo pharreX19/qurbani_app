@@ -25,12 +25,12 @@ class DashboardController extends GetxController{
   final imagePicker = ImagePicker();
   RxList<dynamic>dailyRequestsStat = [].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    final RequestsController requestsController = Get.put(RequestsController());
-    fetchAllRequests();
-  }
+//  @override
+//  void onInit() {
+//    super.onInit();
+//    final RequestsController requestsController = Get.put(RequestsController());
+//    fetchAllRequests();
+//  }
 
   Future<void> fetchAllRequests() async{
     // await Get.find<RequestsController>().fetchAllRequests();

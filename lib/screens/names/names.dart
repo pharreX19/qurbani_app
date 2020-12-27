@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
@@ -16,22 +17,37 @@ class Names extends StatefulWidget {
   _NamesState createState() => _NamesState();
 }
 
-void _viewNameDetails(BuildContext context, Map<String, dynamic> name){
-  showModalBottomSheet(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0))),
-      context: context, builder: (context){
-    return NameDetailsBottomSheet(name: name, meaning: name['meaning'],);
-  });
-}
 
 class _NamesState extends State<Names> {
   IconData searchCloseIcon = Icons.search;
   final List<String> searchList = List.generate(20, (index) => 'index $index');
+  List<DocumentSnapshot> favoriteNameList;
 
-  Widget _generateNameListWidget(int index,  [bool isFavoriteIconEnabled = true]){
+  void _viewNameDetails(BuildContext context, Map<String, dynamic> name){
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0))),
+        context: context, builder: (context){
+      return NameDetailsBottomSheet(name: name, meaning: name['meaning'],);
+    });
+  }
+
+  List<DocumentSnapshot> _populateFavoriteNameList(List<DocumentSnapshot> names){
+    favoriteNameList = [];
+
+    names.forEach((document){
+      print(document['is_favorite']);
+      if(document['is_favorite']){
+        favoriteNameList.add(document);
+      }
+    });
+    return favoriteNameList;
+  }
+
+
+  Widget _generateNameListWidget(DocumentSnapshot document,  [bool isFavoriteIconEnabled = true]){
     return InkWell(
       onTap: (){
-        _viewNameDetails(context, Get.find<NamesController>().nameList[index]);
+        _viewNameDetails(context, document.data());
       },
       child: Padding(
           padding: EdgeInsets.symmetric(
@@ -45,7 +61,7 @@ class _NamesState extends State<Names> {
             children: [
               Row(
                 children: [
-                  Text(Get.find<NamesController>().nameList[index]['name_en']),
+                  Text(document['name_en']),
                   Spacer(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +71,7 @@ class _NamesState extends State<Names> {
                           Icon(Icons.location_on_outlined, size: SizeConfig.blockSizeHorizontal * 5,),
                           Padding(
                             padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 1),
-                            child: Text(Get.find<NamesController>().nameList[index]['origin']),
+                            child: Text(document['origin']),
 
                           )
                         ],
@@ -73,10 +89,10 @@ class _NamesState extends State<Names> {
                     ],
                   ),
                   isFavoriteIconEnabled ?  SizedBox(width: SizeConfig.blockSizeHorizontal* 8,) : Container(),
-                  isFavoriteIconEnabled ? IconButton(icon: Icon(Get.find<NamesController>().nameList[index]['is_favorite'] ?
+                  isFavoriteIconEnabled ? IconButton(icon: Icon(document['is_favorite'] == true ?
                   Icons.favorite : Icons.favorite_border, color: Colors.red[700],),
                       onPressed: (){
-                        Get.find<NamesController>().toggleFavoriteName(index);
+                        Get.find<NamesController>().toggleFavoriteName(document.id, !document['is_favorite']);
                       }) : Container(),
                 ],
               ),
@@ -123,34 +139,48 @@ class _NamesState extends State<Names> {
               ),
             ];
           },
-          body: TabBarView(
-            children: [
-              Obx((){
-                return ListView.builder(itemCount: Get.find<NamesController>().nameList.length, itemBuilder: (context, int index){
-                  if(Get.find<NamesController>().nameList[index]['gender'].toString().toLowerCase() == 'female'){
-                    return Container();
-                  }
-                    return _generateNameListWidget(index);
-                },);
-              }),
-              Obx((){
-                return ListView.builder(itemCount: Get.find<NamesController>().nameList.length, itemBuilder: (context, int index){
-                  if(Get.find<NamesController>().nameList[index]['gender'].toString().toLowerCase() == 'male'){
-                    return Container();
-                  }
-                  return _generateNameListWidget(index);
-                },);
-              }),
-              Obx((){
-                return ListView.builder(itemCount: Get.find<NamesController>().nameList.length, itemBuilder: (context, int index){
-                  if(!Get.find<NamesController>().nameList[index]['is_favorite']){
-                    return Container();
-                  }
-                  return _generateNameListWidget(index, false);
-                },);
-              }),
-            ],
-          ),
+          body: StreamBuilder(
+            stream: Get.find<NamesController>().names,
+            builder: (context, AsyncSnapshot snapshot){
+              if(snapshot.hasError){
+                return Center(
+                  child: Text('An error occurred, please try again later'),
+                );
+              }
+              if(snapshot.hasData){
+                List<DocumentSnapshot> nameList = snapshot.data.documents;
+                _populateFavoriteNameList(nameList);
+                return TabBarView(
+                  children: [
+                    ListView.builder(itemCount: nameList.length, itemBuilder: (context, int index){
+                        if(nameList[index]['gender'].toString().toLowerCase() == 'female'){
+                          return Container();
+                        }
+                        return _generateNameListWidget(nameList[index]);
+                      },),
+
+                    ListView.builder(itemCount: nameList.length, itemBuilder: (context, int index){
+                        if(nameList[index]['gender'].toString().toLowerCase() == 'male'){
+                          return Container();
+                        }
+                        return _generateNameListWidget(nameList[index]);
+                      },),
+
+                    favoriteNameList.length == 0 ?
+                    Center(
+                      child: Text('No favorites'),
+                    ) :
+                    ListView.builder(itemCount: favoriteNameList.length, itemBuilder: (context, int index){
+                        return _generateNameListWidget(favoriteNameList[index], false);
+                      },)
+                  ],
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          )
         ),
       ),
     );
