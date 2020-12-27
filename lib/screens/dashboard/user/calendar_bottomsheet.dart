@@ -5,7 +5,8 @@ import 'package:qurbani/controllers/dashboard_controller.dart';
 
 class CalendarBottomSheet extends StatefulWidget {
   final Function onDateSelectedCallback;
-  CalendarBottomSheet({this.onDateSelectedCallback});
+  final List<dynamic> calendarPinPoints;
+  CalendarBottomSheet({this.onDateSelectedCallback, this.calendarPinPoints});
 
   @override
   _CalendarBottomSheetState createState() => _CalendarBottomSheetState();
@@ -95,7 +96,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.blockSizeVertical * 2,
       ),
-      height: SizeConfig.blockSizeVertical * 55,
+      height: SizeConfig.blockSizeVertical * 50,
       child: Column(
               children: [
                 Padding(
@@ -124,6 +125,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 ).toList()),
                 Wrap(
                   children: _dates.map((element ) {
+                    var today = '$_year-${_month + 1}-${element < 10 ? "0$element" : element }';
                     return FractionallySizedBox(
                       widthFactor: 0.13,
                       child: element == 0 ? Container() : GestureDetector(
@@ -132,13 +134,32 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                             _onServiceDateSelected(element);
                           },
                           child: Obx((){
-                            return Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: element == Get.find<DashboardController>().serviceDay.value ?  Colors.teal : Colors.transparent,
+                            return Stack(
+                              children: [
+                                Center(
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: element == Get.find<DashboardController>().serviceDay.value ?  Colors.teal : Colors.transparent,
+                                      ),
+                                      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                                      child: Text('$element', textAlign: TextAlign.center,)),
                                 ),
-                                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
-                                child: Text('$element', textAlign: TextAlign.center,));
+                                widget.calendarPinPoints != null && widget.calendarPinPoints.contains(today) ?
+                                Positioned(
+                                  right: SizeConfig.blockSizeHorizontal * 5,
+                                  top: SizeConfig.blockSizeHorizontal * 7.3,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.teal,
+                                        shape: BoxShape.circle
+                                    ),
+                                    width: SizeConfig.blockSizeHorizontal * 1.5,
+                                    height: SizeConfig.blockSizeHorizontal * 1.5,
+                                  ),
+                                ) : Container()
+                              ],
+                            );
                           })),
                     );
                   },
@@ -148,3 +169,4 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
     );
   }
 }
+

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
+import 'package:qurbani/controllers/requests_controller.dart';
 import 'package:qurbani/screens/image_video_upload/upload_images_videos.dart';
 
 class RequestOptionsBottomSheet extends StatefulWidget {
@@ -9,7 +11,7 @@ class RequestOptionsBottomSheet extends StatefulWidget {
 
 class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
 
-  bool _hideCompleted = true;
+  // bool _hideCompleted = true;
 
   void _downloadReceipt(){
     Navigator.of(context).pop();
@@ -39,16 +41,16 @@ class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
             onTap: _uploadImagesOrVideos,
           ),
           Divider(),
-          ListTile(
-            leading: Icon(Icons.list),
-            title: Text('Hide completed'),
-            trailing: _hideCompleted ?  Icon(Icons.check) : null,
-            onTap: (){
-              setState(() {
-                _hideCompleted = !_hideCompleted;
-              });
-            },
-          ),
+          Obx((){
+            return ListTile(
+              leading: Icon(Icons.list),
+              title: Text('Hide completed'),
+              trailing: Get.find<RequestsController>().hideCompleted.value ?  Icon(Icons.check) : null,
+              onTap: (){
+                Get.find<RequestsController>().toggleHideCompleted();
+              },
+            );
+          })
         ],
       )
     );

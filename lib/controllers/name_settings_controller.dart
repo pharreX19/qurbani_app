@@ -1,41 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qurbani/services/api_service.dart';
 
 class NameSettingsController extends GetxController{
-  RxMap<dynamic, dynamic> name  = {}.obs;
+  final Query nameCollection = FirebaseFirestore.instance.collection('names');
+  Map<dynamic, dynamic> name  = {};
   RxString arabicNameFieldError = ''.obs;
   RxString englishNameFieldError = ''.obs;
   RxString dhivehiNameFieldError = ''.obs;
   RxString nameMeaningFieldError = ''.obs;
   RxString nameGenderFieldError = ''.obs;
-
-  // TextEditingController arabicNameController;
-  // TextEditingController englishNameController;
-  // TextEditingController dhivehiNameController;
-  // TextEditingController nameMeaningController;
   RxList<dynamic> nameGender = ['Male'].obs;
   String gender;
+  RxString origin = 'Arabic'.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // arabicNameController = TextEditingController();
-    // englishNameController = TextEditingController();
-    // dhivehiNameController = TextEditingController();
-    // nameMeaningController = TextEditingController();
+    // fetchAllNames();
   }
 
-  @override
-  void dispose() {
-    // arabicNameController.dispose();
-    // englishNameController.dispose();
-    // dhivehiNameController.dispose();
-    // nameMeaningController.dispose();
-    super.dispose();
+  Stream<QuerySnapshot> get names {
+    return nameCollection.snapshots();
   }
+
+  // Future<void> fetchAllNames() async{
+  //   dynamic response = await ApiService.instance.getAllNames('names');
+    // nameList.assignAll(response);
+  // }
 
   void setName(Map<String, dynamic> selectedName){
-    name.assignAll(selectedName);
+    // name.assignAll(selectedName);
   }
 
   void updateSelectedName(String key, dynamic newValue){
@@ -43,7 +40,7 @@ class NameSettingsController extends GetxController{
   }
 
   void onEnglishNameChanged(String name){
-    if(name.trim().isEmpty){
+    if(name == null ||  name.trim().isEmpty){
       englishNameFieldError.value = 'Name is English is required!';
     }else{
       englishNameFieldError.value = '';
@@ -52,7 +49,7 @@ class NameSettingsController extends GetxController{
   }
 
   void onArabicNameChanged(String name){
-    if(name.trim().isEmpty){
+    if(name == null || name.trim().isEmpty){
       arabicNameFieldError.value = 'Name is Arabic is required!';
     }else {
       arabicNameFieldError.value = '';
@@ -61,7 +58,7 @@ class NameSettingsController extends GetxController{
   }
 
   void onDhivehiNameChanged(String name){
-    if(name.trim().isEmpty){
+    if(name == null || name.trim().isEmpty){
       dhivehiNameFieldError.value = 'Name is Dhivehi is required!';
     }else {
       dhivehiNameFieldError.value = '';
@@ -70,7 +67,7 @@ class NameSettingsController extends GetxController{
   }
 
   void onNameMeaningChanged(String meaning){
-    if(meaning.trim().isEmpty){
+    if(meaning == null || meaning.trim().isEmpty){
       nameMeaningFieldError.value = 'Name meaning is required!';
     }else {
       nameMeaningFieldError.value = '';
@@ -79,34 +76,43 @@ class NameSettingsController extends GetxController{
   }
 
   void onNameGenderChanged(String selectedGender){
-      if(nameGender.contains(selectedGender)){
-        nameGender.removeWhere((element) => element.toString().toLowerCase() == selectedGender.toLowerCase());
-      }else{
-        nameGender.insert(nameGender.length, selectedGender);
-      }
-      switch(nameGender.length) {
-        case 0:
-          nameGenderFieldError.value = 'Gender is required!';
-          gender = null;
-          break;
-        case 1:
-          gender = nameGender[0];
-          nameGenderFieldError.value = '';
-          break;
-        case 2:
-          gender = 'both';
-          nameGenderFieldError.value = '';
-      }
-      updateSelectedName('gender', gender);
+      // if(nameGender.contains(selectedGender)){
+      //   nameGender.removeWhere((element) => element.toString().toLowerCase() == selectedGender.toLowerCase());
+      // }else{
+      //   nameGender.insert(nameGender.length, selectedGender);
+      // }
+      // switch(nameGender.length) {
+      //   case 0:
+      //     nameGenderFieldError.value = 'Gender is required!';
+      //     gender = null;
+      //     break;
+      //   case 1:
+      //     gender = nameGender[0];
+      //     nameGenderFieldError.value = '';
+      //     break;
+      //   case 2:
+      //     gender = 'both';
+      //     nameGenderFieldError.value = '';
+      // }
+      // updateSelectedName('gender', gender);
   }
 
   void onNameOriginChanged(String meaning){
     updateSelectedName('origin', meaning);
   }
 
-  void updateOrRegisterName(){
-    checkValidation();
+    void registerName() async{
+      if(checkValidation()){
+      //   nameList.add(name);
+      //   this.nameList.refresh();
+      //   await ApiService.instance.createName('names', name.value);
+      }
+  }
 
+  void deleteName(int index) async{
+    // await ApiService.instance.deleteName('names/${nameList[index]['id']}');
+    // nameList.removeAt(index);
+    // this.nameList.refresh();
   }
 
   bool checkValidation(){
@@ -114,12 +120,23 @@ class NameSettingsController extends GetxController{
     onArabicNameChanged(name['name_ar']);
     onDhivehiNameChanged(name['name_dh']);
     onNameMeaningChanged(name['meaning']);
-    onNameOriginChanged(name['origin']);
+    // onNameOriginChanged(name['origin']);
 
-    if(englishNameFieldError.value == null && dhivehiNameFieldError.value == null && arabicNameFieldError.value == null &&
-        nameMeaningFieldError.value == null && nameGenderFieldError == null){
+    if(englishNameFieldError.value.isEmpty && dhivehiNameFieldError.value.isEmpty && arabicNameFieldError.value.isEmpty &&
+        nameMeaningFieldError.value.isEmpty && nameGenderFieldError.value.isEmpty){
       return true;
     }
     return false;
+  }
+
+  void updateName(BuildContext context, String id) async {
+    if (checkValidation()) {
+      try{
+        await ApiService.instance.updateName('names/$id', name);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name updated successfully'),));
+      }catch(e){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occured, try again'),));
+      }
+    }
   }
 }

@@ -12,7 +12,9 @@ class RequestApproveRejectButton extends StatelessWidget {
     return Expanded(
       child: RaisedButton.icon(
         elevation: 0.5,
-        onPressed: (){},
+        onPressed: (){
+          onPressed();
+        },
         icon: Icon(icon, color: color,),
         label: Text(title, style: TextStyle(color: color),), color: Colors.grey[100],
       )

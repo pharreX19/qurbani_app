@@ -4,6 +4,7 @@ import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
 import 'package:qurbani/screens/dashboard/user/service_type_bottomsheet.dart';
+import 'package:qurbani/screens/information/information.dart';
 import 'package:qurbani/screens/names/names.dart';
 import 'package:qurbani/screens/request/request_form.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
@@ -11,16 +12,23 @@ import 'package:qurbani/widgets/dashboard/main_card.dart';
 
 class Dashboard extends StatefulWidget {
   final List<Map<String, dynamic>> _mainCardContent = [
-    {'title': 'Information', 'path': 'assets/images/information.jpg', 'detail-page' : Names(tag: 'Information', imagePath: 'assets/images/information.jpg',)},
+    {'title': 'Information', 'path': 'assets/images/information.jpg', 'detail-page' : Information(tag: 'Information', imagePath: 'assets/images/information.jpg',)},
     {'title': 'Names', 'path': 'assets/images/names.jpg' , 'detail-page' : Names(tag: 'Names', imagePath: 'assets/images/names.jpg',)},
     {'title': 'FAQ', 'path': 'assets/images/information.jpg', 'detail-page' : Names(tag: 'FAQ', imagePath: 'assets/images/names.jpg',)},
   ];
 
-  final List<Map<String, dynamic>> _serviceIcons = [
-    {'title' : 'Goat', 'price': 'MVR 700', 'icon' : Icons.waterfall_chart },
-    {'title' : 'Sheep', 'price': 'MVR 1000', 'icon' : Icons.anchor_sharp },
-    {'title' : 'Cow', 'price': 'MVR 1500','icon' : Icons.anchor_sharp },
-    {'title' : 'Camel', 'price': 'MVR 1700', 'icon' : Icons.adjust_sharp }
+  final List<Map<String, dynamic>> _serviceTypes = [
+    {'name' : 'Goat',  'icon' : Icons.waterfall_chart },
+    {'name' : 'Sheep', 'icon' : Icons.anchor_sharp },
+    {'name' : 'Cow', 'icon' : Icons.anchor_sharp },
+    {'name' : 'Camel', 'icon' : Icons.adjust_sharp }
+  ];
+
+  final List<Map<String, dynamic>> _services = [
+    {'name': 'Sadaqah', 'icon': Icons.workspaces_outline},
+    {'name': 'Udhiya', 'icon': Icons.map},
+    {'name': 'Aqeeqah', 'icon': Icons.style},
+    {'name': 'Others', 'icon': Icons.palette_outlined},
   ];
 
   final DashboardController dashboardController = Get.put(DashboardController());
@@ -64,14 +72,21 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
   }
 
-  void _onServiceTapped(BuildContext context){
+  List<Map<String, dynamic>> generateServiceTypes(String serviceType){
+    if(serviceType.toLowerCase() != 'goat'){
+      return widget._services.where((element) => element['name'].toString().toLowerCase() != 'aqeeqah').toList();
+    }
+    return widget._services;
+  }
+
+  void _onServiceTapped(BuildContext context, String serviceType){
     widget.dashboardController.childName = null;
     showModalBottomSheet(shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(8.0),
       ),
     ), context: context, builder: (context){
-      return ServiceTypeBottomSheet();
+      return ServiceTypeBottomSheet(generateServiceTypes(serviceType));
     });
     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => ServiceRequetForm()));
   }
@@ -115,20 +130,23 @@ class _DashboardState extends State<Dashboard> {
               Wrap(
                 alignment: WrapAlignment.center,
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: widget._serviceIcons.map((element){
+                children: widget._serviceTypes.map((element){
                   return GestureDetector(
                     onTap: (){
-                      _onServiceTapped(context);
+                      _onServiceTapped(context, element['name']);
                     },
                     child: Padding(
-                      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 3),
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.blockSizeHorizontal * 3,
+                        horizontal: SizeConfig.blockSizeHorizontal * 6
+                      ),
                       child: Column(
                         children: [
                           Icon(element['icon']),
                           SizedBox(height: SizeConfig.blockSizeVertical * 1,),
                           // Text(element['title']),
                           // SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-                          Text(element['price']),
+                          Text(element['name']),
                         ],
                       ),
                     ),

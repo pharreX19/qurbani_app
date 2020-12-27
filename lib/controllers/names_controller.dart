@@ -1,30 +1,25 @@
 import 'package:get/get.dart';
+import 'package:qurbani/services/api_service.dart';
 
 class NamesController extends GetxController {
   RxList<dynamic> nameList = [].obs;
-  List<Map<String, dynamic>> tempList;
+  // List<Map<String, dynamic>> tempList;
 
   @override
   void onInit() {
     super.onInit();
-    tempList = List.generate(5, (index){
-      return {
-        'name' : 'Test Name $index',
-        'meaning': 'Test Meaning Test Meaning Test Meaning Test Meaning Test Meaning Test Meaning Test Meaning Test Meaning Test Meaning Test Meaning Test Meaning Test Meaning ' ,
-        'gender' : index % 2 == 0 ? 'male' : 'female',
-        'is_favorited': false
-      };
-    });
-    nameList.assignAll([...tempList]);
+    fetchAllNames();
   }
 
-  void toggleFavoriteName(int index){
-    print('YAYY');
-    tempList.forEach((element){
-      if(element == nameList[index]){
-        element['is_favorited'] = !element['is_favorited'];
-      }
-    });
-    nameList.assignAll([...tempList]);
+  Future<void> fetchAllNames() async{
+    dynamic response = await ApiService.instance.getAllNames('names');
+    nameList.assignAll(response);
+  }
+
+  Future<void> toggleFavoriteName(int index) async {
+    nameList[index]['is_favorite'] = !nameList[index]['is_favorite'];
+    this.nameList.refresh();
+    await ApiService.instance.updateName('names/${nameList[index]['id']}',
+        {'is_favorite': nameList[index]['is_favorite']});
   }
 }

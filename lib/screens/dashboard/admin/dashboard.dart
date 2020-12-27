@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:qurbani/controllers/homeController.dart';
+import 'package:qurbani/controllers/requests_controller.dart';
 import 'package:qurbani/screens/calendar/calendar_view.dart';
 import 'package:qurbani/screens/dashboard/admin/monthly_sales_chart.dart';
 import 'package:qurbani/screens/dashboard/admin/weekly_sales_chart.dart';
@@ -23,11 +24,11 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   ScrollController _scrollController = ScrollController();
-  List<Map<String, dynamic>> _serviceStatus = [
-    { 'title' : 'Pending', 'count': 10 },
-    { 'title' : 'Approved', 'count': 5 },
-    { 'title' : 'Completed', 'count': 3 },
-    ];
+  // List<Map<String, dynamic>> _serviceStatus = [
+  //   { 'title' : 'Pending', 'count': 10 },
+  //   { 'title' : 'Approved', 'count': 5 },
+  //   { 'title' : 'Completed', 'count': 3 },
+  //   ];
 
   Widget _buildHeader(){
     return Column(
@@ -53,7 +54,9 @@ class _DashboardState extends State<Dashboard> {
       padding: EdgeInsets.only(
           top: SizeConfig.blockSizeVertical * 2),
       child: ListTile(
-        title: Text('MVR 2500'),
+        title: Obx((){
+          return Text(Get.find<DashboardController>().currentMonthEarning.toStringAsFixed(2));
+        }),
         subtitle: Text('This months Earning'),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -69,23 +72,25 @@ class _DashboardState extends State<Dashboard> {
   Widget _buildServiceStatByStatus(){
     return Padding(
       padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 2),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: _serviceStatus.map((element){
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.addchart_rounded),
-                    Text(element['count'].toString())
-                  ],
-                ),
-                Text(element['title'])
-              ],
-            );
-          }).toList()
-      ),
+      child: Obx((){
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            // children: Get.find<RequestsController>().requestStats.map((element){
+            //   return Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Row(
+            //         children: [
+            //           Icon(Icons.addchart_rounded),
+            //           Text(element['count'].toString())
+            //         ],
+            //       ),
+            //       Text(element['title'])
+            //     ],
+            //   );
+            // }).toList()
+        );
+      })
     );
   }
 
@@ -96,9 +101,14 @@ class _DashboardState extends State<Dashboard> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            Container(
+              Container(
                 height: SizeConfig.blockSizeVertical * 30,
-                child: WeeklySalesChart()),
+                child: Obx((){
+                  if(Get.find<DashboardController>().dailyRequestsStat.length > 0){
+                    return WeeklySalesChart(dailyRequests: Get.find<DashboardController>().dailyRequestsStat,);
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }) ),
             // SizedBox(height: SizeConfig.blockSizeVertical * 1,),
             Container(
                 padding: EdgeInsets.only(

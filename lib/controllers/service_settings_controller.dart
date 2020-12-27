@@ -1,55 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qurbani/services/api_service.dart';
 
 class ServiceSettingsController extends GetxController{
-  // RxMap<dynamic, dynamic> service  = {}.obs;
-  // TextEditingController serviceTypeController;
-  // TextEditingController servicePriceController;
-  RxList<Map<String, dynamic>> serviceTypes = [
-    {'name' : 'Goat', 'price' : 1100, 'isActive': true},
-    {'name' : 'Cow', 'price' : 1300, 'isActive': true},
-    {'name' : 'Sheep', 'price' : 100, 'isActive': true},
-    {'name' : 'Camel', 'price' : 1500, 'isActive': false},
-    {'name' : 'Others', 'price' : 2000, 'isActive': true},
-  ].obs;
-
-  RxString service = ''.obs;
+  final Query serviceCollection = FirebaseFirestore.instance.collection('services');
   RxMap<dynamic, dynamic> selectedServiceType = {}.obs;
+  final TextEditingController servicePriceController = TextEditingController();
 
   @override
-  void onInit() {
-    super.onInit();
-    // serviceTypeController = TextEditingController(text: '');
-    // servicePriceController = TextEditingController(text: '');
-    selectedServiceType.assignAll(serviceTypes[0]);
+  onClose(){
+    servicePriceController.dispose();
   }
 
-  @override
-  void dispose() {
-    // servicePriceController.dispose();
-    // serviceTypeController.dispose();
-    super.dispose();
-  }
-
-  void setServiceType(String selectedService){
-    // service.assignAll(selectedServiceType);
-    service.value = selectedService;
+  Stream<QuerySnapshot> get services {
+    return serviceCollection.snapshots();
   }
 
   void updateSelectedService(String key, dynamic value){
     selectedServiceType[key] = value;
-    // service.update(key, (value) => newValue);
-  }
-
-  void onServiceTypeChanged(String name){
-    updateSelectedService('name' , name);
   }
 
   void onServicePriceChanged(String price){
     updateSelectedService('price', double.parse(price));
   }
 
-  void updateService(){
-    print(selectedServiceType);
+  Future<void> updateServiceType(Map<String, dynamic> service, BuildContext context) async{
+    try{
+      dynamic response = await ApiService.instance.updateServiceType(
+          'services/${service['id']}/${service['name'].toString().toLowerCase()}/${selectedServiceType['id']}', selectedServiceType.value);
+      servicePriceController.text = '';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Service type updated successfully!'),));
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));
+    }
   }
 }

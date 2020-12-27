@@ -50,7 +50,7 @@ class NameOriginSearchDelegate extends SearchDelegate{
           title: Text(suggestionList[index]),
           onTap: (){
             selectedResult = suggestionList[index];
-            Get.find<NameSettingsController>().name['origin'] = selectedResult;
+            Get.find<NameSettingsController>().origin.value = selectedResult;
             Navigator.pop(context, selectedResult);
             // showResults(context);
           },

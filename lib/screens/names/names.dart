@@ -20,7 +20,7 @@ void _viewNameDetails(BuildContext context, Map<String, dynamic> name){
   showModalBottomSheet(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0))),
       context: context, builder: (context){
-    return NameDetailsBottomSheet(name: name['name'], meaning: name['meaning'],);
+    return NameDetailsBottomSheet(name: name, meaning: name['meaning'],);
   });
 }
 
@@ -45,7 +45,7 @@ class _NamesState extends State<Names> {
             children: [
               Row(
                 children: [
-                  Text(Get.find<NamesController>().nameList[index]['name']),
+                  Text(Get.find<NamesController>().nameList[index]['name_en']),
                   Spacer(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +55,8 @@ class _NamesState extends State<Names> {
                           Icon(Icons.location_on_outlined, size: SizeConfig.blockSizeHorizontal * 5,),
                           Padding(
                             padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 1),
-                            child: Text('Greek'),
+                            child: Text(Get.find<NamesController>().nameList[index]['origin']),
+
                           )
                         ],
                       ),
@@ -72,7 +73,7 @@ class _NamesState extends State<Names> {
                     ],
                   ),
                   isFavoriteIconEnabled ?  SizedBox(width: SizeConfig.blockSizeHorizontal* 8,) : Container(),
-                  isFavoriteIconEnabled ? IconButton(icon: Icon(Get.find<NamesController>().nameList[index]['is_favorited'] ?
+                  isFavoriteIconEnabled ? IconButton(icon: Icon(Get.find<NamesController>().nameList[index]['is_favorite'] ?
                   Icons.favorite : Icons.favorite_border, color: Colors.red[700],),
                       onPressed: (){
                         Get.find<NamesController>().toggleFavoriteName(index);
@@ -126,7 +127,7 @@ class _NamesState extends State<Names> {
             children: [
               Obx((){
                 return ListView.builder(itemCount: Get.find<NamesController>().nameList.length, itemBuilder: (context, int index){
-                  if(Get.find<NamesController>().nameList[index]['gender'] == 'female'){
+                  if(Get.find<NamesController>().nameList[index]['gender'].toString().toLowerCase() == 'female'){
                     return Container();
                   }
                     return _generateNameListWidget(index);
@@ -134,7 +135,7 @@ class _NamesState extends State<Names> {
               }),
               Obx((){
                 return ListView.builder(itemCount: Get.find<NamesController>().nameList.length, itemBuilder: (context, int index){
-                  if(Get.find<NamesController>().nameList[index]['gender'] == 'male'){
+                  if(Get.find<NamesController>().nameList[index]['gender'].toString().toLowerCase() == 'male'){
                     return Container();
                   }
                   return _generateNameListWidget(index);
@@ -142,7 +143,7 @@ class _NamesState extends State<Names> {
               }),
               Obx((){
                 return ListView.builder(itemCount: Get.find<NamesController>().nameList.length, itemBuilder: (context, int index){
-                  if(!Get.find<NamesController>().nameList[index]['is_favorited']){
+                  if(!Get.find<NamesController>().nameList[index]['is_favorite']){
                     return Container();
                   }
                   return _generateNameListWidget(index, false);

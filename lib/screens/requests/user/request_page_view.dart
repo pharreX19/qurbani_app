@@ -1,13 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
+import 'package:qurbani/controllers/requests_controller.dart';
 
 class RequestPageView extends StatelessWidget {
-  final Map<String, dynamic> requestedServiceInfo = {
-    'date' : '20 Decemeber 2020',
-    'status' : 'Pending',
-    'name' : 'Ahmed Ali',
-    'type' : 'Aqeeqah'
-  } ;
+  final DocumentSnapshot document;
+
+  RequestPageView({this.document});
 
   Widget _buildNameTag({String title, IconData icon}){
     return Row(
@@ -19,33 +19,65 @@ class RequestPageView extends StatelessWidget {
     );
   }
 
-  Widget _buildBackgroundImageContent(){
-    return Padding(
-        padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4, bottom: SizeConfig.blockSizeHorizontal * 3),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+  Widget _buildContentFooter(){
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _buildNameTag(title: document['user']['name'], icon: Icons.person),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 0.7),
+            child: Row(
+              children: [
+                _buildNameTag(title: document['service']['name'],
+                    icon: Icons.miscellaneous_services),
+                Text(' - ${document['service']['type']} -', style: TextStyle(color: Colors.white),)
+              ],
+            )
+          ),
+          Row(
             children: [
-              _buildNameTag(title: requestedServiceInfo['name'], icon: Icons.person),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 0.7),
-                child: _buildNameTag(title: requestedServiceInfo['type'], icon: Icons.miscellaneous_services),
-              ),
-              Row(
-                children: [
-                  _buildNameTag(title: requestedServiceInfo['date'], icon: Icons.today),
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 4),
-                    child: Text(requestedServiceInfo['status'].toString().toUpperCase(), style: TextStyle(color: Colors.white),),
-                  )
-                ],
-              )
-            ]
-        )
+              _buildNameTag(title: '${DateTime.fromMillisecondsSinceEpoch(
+                  document['date'].seconds * 1000)}', icon: Icons.today),
+              Spacer(),
+              Text(
+                document['status'].toString().toUpperCase(),
+                style: TextStyle(color: document['status'].toString().toLowerCase() == 'rejected' ?
+                Colors.red : Colors.white),)
+            ],
+          )
+        ]
     );
   }
 
-  Widget _buildBackgroundImageOverlay(){
+  Widget _buildBackgroundImageContent(BuildContext context){
+    return Column(
+        children: [
+          document['status'].toString().toLowerCase() == 'pending' ?
+          InkWell(
+            onTap: (){
+              Get.find<RequestsController>().updateRequestStatus(context, document.id, 'Cancelled');
+            },
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Icon(Icons.cancel_outlined, color: Colors.white,)),
+          ) :
+          Container(),
+          document['status'].toString().toLowerCase() == 'rejected' ?
+          Expanded(child: Center(
+            child: Text(document['rejected_reason'], style: TextStyle(color: Colors.red),),)) :
+          document['status'].toString().toLowerCase() == 'cancelled' ?
+          Expanded(
+            child: Center(
+              child: Icon(Icons.cancel_outlined, size: SizeConfig.blockSizeHorizontal * 20, color: Colors.red,),
+            ),
+          ) :
+          Spacer(),
+          _buildContentFooter(),
+        ],
+    );
+  }
+
+  Widget _buildBackgroundImageOverlay(BuildContext context){
     return Container(
       margin: EdgeInsets.symmetric(
           horizontal: SizeConfig.blockSizeHorizontal * 1,
@@ -56,13 +88,20 @@ class RequestPageView extends StatelessWidget {
             end: Alignment.bottomCenter,
             stops: [0.3, 1.0],
             colors: [
-              Colors.transparent,
+              document['status'].toString().toLowerCase() == 'rejected' ||
+                  document['status'].toString().toLowerCase() == 'cancelled' ?
+                  Colors.black.withOpacity(0.8) :Colors.transparent,
               Colors.black.withOpacity(0.8),
             ]
         ),
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: _buildBackgroundImageContent()
+      child: Padding(
+        padding: EdgeInsets.all(
+            SizeConfig.blockSizeHorizontal * 4,
+        ),
+        child: _buildBackgroundImageContent(context)
+        ),
     );
   }
 
@@ -91,7 +130,7 @@ class RequestPageView extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         _buildBackgroundImage(),
-        _buildBackgroundImageOverlay(),
+        _buildBackgroundImageOverlay(context),
       ],
     );
   }

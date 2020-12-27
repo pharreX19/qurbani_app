@@ -5,14 +5,16 @@ import 'package:qurbani/controllers/dashboard_controller.dart';
 
 class ServiceTypeBottomSheet extends StatelessWidget {
 //  final Function callback;
-  ServiceTypeBottomSheet();
+  final List<Map<String, dynamic>> services;
 
-  final List<Map<String, dynamic>> _serviceName = [
-    {'title': 'Sadaqah', 'icon': Icons.workspaces_outline},
-    {'title': 'Udhiya', 'icon': Icons.map},
-    {'title': 'Aqeeqah', 'icon': Icons.style},
-    {'title': 'Others', 'icon': Icons.palette_outlined},
-  ];
+  ServiceTypeBottomSheet(this.services);
+
+  // final List<Map<String, dynamic>> _serviceName = [
+  //   {'title': 'Sadaqah', 'icon': Icons.workspaces_outline},
+  //   {'title': 'Udhiya', 'icon': Icons.map},
+  //   {'title': 'Aqeeqah', 'icon': Icons.style},
+  //   {'title': 'Others', 'icon': Icons.palette_outlined},
+  // ];
 
   void _serviceTypeSelected(BuildContext context, String serviceType){
 //    callback(selectedServiceName);
@@ -24,15 +26,16 @@ class ServiceTypeBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.blockSizeVertical * 35,
+      padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 1),
+      height: SizeConfig.blockSizeVertical * 8 * services.length,
       child: ListView.builder(
-        itemCount: _serviceName.length,
+        itemCount: services.length,
         itemBuilder: (context, int index) {
           return ListTile(
-            leading: Icon(_serviceName[index]['icon']),
-            title: Text(_serviceName[index]['title']),
+            leading: Icon(services[index]['icon']),
+            title: Text(services[index]['name']),
             onTap: (){
-              _serviceTypeSelected(context,  _serviceName[index]['title']);
+              _serviceTypeSelected(context,  services[index]['name']);
             },
           );
         },

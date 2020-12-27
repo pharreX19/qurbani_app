@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
@@ -15,13 +16,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  final List<Map<String, dynamic>> _services = [
-    {'name' : 'Udhiya', 'price': 700, 'isActive' : true},
-    {'name' : 'Aqeeqah', 'price': 1000, 'isActive' : true },
-    {'name' : 'Sadaqat', 'price': 1500,'isActive' : true },
-    {'name' : 'Others', 'price': 1700, 'isActive' : true}
-  ];
-
+  static const List<String> SERVICES = ['Sadaqat', 'Aqeeqah', 'Others', 'Udhiya'];
   bool _isAdmin = true;
 
   Widget _buildCategory(BuildContext context, String name, Widget detailPage){
@@ -30,10 +25,6 @@ class _SettingsState extends State<Settings> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-//          Padding(
-//            padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3, bottom: SizeConfig.blockSizeVertical * 0.8),
-//            child: Text(title),
-//          ),
           ListTile(
             tileColor: Colors.grey[100],
             title: Text(name),
@@ -56,9 +47,6 @@ class _SettingsState extends State<Settings> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Settings'),
-                SizedBox(
-                  height: SizeConfig.blockSizeVertical * 3,
-                ),
                 ListTile(
                   title: Text('Admin Privileges'),
                   trailing: Switch(
@@ -71,33 +59,59 @@ class _SettingsState extends State<Settings> {
                     },
                   ),
                 ),
-//                Padding(
-//                  padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 3, bottom: SizeConfig.blockSizeVertical * 0.8),
-//                  child: Text('Services'),
-//                ),
-              !_isAdmin ? Expanded(
-                child: Center(
-                  child: Text('You are acting as a User, Please turn on Admin Privileges'),
-                ),
-              ) :
-                  Column(
-                    children: [
-                      ..._services.map((service){
-                        return ListTile(
-                          tileColor: Colors.grey[100],
-                          title: Text(service['name']),
-                          trailing: Icon(Icons.arrow_forward_ios_rounded, size: SizeConfig.blockSizeHorizontal * 5,),
-                          onTap: (){
-                            Get.find<ServiceSettingsController>().setServiceType(service['name']);
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ServiceSettings(title: service['name'],)));
-                          },
-                        );
-                      }),
-                      _buildCategory(context, 'Name List', NameSettings()),
-                      _buildCategory(context, 'Questions', QuestionsSettings())
-                    ],
-                  ),
-              ])
+                StreamBuilder(
+                  stream: Get.find<ServiceSettingsController>().services,
+                  builder: (context, AsyncSnapshot snapshot){
+                    if(snapshot.hasError){
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if(snapshot.hasData && _isAdmin){
+                      List<DocumentSnapshot> serviceList = snapshot.data.documents;
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            height: SizeConfig.blockSizeVertical * 3,
+                          ),
+                          Column(
+                            children: [
+                              ...serviceList.map((service){
+                                return ListTile(
+                                  tileColor: Colors.grey[100],
+                                  title: Text(SERVICES[serviceList.indexOf(service)]),
+                                  trailing: Icon(Icons.arrow_forward_ios_rounded, size: SizeConfig.blockSizeHorizontal * 5,),
+                                  onTap: (){
+                                    // Get.find<ServiceSettingsController>().fetchAllServiceType(service);
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ServiceSettings(
+                                      service: service,
+                                      serviceName: SERVICES[serviceList.indexOf(service)].toLowerCase(),
+                                    )));
+                                  },
+                                );
+                              }),
+                              _buildCategory(context, 'Name List', NameSettings()),
+                              _buildCategory(context, 'Questions', QuestionsSettings())
+                            ],
+                          )
+                        ],
+                      );
+                    }
+                    if(snapshot.hasData && !_isAdmin){
+                      return Expanded(
+                        child: Center(
+                          child: Text('You are acting as a User, Please turn on Admin Privileges'),
+                        ),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                )
+              ],
+            )
         ),
       ),
     );

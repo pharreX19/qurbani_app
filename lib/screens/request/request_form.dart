@@ -6,6 +6,7 @@ import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qurbani/widgets/common/custom_text_field.dart';
 
 
 class RequestForm extends StatelessWidget {
@@ -56,60 +57,72 @@ class RequestForm extends StatelessWidget {
                 child: Column(
                   children: [
                     Obx((){
-                      return TextField(
-                          enabled: Get.find<DashboardController>().childName == null ? true : false,
-                          maxLength: 100,
-                          keyboardType: TextInputType.name,
-                          onChanged: Get.find<DashboardController>().onChangedChildNameTextField,
-                          decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: SizeConfig.blockSizeVertical * 2,
-                                horizontal: SizeConfig.blockSizeVertical * 2,
-                              ),
-                              fillColor: Colors.grey[100],
-                              filled: true,
-                              suffixIcon: Icon(Icons.person,color: Colors.grey[500]),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(4.0)
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              hintText: Get.find<DashboardController>().childName ?? 'Child Name',
-                              hintStyle: TextStyle(color: Colors.grey[500]),
-                              counterText: '',
-                              errorText: Get.find<DashboardController>().childNameFieldError.value == '' ? null :
-                              Get.find<DashboardController>().childNameFieldError.value
-                          )
+                      return CustomTextField(
+                        suffixIcon: Icons.person,
+                        hintText: 'Child\'s Name',
+                        onChanged: Get.find<DashboardController>().onChangedChildNameTextField,
+                        errorText: Get.find<DashboardController>().childNameFieldError.value,
                       );
+                      // return TextField(
+                      //     enabled: Get.find<DashboardController>().childName == null ? true : false,
+                      //     maxLength: 100,
+                      //     keyboardType: TextInputType.name,
+                      //     onChanged: Get.find<DashboardController>().onChangedChildNameTextField,
+                      //     decoration: InputDecoration(
+                      //         contentPadding: EdgeInsets.symmetric(
+                      //           vertical: SizeConfig.blockSizeVertical * 2,
+                      //           horizontal: SizeConfig.blockSizeVertical * 2,
+                      //         ),
+                      //         fillColor: Colors.grey[100],
+                      //         filled: true,
+                      //         suffixIcon: Icon(Icons.person,color: Colors.grey[500]),
+                      //         border: OutlineInputBorder(
+                      //             borderSide: BorderSide.none,
+                      //             borderRadius: BorderRadius.circular(4.0)
+                      //         ),
+                      //         floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      //         hintText: 'Child Name',
+                      //         hintStyle: TextStyle(color: Colors.grey[500]),
+                      //         counterText: '',
+                      //         errorText: Get.find<DashboardController>().childNameFieldError.value == '' ? null :
+                      //         Get.find<DashboardController>().childNameFieldError.value
+                      //     )
+                      // );
                     }),
                     SizedBox(height: SizeConfig.blockSizeVertical * 4,),
                     Obx((){
-                      return Container(
-                        child: TextField(
-                            maxLength: 10,
-                            keyboardType: TextInputType.number,
-                            onChanged: Get.find<DashboardController>().onChangedContactNumberTextField,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.blockSizeVertical * 2,
-                                    horizontal: SizeConfig.blockSizeVertical * 2,
-                                ),
-                                fillColor: Colors.grey[100],
-                                filled: true,
-                                suffixIcon: Icon(Icons.phone, color: Colors.grey[500]),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(4.0)
-                                ),
-                                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                                hintText: 'Contact No.',
-                                hintStyle: TextStyle(color: Colors.grey[500]),
-                                counterText: '',
-                                errorText: Get.find<DashboardController>().contactNumberFieldError.value == '' ? null :
-                                Get.find<DashboardController>().contactNumberFieldError.value
-                            )
-                        ),
+                      return CustomTextField(
+                        suffixIcon: Icons.person,
+                        hintText: 'Contact Number',
+                        onChanged: Get.find<DashboardController>().onChangedContactNumberTextField,
+                        errorText: Get.find<DashboardController>().contactNumberFieldError.value,
                       );
+                      // return Container(
+                      //   child: TextField(
+                      //       maxLength: 10,
+                      //       keyboardType: TextInputType.number,
+                      //       onChanged: Get.find<DashboardController>().onChangedContactNumberTextField,
+                      //       decoration: InputDecoration(
+                      //           contentPadding: EdgeInsets.symmetric(
+                      //               vertical: SizeConfig.blockSizeVertical * 2,
+                      //               horizontal: SizeConfig.blockSizeVertical * 2,
+                      //           ),
+                      //           fillColor: Colors.grey[100],
+                      //           filled: true,
+                      //           suffixIcon: Icon(Icons.phone, color: Colors.grey[500]),
+                      //           border: OutlineInputBorder(
+                      //               borderSide: BorderSide.none,
+                      //               borderRadius: BorderRadius.circular(4.0)
+                      //           ),
+                      //           floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      //           hintText: 'Contact No.',
+                      //           hintStyle: TextStyle(color: Colors.grey[500]),
+                      //           counterText: '',
+                      //           errorText: Get.find<DashboardController>().contactNumberFieldError.value == '' ? null :
+                      //           Get.find<DashboardController>().contactNumberFieldError.value
+                      //       )
+                      //   ),
+                      // );
                     }),
                   ],
                 ),
@@ -159,7 +172,7 @@ class RequestForm extends StatelessWidget {
                           title: Text('Bank Receipt', style: TextStyle(
                             color: Get.find<DashboardController>().receiptUploadFieldError.value.isEmpty ? Colors.black : Colors.red[600],
                           ),),
-                          trailing: Get.find<DashboardController>().receiptPath.value.isNotEmpty ?
+                          trailing: Get.find<DashboardController>().receiptUrl.value.isNotEmpty ?
                             Text('Uploaded') : Icon(Icons.upload_rounded,
                             color: Get.find<DashboardController>().receiptUploadFieldError.value.isEmpty ? Colors.grey[500] : Colors.red[600]),
                       onTap: () => Get.find<DashboardController>().pickReceiptImage(),

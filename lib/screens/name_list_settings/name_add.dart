@@ -86,12 +86,12 @@ class _AddNameState extends State<AddName> {
                             trailing: Checkbox(
                               value: Get.find<NameSettingsController>().nameGender.contains(gender),
                               onChanged: (value){
-                                // if(value){
+                                if(value){
                                   Get.find<NameSettingsController>().onNameGenderChanged(gender);
-                                // }
-                                // setState(() {
-                                //   gender['checked'] = value;
-                                // });
+                                }
+                                setState(() {
+                                  // gender['checked'] = value;
+                                });
                               },
                               fillColor: MaterialStateProperty.all(Colors.teal),
                               materialTapTargetSize: MaterialTapTargetSize.padded,
@@ -113,9 +113,10 @@ class _AddNameState extends State<AddName> {
                          ),
                        );
                      }),
-                     Obx((){
-                       return ListTile(
-                         title: Text(Get.find<NameSettingsController>().name['origin']),
+                     ListTile(
+                         title: Obx((){
+                           return Text(Get.find<NameSettingsController>().origin.value);
+                         }),
                          trailing: Padding(
                            padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 2.5,),
                            child: Icon(Icons.location_on_outlined, color: Colors.teal,),
@@ -123,13 +124,13 @@ class _AddNameState extends State<AddName> {
                          onTap: (){
                             showSearch(context: context, delegate: NameOriginSearchDelegate(searchSuggestions: _nameOriginList));
                          },
-                       );
-                     }),
+                       ),
+                     // }),
                       SizedBox(height: SizeConfig.blockSizeVertical * 3,),
                       SubmitButton(
                         title: 'Save',
                         icon: Icons.save,
-                        submitCallback: Get.find<NameSettingsController>().updateOrRegisterName,
+                        submitCallback: Get.find<NameSettingsController>().registerName,
                       )
                     ],
                   ),
