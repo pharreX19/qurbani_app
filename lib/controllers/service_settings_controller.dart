@@ -8,7 +8,7 @@ class ServiceSettingsController extends GetxController{
   final Query serviceCollection = FirebaseFirestore.instance.collection('services');
   RxMap<dynamic, dynamic> selectedServiceType = {}.obs;
   final TextEditingController servicePriceController = TextEditingController();
-
+  RxInt selectedServiceTypeIndex = 0.obs;
   @override
   onClose(){
     servicePriceController.dispose();

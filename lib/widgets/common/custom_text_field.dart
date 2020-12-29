@@ -12,6 +12,7 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final Function onChanged;
   final String errorText;
+  final TextInputType textInputType;
 
   CustomTextField(
       {this.hintText,
@@ -23,6 +24,7 @@ class CustomTextField extends StatelessWidget {
         this.controller,
         this.onChanged,
         this.errorText,
+        this.textInputType = TextInputType.name,
       this.maxLength = 50});
 
   @override
@@ -32,7 +34,7 @@ class CustomTextField extends StatelessWidget {
         maxLength: maxLength,
         maxLines: maxLines,
         controller: controller,
-        keyboardType: TextInputType.name,
+        keyboardType: textInputType,
         textDirection: textDirection,
         onChanged: (value){
           if(onChanged != null){

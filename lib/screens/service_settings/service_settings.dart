@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/service_settings_controller.dart';
+import 'package:qurbani/controllers/service_type_settings_controller.dart';
 import 'package:qurbani/widgets/common/custom_text_field.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 import 'package:qurbani/widgets/common/submit_button.dart';
@@ -19,11 +20,12 @@ class ServiceSettings extends StatefulWidget {
 
 class _ServiceSettingsState extends State<ServiceSettings> {
   List<DocumentSnapshot> serviceTypes;
-
+  RxMap<dynamic, dynamic> selectedServiceType = {}.obs;
   String _submitButtonText = 'Update Service';
   IconData _submitButtonIcon = Icons.check;
 
   Widget _buildServiceUpdateForm(){
+    print(serviceTypes[0]['price']);
     return Card(
       child: Padding(
         padding: EdgeInsets.only(
@@ -36,7 +38,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
             children: [
              Obx((){
                return  CustomTextField(
-                 hintText: Get.find<ServiceSettingsController>().selectedServiceType['type'],//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
+                 hintText: Get.find<ServiceTypeSettingsController>().selectedServiceTypeName.value ?? serviceTypes[0]['type'],//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
                  enabled: false,
                );
              }),
@@ -47,8 +49,8 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                 return CustomTextField(
                   controller: Get.find<ServiceSettingsController>().servicePriceController,
                   enabled: true,
-                  hintText: Get.find<ServiceSettingsController>().selectedServiceType['price'].toString(),
-                  onChanged: Get.find<ServiceSettingsController>().onServicePriceChanged,
+                  hintText: Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value.toString() ?? serviceTypes[0]['price'].toString(),
+                  onChanged: Get.find<ServiceTypeSettingsController>().onServicePriceChanged,
                 );
               }),
               SizedBox(
@@ -60,7 +62,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                   Text('Service Status'),
                  Obx((){
                    return  Switch(activeColor: Colors.teal,
-                       value: Get.find<ServiceSettingsController>().selectedServiceType['is_active'],
+                       value: Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value ?? serviceTypes[0]['is_active'],
                        onChanged: (value) {
                            Get.find<ServiceSettingsController>().updateSelectedService('is_active', value);
                          // });
@@ -87,10 +89,16 @@ class _ServiceSettingsState extends State<ServiceSettings> {
               ...serviceTypes.map((serviceType){
                 return InkWell(
                     onTap: (){
-                      Get.find<ServiceSettingsController>().selectedServiceType.assignAll({
-                        'id':serviceType.id,
-                        ...serviceType.data()
-                      });
+                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeName.value = serviceType['type'];
+                      Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value = serviceType['price'] * 1.0;
+                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeId.value = serviceType['type'];
+                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value = serviceType['is_active'];
+
+                      // Get.find<ServiceSettingsController>().selectedServiceType.assignAll({
+                      //   'id':serviceType.id,
+                      //   ...serviceType.data()
+                      // });
+                      Get.find<ServiceSettingsController>().selectedServiceTypeIndex.value = serviceTypes.indexOf(serviceType);
                     },
                     child: Obx((){
                       return Container(
@@ -122,6 +130,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
 
   @override
   Widget build(BuildContext context) {
+    ServiceTypeSettingsController serviceTypeSettingsController = Get.put(ServiceTypeSettingsController());
     return SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -136,42 +145,70 @@ class _ServiceSettingsState extends State<ServiceSettings> {
               height: SizeConfig.blockSizeVertical * 3,
             ),
             StreamBuilder(
-              stream: widget.service.reference.collection(widget.serviceName).snapshots(),
+              stream: serviceTypeSettingsController.serviceTypes,
               builder: (context, AsyncSnapshot snapshot){
                 if(snapshot.hasError){
                   return Center(
-                    child: Text('Something went wrong, please try again later'),
+                    child: Text('An error occurred, please try again'),
                   );
                 }
                 if(snapshot.hasData){
                   serviceTypes = snapshot.data.documents;
-                  Get.find<ServiceSettingsController>().selectedServiceType.assignAll({
-                    'id': serviceTypes[0].id,
-                    ...serviceTypes[0].data()
-                  });
                   return Column(
                     children: [
                       _buildServiceUpdateForm(),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.blockSizeHorizontal * 1,
-                            right: SizeConfig.blockSizeHorizontal * 1,
-                            top: SizeConfig.blockSizeHorizontal * 3
-                        ),
-                        child: SubmitButton(
-                          title: _submitButtonText,
-                          icon: _submitButtonIcon,
-                          submitCallback: _submitCallback
-                          ,
-                        ),
-                      ),
                       _buildServiceTypes(),
+                      RaisedButton(
+                        child: Text('update'),
+                        onPressed: (){
+                          serviceTypeSettingsController.updateServiceType({'id':'asas'}, context);
+                        },
+                      )
                     ],
                   );
                 }
-                return Center(child: CircularProgressIndicator());
+                return Center(
+                    child: CircularProgressIndicator()
+                  );
               },
             )
+            // StreamBuilder(
+            //   stream: widget.service.reference.collection(widget.serviceName).snapshots(),
+            //   builder: (context, AsyncSnapshot snapshot){
+            //     if(snapshot.hasError){
+            //       return Center(
+            //         child: Text('Something went wrong, please try again later'),
+            //       );
+            //     }
+            //     if(snapshot.hasData){
+            //       serviceTypes = snapshot.data.documents;
+            //       Get.find<ServiceSettingsController>().selectedServiceType.assignAll({
+            //         'id': serviceTypes[0].id,
+            //         ...serviceTypes[0].data()
+            //       });
+            //       return Column(
+            //         children: [
+            //           _buildServiceUpdateForm(),
+            //           Padding(
+            //             padding: EdgeInsets.only(
+            //                 left: SizeConfig.blockSizeHorizontal * 1,
+            //                 right: SizeConfig.blockSizeHorizontal * 1,
+            //                 top: SizeConfig.blockSizeHorizontal * 3
+            //             ),
+            //             child: SubmitButton(
+            //               title: _submitButtonText,
+            //               icon: _submitButtonIcon,
+            //               submitCallback: _submitCallback
+            //               ,
+            //             ),
+            //           ),
+            //           _buildServiceTypes(),
+            //         ],
+            //       );
+            //     }
+            //     return Center(child: CircularProgressIndicator());
+            //   },
+            // )
           ],
         ),
       ),
