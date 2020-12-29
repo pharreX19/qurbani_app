@@ -71,31 +71,36 @@ class _NameSettingsState extends State<NameSettings> {
                   if(snapshot.hasData){
                     names = snapshot.data.documents;
 
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: names.length,
-                        itemBuilder: (context, int index){
-                          return Dismissible(
-                            direction: DismissDirection.endToStart,
-                            background: Icon(Icons.zoom_out_rounded),
-                            secondaryBackground: slideLeftBackground(),
-                            onDismissed: (dismissDirection){
-                              Get.find<NameSettingsController>().deleteName(index);
-                            },
-                            key: Key('$index'),
-                            child: ListTile(
-                              title: Text(names[index]['name_en']),
-                              subtitle: Text(names[index]['meaning']),
-                              trailing: Icon(Icons.arrow_forward_ios_rounded, size: SizeConfig.blockSizeHorizontal * 5,),
-                              onTap: (){
-                                Get.find<NameSettingsController>().name = names[index].data();
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NameEdit(name: names[index],)));
+                    if(names.length == 0){
+                      return Expanded(child: Center(child: Text('No names found'),));
+                    }else{
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: names.length,
+                          itemBuilder: (context, int index){
+                            return Dismissible(
+                              direction: DismissDirection.endToStart,
+                              background: Icon(Icons.zoom_out_rounded),
+                              secondaryBackground: slideLeftBackground(),
+                              onDismissed: (dismissDirection){
+                                Get.find<NameSettingsController>().deleteName(names[index].id);
                               },
-                            ),
-                          );
-                        },
-                      ),
-                    );
+                              key: Key(names[index].id),
+                              child: ListTile(
+                                title: Text(names[index]['name_en']),
+                                subtitle: Text(names[index]['meaning']),
+                                trailing: Icon(Icons.arrow_forward_ios_rounded, size: SizeConfig.blockSizeHorizontal * 5,),
+                                onTap: (){
+                                  Get.find<NameSettingsController>().name = names[index].data();
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NameEdit(name: names[index],)));
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+
                   }
                   return Center(
                     child: CircularProgressIndicator(),

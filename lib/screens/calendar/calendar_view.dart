@@ -45,6 +45,7 @@ class CalendarView extends StatelessWidget {
                         child: ListView.builder(
                             itemCount: Get.find<CalendarController>().todaysRequests.length,
                             itemBuilder: (context, int index) {
+                              print('===> CALENDAR ${Get.find<CalendarController>().todaysRequests[index]}');
                               String date = (DateTime.fromMillisecondsSinceEpoch(
                                   Get.find<CalendarController>().todaysRequests[index]['date']['_seconds'] *
                                       1000)).toString().substring(0, 10);

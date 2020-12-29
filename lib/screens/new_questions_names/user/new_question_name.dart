@@ -6,8 +6,20 @@ import 'package:qurbani/widgets/common/custom_text_field.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 import 'package:qurbani/widgets/common/submit_button.dart';
 
-class NewQuestionName extends StatelessWidget {
+class NewQuestionName extends StatefulWidget {
+  @override
+  _NewQuestionNameState createState() => _NewQuestionNameState();
+}
+
+class _NewQuestionNameState extends State<NewQuestionName> {
   final QuestionsAndNamesController _questionsAndNamesController = Get.put(QuestionsAndNamesController());
+  final TextEditingController textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    textEditingController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +42,9 @@ class NewQuestionName extends StatelessWidget {
                   children: [
                     Obx(() {
                       return CustomTextField(
-                        controller: Get.find<QuestionsAndNamesController>().textEditingController,
-                        hintText: 'Name or question',
-                        onChanged: Get.find<QuestionsAndNamesController>().setQuestionOrName,
+                        controller: textEditingController, //Get.find<QuestionsAndNamesController>().textEditingController,
+                        hintText: 'You message goes here...',
+//                        onChanged: Get.find<QuestionsAndNamesController>().setQuestionOrName,
                         errorText: Get.find<QuestionsAndNamesController>().questionOrNamesFieldError.value,
                         maxLength: 255,
                         maxLines: 8,
@@ -45,8 +57,9 @@ class NewQuestionName extends StatelessWidget {
                       title: 'Send',
                       icon: Icons.send,
                       submitCallback: (){
-                        Get.find<QuestionsAndNamesController>().onSubmit(context);
-                      },
+                        Get.find<QuestionsAndNamesController>().onSubmit(context, textEditingController.text);
+                          textEditingController.text = '';
+                        },
                     ),
                   ],
                 ),

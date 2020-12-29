@@ -7,13 +7,12 @@ import 'package:qurbani/services/api_service.dart';
 class QuestionsAndNamesController extends GetxController{
   final Query feedbackCollection = FirebaseFirestore.instance.collection('feedbacks');
   RxString questionOrNamesFieldError = ''.obs;
-  String questionOrName = '';
-  TextEditingController textEditingController = TextEditingController();
+//  String questionOrName = '';
 
-  @override
-  void onClose(){
-    textEditingController.dispose();
-  }
+//  @override
+//  void onClose(){
+//    textEditingController.dispose();
+//  }
 
 
   Stream<QuerySnapshot> get feedback {
@@ -27,25 +26,28 @@ class QuestionsAndNamesController extends GetxController{
     });
   }
 
-  void setQuestionOrName(String value){
-    if(value.trim().isEmpty){
+//  void setQuestionOrName(String value){
+//    if(value.trim().isEmpty){
+//      questionOrNamesFieldError.value = 'Please fill out this field';
+//    }else{
+//      questionOrNamesFieldError.value = '';
+//    }
+//    questionOrName = value;
+//  }
+
+  void onSubmit(BuildContext context, String message) async{
+//    setQuestionOrName(questionOrName);
+    if(message.trim().isEmpty){
       questionOrNamesFieldError.value = 'Please fill out this field';
     }else{
-      questionOrNamesFieldError.value = '';
-    }
-    questionOrName = value;
-  }
-
-  void onSubmit(BuildContext context) async{
-    setQuestionOrName(questionOrName);
-    if(questionOrNamesFieldError.value.trim().isEmpty){
       try{
+        questionOrNamesFieldError.value = '';
         dynamic response = await ApiService.instance.createFeedback('feedback', {
           'contact': '9909009',
-          'message': questionOrName
+          'message': message
         });
-        questionOrName = '';
-        textEditingController.text = '';
+        message = '';
+//        textEditingController.text = '';
         Scaffold.of(context).showSnackBar(SnackBar(content: Text('Submitted successfully!'),));
       }catch(e){
         Scaffold.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));

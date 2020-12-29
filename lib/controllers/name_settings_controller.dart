@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qurbani/globals/helpers.dart';
 import 'package:qurbani/services/api_service.dart';
 
 class NameSettingsController extends GetxController{
@@ -109,8 +110,8 @@ class NameSettingsController extends GetxController{
       }
   }
 
-  void deleteName(int index) async{
-    // await ApiService.instance.deleteName('names/${nameList[index]['id']}');
+  void deleteName(String id) async{
+     await ApiService.instance.deleteName('names/$id');
     // nameList.removeAt(index);
     // this.nameList.refresh();
   }
@@ -129,14 +130,14 @@ class NameSettingsController extends GetxController{
     return false;
   }
 
-  void updateName(BuildContext context, String id) async {
-    if (checkValidation()) {
-      try{
-        await ApiService.instance.updateName('names/$id', name);
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Name updated successfully'),));
+
+
+  void updateName(BuildContext context, Map<String, dynamic> name) async {
+     try{
+        await ApiService.instance.updateName('names/${name['id']}', toFireStoreJson(name));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name updated successfully'),));
       }catch(e){
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text('An error occured, try again'),));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occured, try again'),));
       }
-    }
   }
 }

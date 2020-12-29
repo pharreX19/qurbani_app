@@ -20,12 +20,15 @@ class ServiceSettings extends StatefulWidget {
 
 class _ServiceSettingsState extends State<ServiceSettings> {
   List<DocumentSnapshot> serviceTypes;
-  RxMap<dynamic, dynamic> selectedServiceType = {}.obs;
+//  RxMap<dynamic, dynamic> selectedServiceType = {}.obs;
   String _submitButtonText = 'Update Service';
   IconData _submitButtonIcon = Icons.check;
+  String serviceTypeId;
+  bool serviceTypeIsActive;
+  final   TextEditingController servicePriceController = TextEditingController(text: '0.0');
+  String serviceTypeName = 'Service Type';
 
   Widget _buildServiceUpdateForm(){
-    print(serviceTypes[0]['price']);
     return Card(
       child: Padding(
         padding: EdgeInsets.only(
@@ -36,21 +39,20 @@ class _ServiceSettingsState extends State<ServiceSettings> {
         ),
         child: Column(
             children: [
-             Obx((){
-               return  CustomTextField(
-                 hintText: Get.find<ServiceTypeSettingsController>().selectedServiceTypeName.value ?? serviceTypes[0]['type'],//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
+               CustomTextField(
+                 hintText: serviceTypeName,//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
                  enabled: false,
-               );
-             }),
+               ),
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2,
               ),
               Obx((){
                 return CustomTextField(
-                  controller: Get.find<ServiceSettingsController>().servicePriceController,
+                  controller: servicePriceController,
                   enabled: true,
-                  hintText: Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value.toString() ?? serviceTypes[0]['price'].toString(),
-                  onChanged: Get.find<ServiceTypeSettingsController>().onServicePriceChanged,
+                  hintText: Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value.toString(),
+                  errorText: Get.find<ServiceTypeSettingsController>().serviceTypePriceFieldError.value,
+//                  onChanged: Get.find<ServiceTypeSettingsController>().onServicePriceChanged,
                 );
               }),
               SizedBox(
@@ -60,13 +62,14 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Service Status'),
-                 Obx((){
-                   return  Switch(activeColor: Colors.teal,
-                       value: Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value ?? serviceTypes[0]['is_active'],
+                  Switch(activeColor: Colors.teal,
+                       value: serviceTypeIsActive ?? false,//Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value ?? serviceTypes[0]['is_active'],
                        onChanged: (value) {
-                           Get.find<ServiceSettingsController>().updateSelectedService('is_active', value);
+                          setState(() {
+                            serviceTypeIsActive = value;
+                          });
+//                           Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value = value;
                          // });
-                       });
                  })
                 ],
               ),
@@ -89,29 +92,32 @@ class _ServiceSettingsState extends State<ServiceSettings> {
               ...serviceTypes.map((serviceType){
                 return InkWell(
                     onTap: (){
-                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeName.value = serviceType['type'];
-                      Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value = serviceType['price'] * 1.0;
-                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeId.value = serviceType['type'];
-                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value = serviceType['is_active'];
-
+//                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeName.value = serviceType['type'];
+                      Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value =  serviceType['price'] * 1.0;
+//                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeId.value = serviceType.id;
+//                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value = serviceType['is_active'];
+                      setState(() {
+                        serviceTypeId = serviceType.id;
+                        serviceTypeIsActive = serviceType['is_active'];
+                        servicePriceController.text =  serviceType['price'].toString();
+                        serviceTypeName = serviceType['type'];
+                      });
                       // Get.find<ServiceSettingsController>().selectedServiceType.assignAll({
                       //   'id':serviceType.id,
                       //   ...serviceType.data()
                       // });
-                      Get.find<ServiceSettingsController>().selectedServiceTypeIndex.value = serviceTypes.indexOf(serviceType);
+//                      Get.find<ServiceSettingsController>().selectedServiceTypeIndex.value = serviceTypes.indexOf(serviceType);
                     },
-                    child: Obx((){
-                      return Container(
+                    child: Container(
                           height: SizeConfig.blockSizeVertical * 5,
                           decoration: BoxDecoration(
-                              color: serviceType.id ==  Get.find<ServiceSettingsController>().selectedServiceType['id'] ? Colors.teal.shade50 : Colors.transparent,
+                              color: serviceType.id ==  serviceTypeId ? Colors.teal.shade50 : Colors.transparent,
                               border: Border.all(color: Colors.teal.shade100),
                               borderRadius: BorderRadius.circular(10.0)
                           ),
                           width: SizeConfig.blockSizeVertical * 10,
                           margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 1, vertical: SizeConfig.blockSizeVertical * 1),
-                          child: Center(child: Text(serviceType['type'].toString().toLowerCase())));
-                    })
+                          child: Center(child: Text(serviceType['type'].toString().toLowerCase())))
                 );
               })
             ],
@@ -122,15 +128,22 @@ class _ServiceSettingsState extends State<ServiceSettings> {
   }
 
   _submitCallback(){
-    Get.find<ServiceSettingsController>().updateServiceType({
-      'id': widget.service.id,
-      'name': widget.serviceName.toLowerCase()
-    }, context);
+    Get.find<ServiceTypeSettingsController>().updateServiceType(
+        {'id': serviceTypeId, 'is_active':  serviceTypeIsActive, 'price': servicePriceController.text}, context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    servicePriceController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     ServiceTypeSettingsController serviceTypeSettingsController = Get.put(ServiceTypeSettingsController());
+    Get.find<ServiceTypeSettingsController>().serviceName = widget.serviceName;
+    Get.find<ServiceTypeSettingsController>().documentSnapshot = widget.service;
+
     return SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -157,13 +170,20 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                   return Column(
                     children: [
                       _buildServiceUpdateForm(),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: SizeConfig.blockSizeHorizontal * 1,
+                            right: SizeConfig.blockSizeHorizontal * 1,
+                            top: SizeConfig.blockSizeHorizontal * 3
+                        ),
+                        child: SubmitButton(
+                          title: _submitButtonText,
+                          icon: _submitButtonIcon,
+                          submitCallback: _submitCallback
+                          ,
+                        ),
+                      ),
                       _buildServiceTypes(),
-                      RaisedButton(
-                        child: Text('update'),
-                        onPressed: (){
-                          serviceTypeSettingsController.updateServiceType({'id':'asas'}, context);
-                        },
-                      )
                     ],
                   );
                 }
