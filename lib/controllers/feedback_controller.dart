@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/services/api_service.dart';
 
-class QuestionsAndNamesController extends GetxController{
+class FeedbackController extends GetxController{
   final Query feedbackCollection = FirebaseFirestore.instance.collection('feedbacks');
-  RxString questionOrNamesFieldError = ''.obs;
+//  RxString questionOrNamesFieldError = ''.obs;
 //  String questionOrName = '';
 
 //  @override
@@ -37,21 +37,21 @@ class QuestionsAndNamesController extends GetxController{
 
   void onSubmit(BuildContext context, String message) async{
 //    setQuestionOrName(questionOrName);
-    if(message.trim().isEmpty){
-      questionOrNamesFieldError.value = 'Please fill out this field';
-    }else{
+//    if(message.trim().isEmpty){
+//      questionOrNamesFieldError.value = 'Please fill out this field';
+//    }else{
       try{
-        questionOrNamesFieldError.value = '';
+//        questionOrNamesFieldError.value = '';
         dynamic response = await ApiService.instance.createFeedback('feedback', {
           'contact': '9909009',
           'message': message
         });
-        message = '';
+//        message = '';
 //        textEditingController.text = '';
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Submitted successfully!'),));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Submitted successfully!'),));
       }catch(e){
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));
       }
     }
-  }
+//  }
 }

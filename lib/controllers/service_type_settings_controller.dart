@@ -10,10 +10,10 @@ class ServiceTypeSettingsController extends GetxController{
   // RxList<dynamic> serviceTypes = [].obs;
 //  RxString selectedServicePriceFieldError = ''.obs;
 //  RxString selectedServiceTypeName = 'Service type'.obs;
-  RxDouble selectedServiceTypePrice = RxDouble(0.0);
+//  RxDouble selectedServiceTypePrice = RxDouble(0.0);
 //  RxString selectedServiceTypeId = ''.obs;
 //  RxBool selectedServiceTypeIsActive = true.obs;
-  RxString serviceTypePriceFieldError = ''.obs;
+//  RxString serviceTypePriceFieldError = ''.obs;
   String serviceName;
   DocumentSnapshot documentSnapshot;
 
@@ -58,7 +58,7 @@ class ServiceTypeSettingsController extends GetxController{
 //    }
   }
 
-  Future<void> updateServiceType(Map<String, dynamic> serviceType ,BuildContext context) async{
+  Future<void> updateServiceType(Map<String, dynamic> serviceType ,BuildContext context, Function callback) async{
    // if(serviceType['price'].toString().isEmpty || double.tryParse(serviceType['price']) == null || double.tryParse(serviceType['price']) <= 0){
    //   serviceTypePriceFieldError.value = 'Price should be greater than zero';
    // }else{
@@ -66,7 +66,7 @@ class ServiceTypeSettingsController extends GetxController{
        dynamic response = await ApiService.instance.updateServiceType(
            'services/${documentSnapshot.id}/$serviceName/${serviceType['id']}', {'price': double.parse(serviceType['price']), 'is_active' : serviceType['is_active']});
        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Service type updated successfully!'), duration: Duration(milliseconds: 500),));
-       serviceTypePriceFieldError.value = '';
+       callback();
      }catch(e){
        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again! $e'),));
      // }

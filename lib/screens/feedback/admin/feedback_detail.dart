@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
-import 'package:qurbani/controllers/questions_and_names_controller.dart';
+import 'package:qurbani/controllers/feedback_controller.dart';
 import 'package:qurbani/widgets/common/custom_app_bar.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 
-class NewQuestionNameDetail extends StatelessWidget {
+class FeedbackDetail extends StatelessWidget {
   final DocumentSnapshot newQuestion;
 
-  NewQuestionNameDetail({this.newQuestion});
+  FeedbackDetail({this.newQuestion});
 
 
   @override

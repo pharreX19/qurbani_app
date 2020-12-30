@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/calendar_controller.dart';
-import 'package:qurbani/controllers/questions_and_names_controller.dart';
+import 'package:qurbani/controllers/feedback_controller.dart';
 import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
 import 'package:qurbani/screens/requests/admin/requests.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';

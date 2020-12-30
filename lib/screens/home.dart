@@ -5,8 +5,8 @@ import 'package:qurbani/controllers/homeController.dart';
 import 'package:qurbani/screens/authentication/login.dart';
 import 'package:qurbani/screens/dashboard/admin/dashboard.dart' as admin;
 import 'package:qurbani/screens/dashboard/user/dashboard.dart' as user;
-import 'package:qurbani/screens/new_questions_names/admin/new_question_name.dart' as admin;
-import 'package:qurbani/screens/new_questions_names/user/new_question_name.dart';
+import 'package:qurbani/screens/feedback/admin/feedback.dart' as admin;
+import 'package:qurbani/screens/feedback/user/feedback.dart' as user;
 import 'package:qurbani/screens/requests/admin/requests.dart' as admin;
 import 'package:qurbani/screens/requests/user/requests.dart' as user;
 import 'package:qurbani/screens/settings/settings.dart';
@@ -24,8 +24,9 @@ class _HomeState extends State<Home> {
     admin.Requests(),
     user.Requests(),
     Settings(),
-    NewQuestionName(),
-    admin.NewQuestionName()
+    user.Feedback(),
+    admin.Feedback()
+
   ];
 
   int _currentIndex = 0;

@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
-import 'package:qurbani/controllers/questions_and_names_controller.dart';
+import 'package:qurbani/controllers/feedback_controller.dart';
+import 'package:qurbani/providers/feedback_validation_provider.dart';
 import 'package:qurbani/widgets/common/custom_text_field.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 import 'package:qurbani/widgets/common/submit_button.dart';
 
-class NewQuestionName extends StatefulWidget {
+class Feedback extends StatefulWidget {
   @override
-  _NewQuestionNameState createState() => _NewQuestionNameState();
+  _FeedbackState createState() => _FeedbackState();
 }
 
-class _NewQuestionNameState extends State<NewQuestionName> {
-  final QuestionsAndNamesController _questionsAndNamesController = Get.put(QuestionsAndNamesController());
-  final TextEditingController textEditingController = TextEditingController();
+class _FeedbackState extends State<Feedback> {
+  final FeedbackController _questionsAndNamesController = Get.put(FeedbackController());
+//  final TextEditingController textEditingController = TextEditingController();
+  FeedbackValidationProvider _validationService;
 
   @override
   void dispose() {
     super.dispose();
-    textEditingController.dispose();
+    _validationService.resetValues();
+//    textEditingController.dispose();
+  }
+
+  void _submitFeedback(){
+    FocusScope.of(context).unfocus();
+    Get.find<FeedbackController>().onSubmit(context, _validationService.feedback.value);
   }
 
   @override
   Widget build(BuildContext context) {
+    _validationService = Provider.of<FeedbackValidationProvider>(context);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -40,27 +50,23 @@ class _NewQuestionNameState extends State<NewQuestionName> {
                     vertical: SizeConfig.blockSizeHorizontal * 4),
                 child: Column(
                   children: [
-                    Obx(() {
-                      return CustomTextField(
-                        controller: textEditingController, //Get.find<QuestionsAndNamesController>().textEditingController,
+                    CustomTextField(
+                        controller: _validationService.feedbackController, //Get.find<QuestionsAndNamesController>().textEditingController,
                         hintText: 'You message goes here...',
-//                        onChanged: Get.find<QuestionsAndNamesController>().setQuestionOrName,
-                        errorText: Get.find<QuestionsAndNamesController>().questionOrNamesFieldError.value,
+                        onChanged: (String value){
+                          _validationService.onFeedbackChanged(value);
+                        },
+                        errorText: _validationService.feedback.error,
                         maxLength: 255,
                         maxLines: 8,
-                      );
-                    }),
+                      ),
                     SizedBox(
                       height: SizeConfig.blockSizeVertical * 2,
                     ),
                     SubmitButton(
                       title: 'Send',
                       icon: Icons.send,
-                      submitCallback: (){
-                        FocusScope.of(context).unfocus();
-                        Get.find<QuestionsAndNamesController>().onSubmit(context, textEditingController.text);
-                          textEditingController.text = '';
-                        },
+                      submitCallback: (_validationService.isValid) ?  _submitFeedback : null
                     ),
                   ],
                 ),

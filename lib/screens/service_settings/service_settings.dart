@@ -44,13 +44,14 @@ class _ServiceSettingsState extends State<ServiceSettings> {
             children: [
                CustomTextField(
                  hintText: _validationService.serviceTypeName.value ?? 'Service Type',//serviceTypeName,//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
+                 controller: _validationService.serviceTypeNameController,
                  enabled: false,
                ),
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2,
               ),
               CustomTextField(
-                  // controller: servicePriceController,
+                   controller: _validationService.serviceTypePriceController, //servicePriceController,
                   enabled: true,
                   hintText: _validationService.serviceTypePrice.value == null  ? '0.0' : _validationService.serviceTypePrice.value.toString(),//Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value.toString(),
                   errorText: _validationService.serviceTypePrice.error,//Get.find<ServiceTypeSettingsController>().serviceTypePriceFieldError.value,
@@ -136,12 +137,13 @@ class _ServiceSettingsState extends State<ServiceSettings> {
   }
 
   _submitCallback(){
+    FocusScope.of(context).unfocus();
     Get.find<ServiceTypeSettingsController>().updateServiceType(
         {
           'id': _validationService.serviceTypeId.value,
           'is_active':  _validationService.serviceTypeStatus.value,
           'price': _validationService.serviceTypePrice.value.toString()
-        }, context);
+        }, context, _validationService.resetValues);
   }
 
   @override
@@ -156,94 +158,100 @@ class _ServiceSettingsState extends State<ServiceSettings> {
     Get.find<ServiceTypeSettingsController>().serviceName = widget.serviceName;
     Get.find<ServiceTypeSettingsController>().documentSnapshot = widget.service;
     _validationService = Provider.of<ServiceTypeValidationProvider>(context);
-    return SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-      body: MainLayout(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.serviceName),
+    return WillPopScope(
+      onWillPop:(){
+        _validationService.resetValues();
+        return Future.value(true);
+      },
+      child: SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+        body: MainLayout(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.serviceName),
 
-            // Text(widget.service['name']),
-            SizedBox(
-              height: SizeConfig.blockSizeVertical * 3,
-            ),
-            StreamBuilder(
-              stream: serviceTypeSettingsController.serviceTypes,
-              builder: (context, AsyncSnapshot snapshot){
-                if(snapshot.hasError){
+              // Text(widget.service['name']),
+              SizedBox(
+                height: SizeConfig.blockSizeVertical * 3,
+              ),
+              StreamBuilder(
+                stream: serviceTypeSettingsController.serviceTypes,
+                builder: (context, AsyncSnapshot snapshot){
+                  if(snapshot.hasError){
+                    return Center(
+                      child: Text('An error occurred, please try again'),
+                    );
+                  }
+                  if(snapshot.hasData){
+                    serviceTypes = snapshot.data.documents;
+                    return Column(
+                      children: [
+                        _buildServiceUpdateForm(),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: SizeConfig.blockSizeHorizontal * 1,
+                              right: SizeConfig.blockSizeHorizontal * 1,
+                              top: SizeConfig.blockSizeHorizontal * 3
+                          ),
+                          child: SubmitButton(
+                            title: _submitButtonText,
+                            icon: _submitButtonIcon,
+                            submitCallback: (!_validationService.isValid) ? null : _submitCallback
+                            ,
+                          ),
+                        ),
+                        _buildServiceTypes(),
+                      ],
+                    );
+                  }
                   return Center(
-                    child: Text('An error occurred, please try again'),
-                  );
-                }
-                if(snapshot.hasData){
-                  serviceTypes = snapshot.data.documents;
-                  return Column(
-                    children: [
-                      _buildServiceUpdateForm(),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: SizeConfig.blockSizeHorizontal * 1,
-                            right: SizeConfig.blockSizeHorizontal * 1,
-                            top: SizeConfig.blockSizeHorizontal * 3
-                        ),
-                        child: SubmitButton(
-                          title: _submitButtonText,
-                          icon: _submitButtonIcon,
-                          submitCallback: (!_validationService.isValid) ? null : _submitCallback
-                          ,
-                        ),
-                      ),
-                      _buildServiceTypes(),
-                    ],
-                  );
-                }
-                return Center(
-                    child: CircularProgressIndicator()
-                  );
-              },
-            )
-            // StreamBuilder(
-            //   stream: widget.service.reference.collection(widget.serviceName).snapshots(),
-            //   builder: (context, AsyncSnapshot snapshot){
-            //     if(snapshot.hasError){
-            //       return Center(
-            //         child: Text('Something went wrong, please try again later'),
-            //       );
-            //     }
-            //     if(snapshot.hasData){
-            //       serviceTypes = snapshot.data.documents;
-            //       Get.find<ServiceSettingsController>().selectedServiceType.assignAll({
-            //         'id': serviceTypes[0].id,
-            //         ...serviceTypes[0].data()
-            //       });
-            //       return Column(
-            //         children: [
-            //           _buildServiceUpdateForm(),
-            //           Padding(
-            //             padding: EdgeInsets.only(
-            //                 left: SizeConfig.blockSizeHorizontal * 1,
-            //                 right: SizeConfig.blockSizeHorizontal * 1,
-            //                 top: SizeConfig.blockSizeHorizontal * 3
-            //             ),
-            //             child: SubmitButton(
-            //               title: _submitButtonText,
-            //               icon: _submitButtonIcon,
-            //               submitCallback: _submitCallback
-            //               ,
-            //             ),
-            //           ),
-            //           _buildServiceTypes(),
-            //         ],
-            //       );
-            //     }
-            //     return Center(child: CircularProgressIndicator());
-            //   },
-            // )
-          ],
+                      child: CircularProgressIndicator()
+                    );
+                },
+              )
+              // StreamBuilder(
+              //   stream: widget.service.reference.collection(widget.serviceName).snapshots(),
+              //   builder: (context, AsyncSnapshot snapshot){
+              //     if(snapshot.hasError){
+              //       return Center(
+              //         child: Text('Something went wrong, please try again later'),
+              //       );
+              //     }
+              //     if(snapshot.hasData){
+              //       serviceTypes = snapshot.data.documents;
+              //       Get.find<ServiceSettingsController>().selectedServiceType.assignAll({
+              //         'id': serviceTypes[0].id,
+              //         ...serviceTypes[0].data()
+              //       });
+              //       return Column(
+              //         children: [
+              //           _buildServiceUpdateForm(),
+              //           Padding(
+              //             padding: EdgeInsets.only(
+              //                 left: SizeConfig.blockSizeHorizontal * 1,
+              //                 right: SizeConfig.blockSizeHorizontal * 1,
+              //                 top: SizeConfig.blockSizeHorizontal * 3
+              //             ),
+              //             child: SubmitButton(
+              //               title: _submitButtonText,
+              //               icon: _submitButtonIcon,
+              //               submitCallback: _submitCallback
+              //               ,
+              //             ),
+              //           ),
+              //           _buildServiceTypes(),
+              //         ],
+              //       );
+              //     }
+              //     return Center(child: CircularProgressIndicator());
+              //   },
+              // )
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 }

@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
-import 'package:qurbani/controllers/questions_and_names_controller.dart';
-import 'package:qurbani/screens/new_questions_names/admin/new_question_name_detail.dart';
+import 'package:qurbani/controllers/feedback_controller.dart';
+import 'package:qurbani/screens/feedback/admin/feedback_detail.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 
-class NewQuestionName extends StatelessWidget {
-  final QuestionsAndNamesController _questionsAndNamesController = Get.put(QuestionsAndNamesController());
+class Feedback extends StatelessWidget {
+  final FeedbackController _questionsAndNamesController = Get.put(FeedbackController());
 
   Widget slideRightBackground() {
     return Container(
@@ -56,7 +56,7 @@ class NewQuestionName extends StatelessWidget {
                     height: SizeConfig.blockSizeVertical * 5,
                   ),
                   StreamBuilder(
-                      stream: Get.find<QuestionsAndNamesController>().feedback,
+                      stream: Get.find<FeedbackController>().feedback,
                       builder: (context, AsyncSnapshot snapshot) {
                         if (snapshot.hasError) {
                           return Center(
@@ -74,7 +74,7 @@ class NewQuestionName extends StatelessWidget {
                                     direction: DismissDirection.startToEnd,
                                     background: slideRightBackground(),
                                     onDismissed: (dismissDirection) {
-                                      Get.find<QuestionsAndNamesController>().updateFeedback(feedback.id);
+                                      Get.find<FeedbackController>().updateFeedback(feedback.id);
                                       },
                                     // secondaryBackground: slideRightBackground(),
                                     child: ListTile(
@@ -93,7 +93,7 @@ class NewQuestionName extends StatelessWidget {
                                           .blockSizeHorizontal * 5,),
                                       onTap: () {
                                         Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (context) => NewQuestionNameDetail(
+                                            MaterialPageRoute(builder: (context) => FeedbackDetail(
                                                   newQuestion: feedback,
                                                 )));
                                       },

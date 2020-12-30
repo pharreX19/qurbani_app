@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
+import 'package:qurbani/providers/feedback_validation_provider.dart';
 import 'package:qurbani/providers/name_validator_provider.dart';
 import 'package:qurbani/providers/service_type_validation_provider.dart';
 import 'package:qurbani/screens/authentication/login.dart';
@@ -22,7 +23,9 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<NameValidationProvider>(
           create: (context) => NameValidationProvider()),
       ChangeNotifierProvider<ServiceTypeValidationProvider>(
-          create: (context) => ServiceTypeValidationProvider())
+          create: (context) => ServiceTypeValidationProvider()),
+      ChangeNotifierProvider<FeedbackValidationProvider>(
+          create: (context) => FeedbackValidationProvider())
     ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

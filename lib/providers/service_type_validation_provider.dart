@@ -7,6 +7,10 @@ class ServiceTypeValidationProvider extends ChangeNotifier{
   ValidateItem _serviceTypeStatus = ValidateItem(value: false, error: null);
   ValidateItem _serviceTypeId = ValidateItem(value: null, error: null);
 
+  TextEditingController serviceTypeNameController = TextEditingController();
+  TextEditingController serviceTypePriceController = TextEditingController();
+
+
   ValidateItem get serviceTypeId => _serviceTypeId;
   ValidateItem get serviceTypeName => _serviceTypeName;
   ValidateItem get serviceTypePrice => _serviceTypePrice;
@@ -51,5 +55,21 @@ class ServiceTypeValidationProvider extends ChangeNotifier{
   void onChangeServiceTypStatus(bool isActive){
       _serviceTypeStatus = ValidateItem(value: isActive, error: null);
       notifyListeners();
+  }
+
+  void resetValues(){
+    clearTextFields();
+    clearValidations();
+    notifyListeners();
+  }
+
+  void clearTextFields(){
+    serviceTypeNameController.clear();
+    serviceTypePriceController.clear();
+  }
+
+  void clearValidations(){
+    _serviceTypeId = ValidateItem(value: null, error: null);
+    _serviceTypePrice = ValidateItem(value: _serviceTypePrice.value, error: null);
   }
 }

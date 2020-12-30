@@ -7,8 +7,8 @@ import 'package:qurbani/services/api_service.dart';
 class ServiceSettingsController extends GetxController{
   final Query serviceCollection = FirebaseFirestore.instance.collection('services');
 //  RxMap<dynamic, dynamic> selectedServiceType = {}.obs;
-  RxInt selectedServiceTypeIndex = 0.obs;
-  RxBool selected = true.obs;
+//  RxInt selectedServiceTypeIndex = 0.obs;
+//  RxBool selected = true.obs;
 
   Stream<QuerySnapshot> get services {
     return serviceCollection.snapshots();
