@@ -59,9 +59,9 @@ class ServiceTypeSettingsController extends GetxController{
   }
 
   Future<void> updateServiceType(Map<String, dynamic> serviceType ,BuildContext context) async{
-   if(serviceType['price'].toString().isEmpty || double.tryParse(serviceType['price']) == null || double.tryParse(serviceType['price']) <= 0){
-     serviceTypePriceFieldError.value = 'Price should be greater than zero';
-   }else{
+   // if(serviceType['price'].toString().isEmpty || double.tryParse(serviceType['price']) == null || double.tryParse(serviceType['price']) <= 0){
+   //   serviceTypePriceFieldError.value = 'Price should be greater than zero';
+   // }else{
      try{
        dynamic response = await ApiService.instance.updateServiceType(
            'services/${documentSnapshot.id}/$serviceName/${serviceType['id']}', {'price': double.parse(serviceType['price']), 'is_active' : serviceType['is_active']});
@@ -69,7 +69,7 @@ class ServiceTypeSettingsController extends GetxController{
        serviceTypePriceFieldError.value = '';
      }catch(e){
        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again! $e'),));
-     }
+     // }
    }
   }
 }

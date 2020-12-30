@@ -13,7 +13,7 @@ class NameSettingsController extends GetxController{
   RxString dhivehiNameFieldError = ''.obs;
   RxString nameMeaningFieldError = ''.obs;
   RxString nameGenderFieldError = ''.obs;
-  RxList<dynamic> nameGender = ['Male'].obs;
+  // RxList<dynamic> nameGender = ['Male'].obs;
   String gender;
   RxString origin = 'Arabic'.obs;
 
@@ -37,46 +37,61 @@ class NameSettingsController extends GetxController{
   }
 
   void updateSelectedName(String key, dynamic newValue){
-    name.update(key, (value) => newValue);
+    // name.update(key, (value) => newValue);
   }
 
-  void onEnglishNameChanged(String name){
+  bool onEnglishNameChanged(String name){
     if(name == null ||  name.trim().isEmpty){
       englishNameFieldError.value = 'Name is English is required!';
+      return false;
     }else{
       englishNameFieldError.value = '';
-      updateSelectedName('name_en' , name);
+      // updateSelectedName('name_en' , name);
+      return true;
     }
   }
 
-  void onArabicNameChanged(String name){
+  bool onArabicNameChanged(String name){
     if(name == null || name.trim().isEmpty){
       arabicNameFieldError.value = 'Name is Arabic is required!';
+      return false;
     }else {
       arabicNameFieldError.value = '';
-      updateSelectedName('name_ar', name);
+      // updateSelectedName('name_ar', name);
+      return true;
     }
   }
 
-  void onDhivehiNameChanged(String name){
+  bool onDhivehiNameChanged(String name){
     if(name == null || name.trim().isEmpty){
       dhivehiNameFieldError.value = 'Name is Dhivehi is required!';
+      return false;
     }else {
       dhivehiNameFieldError.value = '';
-      updateSelectedName('name_dh', name);
+      // updateSelectedName('name_dh', name);
+      return true;
     }
   }
 
-  void onNameMeaningChanged(String meaning){
+  bool onNameMeaningChanged(String meaning){
     if(meaning == null || meaning.trim().isEmpty){
       nameMeaningFieldError.value = 'Name meaning is required!';
+      return false;
     }else {
       nameMeaningFieldError.value = '';
-      updateSelectedName('meaning', meaning);
+      // updateSelectedName('meaning', meaning);
+      return true;
     }
   }
 
-  void onNameGenderChanged(String selectedGender){
+  bool onNameGenderChanged(List<String> nameGender){
+    if(nameGender.length <= 0){
+      nameGenderFieldError.value = 'Gender is required!';
+      return false;
+    }else{
+      nameGenderFieldError.value = '';
+      return true;
+    }
       // if(nameGender.contains(selectedGender)){
       //   nameGender.removeWhere((element) => element.toString().toLowerCase() == selectedGender.toLowerCase());
       // }else{
@@ -102,11 +117,17 @@ class NameSettingsController extends GetxController{
     updateSelectedName('origin', meaning);
   }
 
-    void registerName() async{
-      if(checkValidation()){
+    void registerName(Map<String, dynamic> name, Function callback) async{
+      // if(checkValidation(name)){
       //   nameList.add(name);
       //   this.nameList.refresh();
-      //   await ApiService.instance.createName('names', name.value);
+      //   print(name);
+       try{
+         await ApiService.instance.createName('names', name);
+         callback();
+       }catch(e){
+         print('An error occurred');
+       // }
       }
   }
 
@@ -116,12 +137,12 @@ class NameSettingsController extends GetxController{
     // this.nameList.refresh();
   }
 
-  bool checkValidation(){
+  bool checkValidation(Map<String, dynamic> name){
     onEnglishNameChanged(name['name_en']);
     onArabicNameChanged(name['name_ar']);
     onDhivehiNameChanged(name['name_dh']);
     onNameMeaningChanged(name['meaning']);
-    // onNameOriginChanged(name['origin']);
+    onNameOriginChanged(name['origin']);
 
     if(englishNameFieldError.value.isEmpty && dhivehiNameFieldError.value.isEmpty && arabicNameFieldError.value.isEmpty &&
         nameMeaningFieldError.value.isEmpty && nameGenderFieldError.value.isEmpty){

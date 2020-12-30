@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/controllers/name_settings_controller.dart';
+import 'package:qurbani/providers/name_validator_provider.dart';
 
 class NameOriginSearchDelegate extends SearchDelegate{
   final List<dynamic> searchSuggestions;
   final List<dynamic> recentSearches = ['Arabic', 'Hebrew', 'Turkish'];
+  final NameValidationProvider validationService;
   String selectedResult;
 
-  NameOriginSearchDelegate({this.searchSuggestions});
+  NameOriginSearchDelegate({this.searchSuggestions, this.validationService});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -50,7 +52,8 @@ class NameOriginSearchDelegate extends SearchDelegate{
           title: Text(suggestionList[index]),
           onTap: (){
             selectedResult = suggestionList[index];
-            Get.find<NameSettingsController>().origin.value = selectedResult;
+            validationService.onNameOriginChanged(selectedResult);
+            // Get.find<NameSettingsController>().origin.value = selectedResult;
             Navigator.pop(context, selectedResult);
             // showResults(context);
           },

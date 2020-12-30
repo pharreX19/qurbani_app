@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/name_settings_controller.dart';
+import 'package:qurbani/providers/name_validator_provider.dart';
 import 'package:qurbani/screens/name_list_settings/name_origin_search_delegate.dart';
 import 'package:qurbani/widgets/common/custom_text_field.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
@@ -15,14 +17,39 @@ class AddName extends StatefulWidget {
 class _AddNameState extends State<AddName> {
 
   List<String> _gendersTitle = ['Male', 'Female'];
+  final TextEditingController _englishNameController = TextEditingController();
+  final TextEditingController _arabicNameController = TextEditingController();
+  final TextEditingController _dhivehiNameController = TextEditingController();
+  final TextEditingController _nameMeaningController = TextEditingController();
+  NameValidationProvider validationService;
     // {'gender': 'Male', 'checked': true},
     // {'gender': 'Female', 'checked': false}
   // ];
 
   List<String> _nameOriginList = ['Arabic', 'Hebrew', 'Turkish'];
+  List<dynamic> nameGender = ['Male'];
+
+  void _clearForm(){
+    _englishNameController.text = '';
+    _arabicNameController.text = '';
+    _dhivehiNameController.text = '';
+    _nameMeaningController.text = '';
+  }
+
+  void _submitForm(){
+    Get.find<NameSettingsController>().registerName({
+      'name_en': _englishNameController.text,
+      'name_ar': _arabicNameController.text,
+      'name_dh': _dhivehiNameController.text,
+      'meaning': _nameMeaningController.text,
+      'origin' : validationService.nameOrigin.value,
+      'gender' : validationService.nameGender.value
+    }, _clearForm);
+  }
 
   @override
   Widget build(BuildContext context) {
+    validationService = Provider.of<NameValidationProvider>(context);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -41,88 +68,90 @@ class _AddNameState extends State<AddName> {
                       vertical: SizeConfig.blockSizeVertical * 2),
                   child: Column(
                     children: [
-                      Obx((){
-                        return CustomTextField(
+                      CustomTextField(
                           suffixIcon: Icons.person,
                           hintText: 'الاسم بالعربي',
                           textDirection: TextDirection.rtl,
-                          onChanged: Get.find<NameSettingsController>().onArabicNameChanged,
-                          errorText: Get.find<NameSettingsController>().arabicNameFieldError.value,
-                        );
-                      }),
+                          controller: _arabicNameController,
+                          onChanged: (String value){
+                            validationService.onArabicNameChanged(value);
+                          },//Get.find<NameSettingsController>().onArabicNameChanged,
+                          errorText: validationService.nameInArabic.error //Get.find<NameSettingsController>().arabicNameFieldError.value,
+                        ),
                       SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-                      Obx((){
-                        return CustomTextField(
+                      CustomTextField(
                           suffixIcon: Icons.person,
                           hintText: 'ނަން ދިވެހިބަހުން',
+                          controller: _dhivehiNameController,
                           textDirection: TextDirection.rtl,
-                          onChanged: Get.find<NameSettingsController>().onDhivehiNameChanged,
-                          errorText: Get.find<NameSettingsController>().dhivehiNameFieldError.value,
-                        );
-                      }),
+                          onChanged: (String value){
+                            validationService.onDhivehiNameChanged(value);
+                          }, //Get.find<NameSettingsController>().onDhivehiNameChanged,
+                          errorText: validationService.nameInDhivehi.error//Get.find<NameSettingsController>().dhivehiNameFieldError.value,
+                        ),
                       SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-                      Obx((){
-                        return CustomTextField(
-                          leading: Icon(Icons.person, color: Colors.teal,),
+                     CustomTextField(
+                          leading: Icons.person,
                           hintText: 'Name in English',
-                          onChanged: Get.find<NameSettingsController>().onEnglishNameChanged,
-                          errorText: Get.find<NameSettingsController>().englishNameFieldError.value,
-                        );
-                      }),
+                          controller: _englishNameController,
+                          onChanged: (String value){
+                            validationService.onEnglishNameChanged(value);
+                          }, //Get.find<NameSettingsController>().onEnglishNameChanged,
+                          errorText: validationService.nameInEnglish.error// Get.find<NameSettingsController>().englishNameFieldError.value,
+                        ),
                       SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-                      Obx((){
-                        return CustomTextField(
+                      CustomTextField(
                           hintText: 'Name meaning',
                           maxLines: 5,
                           maxLength: 255,
-                          onChanged: Get.find<NameSettingsController>().onNameMeaningChanged,
-                          errorText: Get.find<NameSettingsController>().nameMeaningFieldError.value,
-                        );
-                      }),
+                          controller: _nameMeaningController,
+                          onChanged: (String value){
+                            validationService.onNameMeaningChanged(value);
+                          },//Get.find<NameSettingsController>().onNameMeaningChanged,
+                          errorText: validationService.nameMeaning.error// Get.find<NameSettingsController>().nameMeaningFieldError.value,
+                        ),
                       SizedBox(height: SizeConfig.blockSizeVertical * 2,),
                       ..._gendersTitle.map((gender){
-                        return Obx((){
-                          return ListTile(
+                        return ListTile(
                             trailing: Checkbox(
-                              value: Get.find<NameSettingsController>().nameGender.contains(gender),
+                              value: validationService.nameGender.value.contains(gender), //nameGender.contains(gender),
                               onChanged: (value){
-                                if(value){
-                                  Get.find<NameSettingsController>().onNameGenderChanged(gender);
-                                }
-                                setState(() {
-                                  // gender['checked'] = value;
-                                });
+                                validationService.onNameGenderChanged(gender, value);
+                                // setState(() {
+                                //   if(value){
+                                //     nameGender.add(gender);
+                                //   }else{
+                                //     nameGender.remove(gender);
+                                //   }
+                                // });
                               },
-//                              fillColor: MaterialStateProperty.all(Colors.teal),
+                             fillColor: MaterialStateProperty.all(Colors.teal),
                               materialTapTargetSize: MaterialTapTargetSize.padded,
                             ),
                             title: Text(gender),
                           );
-                        });
                       }),
-                     Obx((){
-                       return Padding(
+                      validationService.nameGender.error == null ? Container() :
+                      Padding(
                          padding: EdgeInsets.only(
                              left: SizeConfig.blockSizeHorizontal * 3.5,
                              bottom: SizeConfig.blockSizeHorizontal * 3
                          ),
                          child: Align(
                            alignment: Alignment.centerLeft,
-                           child: Text(Get.find<NameSettingsController>().nameGenderFieldError.value,
+                           child: Text(validationService.nameGender.error,
                              style: TextStyle(color: Colors.red[600]),),
                          ),
-                       );
-                     }),
+                       ),
                      ListTile(
-                         title: Obx((){
-                           return Text(Get.find<NameSettingsController>().origin.value);
-                         }),
+                         title: Text(validationService.nameOrigin.value),//Get.find<NameSettingsController>().origin.value);
                          trailing: Padding(
                            padding: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 2.5,),
                            child: Icon(Icons.location_on_outlined, color: Colors.teal,),
                          ),
                          onTap: (){
-                            showSearch(context: context, delegate: NameOriginSearchDelegate(searchSuggestions: _nameOriginList));
+                            showSearch(context: context, delegate: NameOriginSearchDelegate(searchSuggestions: _nameOriginList,
+                                validationService: validationService));
                          },
                        ),
                      // }),
@@ -130,7 +159,7 @@ class _AddNameState extends State<AddName> {
                       SubmitButton(
                         title: 'Save',
                         icon: Icons.save,
-                        submitCallback: Get.find<NameSettingsController>().registerName,
+                        submitCallback: (validationService.isValid) ? _submitForm : null
                       )
                     ],
                   ),

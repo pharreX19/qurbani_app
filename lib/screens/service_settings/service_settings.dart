@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/service_settings_controller.dart';
 import 'package:qurbani/controllers/service_type_settings_controller.dart';
+import 'package:qurbani/providers/service_type_validation_provider.dart';
 import 'package:qurbani/widgets/common/custom_text_field.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 import 'package:qurbani/widgets/common/submit_button.dart';
@@ -27,6 +29,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
   bool serviceTypeIsActive;
   final   TextEditingController servicePriceController = TextEditingController(text: '0.0');
   String serviceTypeName = 'Service Type';
+  ServiceTypeValidationProvider _validationService;
 
   Widget _buildServiceUpdateForm(){
     return Card(
@@ -40,21 +43,21 @@ class _ServiceSettingsState extends State<ServiceSettings> {
         child: Column(
             children: [
                CustomTextField(
-                 hintText: serviceTypeName,//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
+                 hintText: _validationService.serviceTypeName.value ?? 'Service Type',//serviceTypeName,//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
                  enabled: false,
                ),
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2,
               ),
-              Obx((){
-                return CustomTextField(
-                  controller: servicePriceController,
+              CustomTextField(
+                  // controller: servicePriceController,
                   enabled: true,
-                  hintText: Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value.toString(),
-                  errorText: Get.find<ServiceTypeSettingsController>().serviceTypePriceFieldError.value,
-//                  onChanged: Get.find<ServiceTypeSettingsController>().onServicePriceChanged,
-                );
-              }),
+                  hintText: _validationService.serviceTypePrice.value == null  ? '0.0' : _validationService.serviceTypePrice.value.toString(),//Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value.toString(),
+                  errorText: _validationService.serviceTypePrice.error,//Get.find<ServiceTypeSettingsController>().serviceTypePriceFieldError.value,
+                  onChanged: (String price){
+                    _validationService.onChangeServiceTypePrice(price);
+                  }  //Get.find<ServiceTypeSettingsController>().onServicePriceChanged,
+                ),
               SizedBox(
                 height: SizeConfig.blockSizeVertical * 2,
               ),
@@ -63,11 +66,12 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                 children: [
                   Text('Service Status'),
                   Switch(activeColor: Colors.teal,
-                       value: serviceTypeIsActive ?? false,//Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value ?? serviceTypes[0]['is_active'],
+                       value: _validationService.serviceTypeStatus.value, //serviceTypeIsActive ?? false,//Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value ?? serviceTypes[0]['is_active'],
                        onChanged: (value) {
-                          setState(() {
-                            serviceTypeIsActive = value;
-                          });
+                            _validationService.onChangeServiceTypStatus(value);
+                          // setState(() {
+                          //   serviceTypeIsActive = value;
+                          // });
 //                           Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value = value;
                          // });
                  })
@@ -93,15 +97,19 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                 return InkWell(
                     onTap: (){
 //                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeName.value = serviceType['type'];
-                      Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value =  serviceType['price'] * 1.0;
+//                       Get.find<ServiceTypeSettingsController>().selectedServiceTypePrice.value =  serviceType['price'] * 1.0;
 //                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeId.value = serviceType.id;
 //                      Get.find<ServiceTypeSettingsController>().selectedServiceTypeIsActive.value = serviceType['is_active'];
-                      setState(() {
-                        serviceTypeId = serviceType.id;
-                        serviceTypeIsActive = serviceType['is_active'];
-                        servicePriceController.text =  serviceType['price'].toString();
-                        serviceTypeName = serviceType['type'];
-                      });
+//                       setState(() {
+//                         serviceTypeId = serviceType.id;
+//                         serviceTypeIsActive = serviceType['is_active'];
+//                         servicePriceController.text =  serviceType['price'].toString();
+//                         serviceTypeName = serviceType['type'];
+//                       });
+                      _validationService.onChangeServiceTypeId(serviceType.id);
+                      _validationService.onChangeServiceTypStatus(serviceType['is_active']);
+                      _validationService.onChangeServiceTypePrice(serviceType['price'].toString());
+                      _validationService.onChangeServiceTypeName(serviceType['type']);
                       // Get.find<ServiceSettingsController>().selectedServiceType.assignAll({
                       //   'id':serviceType.id,
                       //   ...serviceType.data()
@@ -111,7 +119,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                     child: Container(
                           height: SizeConfig.blockSizeVertical * 5,
                           decoration: BoxDecoration(
-                              color: serviceType.id ==  serviceTypeId ? Colors.teal.shade50 : Colors.transparent,
+                              color: serviceType.id == _validationService.serviceTypeId.value /*serviceTypeId*/ ? Colors.teal.shade50 : Colors.transparent,
                               border: Border.all(color: Colors.teal.shade100),
                               borderRadius: BorderRadius.circular(10.0)
                           ),
@@ -129,7 +137,11 @@ class _ServiceSettingsState extends State<ServiceSettings> {
 
   _submitCallback(){
     Get.find<ServiceTypeSettingsController>().updateServiceType(
-        {'id': serviceTypeId, 'is_active':  serviceTypeIsActive, 'price': servicePriceController.text}, context);
+        {
+          'id': _validationService.serviceTypeId.value,
+          'is_active':  _validationService.serviceTypeStatus.value,
+          'price': _validationService.serviceTypePrice.value.toString()
+        }, context);
   }
 
   @override
@@ -143,7 +155,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
     ServiceTypeSettingsController serviceTypeSettingsController = Get.put(ServiceTypeSettingsController());
     Get.find<ServiceTypeSettingsController>().serviceName = widget.serviceName;
     Get.find<ServiceTypeSettingsController>().documentSnapshot = widget.service;
-
+    _validationService = Provider.of<ServiceTypeValidationProvider>(context);
     return SafeArea(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -179,7 +191,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
                         child: SubmitButton(
                           title: _submitButtonText,
                           icon: _submitButtonIcon,
-                          submitCallback: _submitCallback
+                          submitCallback: (!_validationService.isValid) ? null : _submitCallback
                           ,
                         ),
                       ),

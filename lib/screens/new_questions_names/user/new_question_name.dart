@@ -57,6 +57,7 @@ class _NewQuestionNameState extends State<NewQuestionName> {
                       title: 'Send',
                       icon: Icons.send,
                       submitCallback: (){
+                        FocusScope.of(context).unfocus();
                         Get.find<QuestionsAndNamesController>().onSubmit(context, textEditingController.text);
                           textEditingController.text = '';
                         },
