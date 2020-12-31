@@ -26,7 +26,6 @@ class _HomeState extends State<Home> {
     Settings(),
     user.Feedback(),
     admin.Feedback()
-
   ];
 
   int _currentIndex = 0;

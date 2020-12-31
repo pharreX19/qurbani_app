@@ -7,6 +7,7 @@ import 'package:qurbani/services/api_service.dart';
 class FeedbackController extends GetxController{
   final Query feedbackCollection = FirebaseFirestore.instance.collection('feedbacks');
 //  RxString questionOrNamesFieldError = ''.obs;
+// RxString questionOrNamesFieldError = ''.obs;
 //  String questionOrName = '';
 
 //  @override
@@ -35,13 +36,13 @@ class FeedbackController extends GetxController{
 //    questionOrName = value;
 //  }
 
-  void onSubmit(BuildContext context, String message) async{
+  void onSubmit(BuildContext context, String message, Function callback) async{
 //    setQuestionOrName(questionOrName);
 //    if(message.trim().isEmpty){
 //      questionOrNamesFieldError.value = 'Please fill out this field';
 //    }else{
       try{
-//        questionOrNamesFieldError.value = '';
+        // questionOrNamesFieldError.value = '';
         dynamic response = await ApiService.instance.createFeedback('feedback', {
           'contact': '9909009',
           'message': message
@@ -49,6 +50,7 @@ class FeedbackController extends GetxController{
 //        message = '';
 //        textEditingController.text = '';
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Submitted successfully!'),));
+        callback();
       }catch(e){
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again!'),));
       }

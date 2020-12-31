@@ -25,10 +25,10 @@ class _ServiceSettingsState extends State<ServiceSettings> {
 //  RxMap<dynamic, dynamic> selectedServiceType = {}.obs;
   String _submitButtonText = 'Update Service';
   IconData _submitButtonIcon = Icons.check;
-  String serviceTypeId;
-  bool serviceTypeIsActive;
-  final   TextEditingController servicePriceController = TextEditingController(text: '0.0');
-  String serviceTypeName = 'Service Type';
+  // String serviceTypeId;
+  // bool serviceTypeIsActive;
+  // final   TextEditingController servicePriceController = TextEditingController(text: '0.0');
+  // String serviceTypeName = 'Service Type';
   ServiceTypeValidationProvider _validationService;
 
   Widget _buildServiceUpdateForm(){
@@ -43,8 +43,8 @@ class _ServiceSettingsState extends State<ServiceSettings> {
         child: Column(
             children: [
                CustomTextField(
-                 hintText: _validationService.serviceTypeName.value ?? 'Service Type',//serviceTypeName,//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
                  controller: _validationService.serviceTypeNameController,
+                 hintText: _validationService.serviceTypeName.value ?? 'Service Type',//serviceTypeName,//_services[_selectedIndex] == '+' ? '' : _services[_selectedIndex],
                  enabled: false,
                ),
               SizedBox(
@@ -149,7 +149,7 @@ class _ServiceSettingsState extends State<ServiceSettings> {
   @override
   void dispose() {
     super.dispose();
-    servicePriceController.dispose();
+    // servicePriceController.dispose();
   }
 
   @override

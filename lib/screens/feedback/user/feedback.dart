@@ -27,7 +27,7 @@ class _FeedbackState extends State<Feedback> {
 
   void _submitFeedback(){
     FocusScope.of(context).unfocus();
-    Get.find<FeedbackController>().onSubmit(context, _validationService.feedback.value);
+    Get.find<FeedbackController>().onSubmit(context, _validationService.feedback.value, _validationService.resetValues);
   }
 
   @override

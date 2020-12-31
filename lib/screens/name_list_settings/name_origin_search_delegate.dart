@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/controllers/name_settings_controller.dart';
-import 'package:qurbani/providers/name_validator_provider.dart';
+import 'package:qurbani/providers/name_validation_provider.dart';
 
 class NameOriginSearchDelegate extends SearchDelegate{
   final List<dynamic> searchSuggestions;

@@ -10,7 +10,6 @@ class ServiceTypeValidationProvider extends ChangeNotifier{
   TextEditingController serviceTypeNameController = TextEditingController();
   TextEditingController serviceTypePriceController = TextEditingController();
 
-
   ValidateItem get serviceTypeId => _serviceTypeId;
   ValidateItem get serviceTypeName => _serviceTypeName;
   ValidateItem get serviceTypePrice => _serviceTypePrice;

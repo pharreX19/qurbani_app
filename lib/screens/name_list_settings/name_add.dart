@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/name_settings_controller.dart';
-import 'package:qurbani/providers/name_validator_provider.dart';
+import 'package:qurbani/providers/name_validation_provider.dart';
 import 'package:qurbani/screens/name_list_settings/name_origin_search_delegate.dart';
 import 'package:qurbani/widgets/common/custom_text_field.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
@@ -32,6 +32,7 @@ class _AddNameState extends State<AddName> {
 //    _dhivehiNameController.text = '';
 //    _nameMeaningController.text = '';
 //  }
+
 
   void _submitForm(){
     FocusScope.of(context).unfocus();

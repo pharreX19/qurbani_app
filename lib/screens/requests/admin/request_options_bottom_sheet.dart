@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/requests_controller.dart';
+import 'package:qurbani/providers/completed_service_visibility_provider.dart';
 import 'package:qurbani/screens/image_video_upload/upload_images_videos.dart';
 
 class RequestOptionsBottomSheet extends StatefulWidget {
@@ -10,6 +12,7 @@ class RequestOptionsBottomSheet extends StatefulWidget {
 }
 
 class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
+  CompletedServiceVisibilityProvider _completedServiceVisibility;
 
   // bool _hideCompleted = true;
 
@@ -25,6 +28,7 @@ class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    _completedServiceVisibility = Provider.of<CompletedServiceVisibilityProvider>(context);
     return Container(
       padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 1),
       height: SizeConfig.blockSizeVertical * 29,
@@ -41,16 +45,14 @@ class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
             onTap: _uploadImagesOrVideos,
           ),
           Divider(),
-          Obx((){
-            return ListTile(
+         ListTile(
               leading: Icon(Icons.list),
               title: Text('Hide completed'),
-              trailing: Get.find<RequestsController>().hideCompleted.value ?  Icon(Icons.check) : null,
+              trailing: _completedServiceVisibility.hideCompleted ?  Icon(Icons.check) : null,
               onTap: (){
-                Get.find<RequestsController>().toggleHideCompleted();
+                _completedServiceVisibility.toggleHideCompleted();
               },
-            );
-          })
+            ),
         ],
       )
     );
