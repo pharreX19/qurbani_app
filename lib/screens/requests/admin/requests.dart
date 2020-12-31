@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/requests_controller.dart';
+import 'package:qurbani/providers/completed_service_visibility_provider.dart';
 import 'package:qurbani/screens/requests/admin/request_approve_reject_card.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 
@@ -20,6 +22,7 @@ class _RequestsState extends State<Requests> {
   List<QueryDocumentSnapshot> pendingRequests;
   List<QueryDocumentSnapshot> approvedRequests;
   List<QueryDocumentSnapshot> completedRequests;
+  CompletedServiceVisibilityProvider _completedServiceVisibility;
 
   List<bool> _isSelected = [true, false];
 
@@ -65,6 +68,7 @@ class _RequestsState extends State<Requests> {
 
   @override
   Widget build(BuildContext context) {
+    _completedServiceVisibility = Provider.of<CompletedServiceVisibilityProvider>(context);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -107,12 +111,9 @@ class _RequestsState extends State<Requests> {
                   }
                   if(snapshot.hasData){
                     _populateRequestCategories(snapshot);
-                    return _isSelected[0] ? _buildRequestList(pendingRequests) : Obx((){
-                      if(Get.find<RequestsController>().hideCompleted.value){
-                        return _buildRequestList(approvedRequests);
-                      }
-                      return _buildRequestList([...approvedRequests, ...completedRequests]);
-                    }) ;
+                    return _isSelected[0] ? _buildRequestList(pendingRequests) :
+                        _completedServiceVisibility.hideCompleted ? _buildRequestList(approvedRequests) :
+                        _buildRequestList([...approvedRequests, ...completedRequests]);
                   }
                   return Center(
                     child: CircularProgressIndicator(),

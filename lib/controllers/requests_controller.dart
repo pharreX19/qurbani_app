@@ -7,7 +7,7 @@ class RequestsController extends GetxController {
   final Query requestCollection = FirebaseFirestore.instance.collection('requests');
   // RxList<dynamic> requests = [].obs;
   // RxList<dynamic> userRequests = [].obs;
-  RxBool hideCompleted = true.obs;
+  bool hideCompleted = true;
   // int completedRequests = 0;
   // int approvedRequests = 0;
   // int pendingRequests = 0;
@@ -63,6 +63,6 @@ class RequestsController extends GetxController {
   }
 
   void toggleHideCompleted(){
-    hideCompleted.value = !hideCompleted.value;
+    hideCompleted = !hideCompleted;
   }
 }

@@ -126,7 +126,7 @@ class DashboardController extends GetxController{
     totalPrice.value = unitPrice * serviceQuantity.value;
   }
 
-  void setRequestedServiceDate(int day){
+  void setRequestedServiceDate(int year, int month, int day){
 
     serviceDate = DateTime(year, month, day);
     setServiceDay(day);

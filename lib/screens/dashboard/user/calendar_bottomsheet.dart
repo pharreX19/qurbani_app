@@ -47,11 +47,11 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
     }
   }
 
-  void _onServiceDateSelected(int day){
+  void _onServiceDateSelected(int year, int month, int day){
     // setState(() {
     //   today = day;
     // });
-    Get.find<DashboardController>().setRequestedServiceDate(day);
+    Get.find<DashboardController>().setRequestedServiceDate(year, month, day);
     widget.onDateSelectedCallback();
   }
 
@@ -125,13 +125,18 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 ).toList()),
                 Wrap(
                   children: _dates.map((element ) {
-                    var today = '$_year-${_month + 1}-${element < 10 ? "0$element" : element }';
+                    var today = '$_year-${_month + 1 < 10 ? "0${_month + 1}" : "${_month + 1}" }-${element < 10 ? "0$element" : element }';
+                    print(widget.calendarPinPoints);
+                    print(today);
                     return FractionallySizedBox(
                       widthFactor: 0.13,
                       child: element == 0 ? Container() : GestureDetector(
                           onTap: (){
 //                            Navigator.pop(context);
-                            _onServiceDateSelected(element);
+                            _onServiceDateSelected(_year, _month+1, element);
+                            print(element);
+                            print(_month+1);
+                            print(_year);
                           },
                           child: Obx((){
                             return Stack(

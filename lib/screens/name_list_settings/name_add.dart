@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/name_settings_controller.dart';
-import 'package:qurbani/providers/name_validator_provider.dart';
+import 'package:qurbani/providers/name_validation_provider.dart';
 import 'package:qurbani/screens/name_list_settings/name_origin_search_delegate.dart';
 import 'package:qurbani/widgets/common/custom_text_field.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
@@ -17,10 +17,10 @@ class AddName extends StatefulWidget {
 class _AddNameState extends State<AddName> {
 
   List<String> _gendersTitle = ['Male', 'Female'];
-  final TextEditingController _englishNameController = TextEditingController();
-  final TextEditingController _arabicNameController = TextEditingController();
-  final TextEditingController _dhivehiNameController = TextEditingController();
-  final TextEditingController _nameMeaningController = TextEditingController();
+  // final TextEditingController _englishNameController = TextEditingController();
+  // final TextEditingController _arabicNameController = TextEditingController();
+  // final TextEditingController _dhivehiNameController = TextEditingController();
+  // final TextEditingController _nameMeaningController = TextEditingController();
   NameValidationProvider validationService;
     // {'gender': 'Male', 'checked': true},
     // {'gender': 'Female', 'checked': false}
@@ -29,22 +29,23 @@ class _AddNameState extends State<AddName> {
   List<String> _nameOriginList = ['Arabic', 'Hebrew', 'Turkish'];
   List<dynamic> nameGender = ['Male'];
 
-  void _clearForm(){
-    _englishNameController.text = '';
-    _arabicNameController.text = '';
-    _dhivehiNameController.text = '';
-    _nameMeaningController.text = '';
-  }
+  // void _clearForm(){
+  //   _englishNameController.text = '';
+  //   _arabicNameController.text = '';
+  //   _dhivehiNameController.text = '';
+  //   _nameMeaningController.text = '';
+  // }
 
   void _submitForm(){
+    FocusScope.of(context).unfocus();
     Get.find<NameSettingsController>().registerName({
-      'name_en': _englishNameController.text,
-      'name_ar': _arabicNameController.text,
-      'name_dh': _dhivehiNameController.text,
-      'meaning': _nameMeaningController.text,
+      'name_en': validationService.nameInEnglish.value,
+      'name_ar': validationService.nameInArabic.value,
+      'name_dh': validationService.nameInDhivehi.value,
+      'meaning': validationService.nameMeaning.value,
       'origin' : validationService.nameOrigin.value,
-      'gender' : validationService.nameGender.value
-    }, _clearForm);
+      'gender' : validationService.nameGender.value.length > 1 ? 'both' : validationService.nameGender.value[0]
+    }, validationService.resetValidation);
   }
 
   @override
@@ -72,7 +73,7 @@ class _AddNameState extends State<AddName> {
                           suffixIcon: Icons.person,
                           hintText: 'الاسم بالعربي',
                           textDirection: TextDirection.rtl,
-                          controller: _arabicNameController,
+                          controller: validationService.arabicNameController,
                           onChanged: (String value){
                             validationService.onArabicNameChanged(value);
                           },//Get.find<NameSettingsController>().onArabicNameChanged,
@@ -82,7 +83,7 @@ class _AddNameState extends State<AddName> {
                       CustomTextField(
                           suffixIcon: Icons.person,
                           hintText: 'ނަން ދިވެހިބަހުން',
-                          controller: _dhivehiNameController,
+                          controller: validationService.dhivehiNameController,
                           textDirection: TextDirection.rtl,
                           onChanged: (String value){
                             validationService.onDhivehiNameChanged(value);
@@ -93,7 +94,7 @@ class _AddNameState extends State<AddName> {
                      CustomTextField(
                           leading: Icons.person,
                           hintText: 'Name in English',
-                          controller: _englishNameController,
+                          controller: validationService.englishNameController,
                           onChanged: (String value){
                             validationService.onEnglishNameChanged(value);
                           }, //Get.find<NameSettingsController>().onEnglishNameChanged,
@@ -104,7 +105,7 @@ class _AddNameState extends State<AddName> {
                           hintText: 'Name meaning',
                           maxLines: 5,
                           maxLength: 255,
-                          controller: _nameMeaningController,
+                          controller: validationService.nameMeaningController,
                           onChanged: (String value){
                             validationService.onNameMeaningChanged(value);
                           },//Get.find<NameSettingsController>().onNameMeaningChanged,

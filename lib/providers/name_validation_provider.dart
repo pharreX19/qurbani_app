@@ -9,6 +9,10 @@ class NameValidationProvider extends ChangeNotifier {
   ValidateItem _nameOrigin = ValidateItem(value: 'Arabic', error: null);
   ValidateItem _nameGender = ValidateItem(value: ['Male'], error: null);
 
+  TextEditingController englishNameController = TextEditingController();
+  TextEditingController arabicNameController = TextEditingController();
+  TextEditingController dhivehiNameController = TextEditingController();
+  TextEditingController nameMeaningController = TextEditingController();
 
   ValidateItem get nameInArabic => _nameInArabic;
   ValidateItem get nameInDhivehi => _nameInDhivehi;
@@ -81,5 +85,27 @@ class NameValidationProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  void resetValidation(){
+    _clearFields();
+    _clearValidation();
+    notifyListeners();
+  }
+
+  void _clearFields(){
+    arabicNameController.clear();
+    dhivehiNameController.clear();
+    englishNameController.clear();
+    nameMeaningController.clear();
+  }
+
+  void _clearValidation(){
+    _nameInArabic = ValidateItem(value: null, error: null);
+    _nameInDhivehi = ValidateItem(value: null, error: null);
+    _nameInEnglish = ValidateItem(value: null, error: null);
+    _nameMeaning = ValidateItem(value: null, error: null);
+    _nameOrigin = ValidateItem(value: 'Arabic', error: null);
+    _nameGender = ValidateItem(value: ['Male'], error: null);
   }
 }

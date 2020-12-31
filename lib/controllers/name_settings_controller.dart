@@ -17,11 +17,11 @@ class NameSettingsController extends GetxController{
   String gender;
   RxString origin = 'Arabic'.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // fetchAllNames();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   fetchAllNames();
+  // }
 
   Stream<QuerySnapshot> get names {
     return nameCollection.snapshots();
@@ -32,66 +32,66 @@ class NameSettingsController extends GetxController{
     // nameList.assignAll(response);
   // }
 
-  void setName(Map<String, dynamic> selectedName){
-    // name.assignAll(selectedName);
-  }
-
-  void updateSelectedName(String key, dynamic newValue){
-    // name.update(key, (value) => newValue);
-  }
-
-  bool onEnglishNameChanged(String name){
-    if(name == null ||  name.trim().isEmpty){
-      englishNameFieldError.value = 'Name is English is required!';
-      return false;
-    }else{
-      englishNameFieldError.value = '';
-      // updateSelectedName('name_en' , name);
-      return true;
-    }
-  }
-
-  bool onArabicNameChanged(String name){
-    if(name == null || name.trim().isEmpty){
-      arabicNameFieldError.value = 'Name is Arabic is required!';
-      return false;
-    }else {
-      arabicNameFieldError.value = '';
-      // updateSelectedName('name_ar', name);
-      return true;
-    }
-  }
-
-  bool onDhivehiNameChanged(String name){
-    if(name == null || name.trim().isEmpty){
-      dhivehiNameFieldError.value = 'Name is Dhivehi is required!';
-      return false;
-    }else {
-      dhivehiNameFieldError.value = '';
-      // updateSelectedName('name_dh', name);
-      return true;
-    }
-  }
-
-  bool onNameMeaningChanged(String meaning){
-    if(meaning == null || meaning.trim().isEmpty){
-      nameMeaningFieldError.value = 'Name meaning is required!';
-      return false;
-    }else {
-      nameMeaningFieldError.value = '';
-      // updateSelectedName('meaning', meaning);
-      return true;
-    }
-  }
-
-  bool onNameGenderChanged(List<String> nameGender){
-    if(nameGender.length <= 0){
-      nameGenderFieldError.value = 'Gender is required!';
-      return false;
-    }else{
-      nameGenderFieldError.value = '';
-      return true;
-    }
+  // void setName(Map<String, dynamic> selectedName){
+  //   // name.assignAll(selectedName);
+  // }
+  //
+  // void updateSelectedName(String key, dynamic newValue){
+  //   // name.update(key, (value) => newValue);
+  // }
+  //
+  // bool onEnglishNameChanged(String name){
+  //   if(name == null ||  name.trim().isEmpty){
+  //     englishNameFieldError.value = 'Name is English is required!';
+  //     return false;
+  //   }else{
+  //     englishNameFieldError.value = '';
+  //     // updateSelectedName('name_en' , name);
+  //     return true;
+  //   }
+  // }
+  //
+  // bool onArabicNameChanged(String name){
+  //   if(name == null || name.trim().isEmpty){
+  //     arabicNameFieldError.value = 'Name is Arabic is required!';
+  //     return false;
+  //   }else {
+  //     arabicNameFieldError.value = '';
+  //     // updateSelectedName('name_ar', name);
+  //     return true;
+  //   }
+  // }
+  //
+  // bool onDhivehiNameChanged(String name){
+  //   if(name == null || name.trim().isEmpty){
+  //     dhivehiNameFieldError.value = 'Name is Dhivehi is required!';
+  //     return false;
+  //   }else {
+  //     dhivehiNameFieldError.value = '';
+  //     // updateSelectedName('name_dh', name);
+  //     return true;
+  //   }
+  // }
+  //
+  // bool onNameMeaningChanged(String meaning){
+  //   if(meaning == null || meaning.trim().isEmpty){
+  //     nameMeaningFieldError.value = 'Name meaning is required!';
+  //     return false;
+  //   }else {
+  //     nameMeaningFieldError.value = '';
+  //     // updateSelectedName('meaning', meaning);
+  //     return true;
+  //   }
+  // }
+  //
+  // bool onNameGenderChanged(List<String> nameGender){
+  //   if(nameGender.length <= 0){
+  //     nameGenderFieldError.value = 'Gender is required!';
+  //     return false;
+  //   }else{
+  //     nameGenderFieldError.value = '';
+  //     return true;
+  //   }
       // if(nameGender.contains(selectedGender)){
       //   nameGender.removeWhere((element) => element.toString().toLowerCase() == selectedGender.toLowerCase());
       // }else{
@@ -111,11 +111,11 @@ class NameSettingsController extends GetxController{
       //     nameGenderFieldError.value = '';
       // }
       // updateSelectedName('gender', gender);
-  }
+  // }
 
-  void onNameOriginChanged(String meaning){
-    updateSelectedName('origin', meaning);
-  }
+  // void onNameOriginChanged(String meaning){
+  //   updateSelectedName('origin', meaning);
+  // }
 
     void registerName(Map<String, dynamic> name, Function callback) async{
       // if(checkValidation(name)){
@@ -137,26 +137,28 @@ class NameSettingsController extends GetxController{
     // this.nameList.refresh();
   }
 
-  bool checkValidation(Map<String, dynamic> name){
-    onEnglishNameChanged(name['name_en']);
-    onArabicNameChanged(name['name_ar']);
-    onDhivehiNameChanged(name['name_dh']);
-    onNameMeaningChanged(name['meaning']);
-    onNameOriginChanged(name['origin']);
+  // bool checkValidation(Map<String, dynamic> name){
+  //   onEnglishNameChanged(name['name_en']);
+  //   onArabicNameChanged(name['name_ar']);
+  //   onDhivehiNameChanged(name['name_dh']);
+  //   onNameMeaningChanged(name['meaning']);
+  //   onNameOriginChanged(name['origin']);
+  //
+  //   if(englishNameFieldError.value.isEmpty && dhivehiNameFieldError.value.isEmpty && arabicNameFieldError.value.isEmpty &&
+  //       nameMeaningFieldError.value.isEmpty && nameGenderFieldError.value.isEmpty){
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-    if(englishNameFieldError.value.isEmpty && dhivehiNameFieldError.value.isEmpty && arabicNameFieldError.value.isEmpty &&
-        nameMeaningFieldError.value.isEmpty && nameGenderFieldError.value.isEmpty){
-      return true;
-    }
-    return false;
-  }
 
 
-
-  void updateName(BuildContext context, Map<String, dynamic> name) async {
+  void updateName(BuildContext context, Map<String, dynamic> name, Function callback) async {
      try{
+       print(toFireStoreJson(name));
         await ApiService.instance.updateName('names/${name['id']}', toFireStoreJson(name));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name updated successfully'),));
+        callback();
       }catch(e){
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occured, try again'),));
       }
