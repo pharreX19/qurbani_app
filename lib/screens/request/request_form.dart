@@ -2,32 +2,62 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qurbani/providers/request_validation_provider.dart';
 import 'package:qurbani/widgets/common/custom_text_field.dart';
 
 
-class RequestForm extends StatelessWidget {
-//  final String requestedService;
-//  final DateTime requestedServiceDate;
-//  RequestForm({this.requestedService, this.requestedServiceDate});
+class RequestForm extends StatefulWidget {
+
+  @override
+  _RequestFormState createState() => _RequestFormState();
+}
+
+class _RequestFormState extends State<RequestForm> {
+  RequestValidationProvider _validationService;
   final List<int> quantityList = [1, 2];
 
-  void _onQuantitySelected(int quantity){
-      Get.find<DashboardController>().setServiceQuantity(quantity);
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if( Get.find<DashboardController>().childName != null){
+        _validationService.onChangedName(Get.find<DashboardController>().childName);
+      }
+      if(Get.find<DashboardController>().contactNo != null){
+        _validationService.onChangedContactNumber(Get.find<DashboardController>().contactNo);
+      }
+      if(Get.find<DashboardController>().serviceQuantity != null){
+        _validationService.onChangedQuantity(Get.find<DashboardController>().serviceQuantity);
+      }
+    });
+  }
+
+  void _submitRequest(){
+    Get.find<DashboardController>().submitRequestForm({
+      'name': _validationService.name.value,
+      'contact': _validationService.contactNo.value,
+      'quantity': _validationService.quantity.value,
+      'receipt': _validationService.receipt.value,
+      'price': _validationService.quantity.value * _validationService.unitPrice.value,
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    _validationService = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: (){
             Navigator.pop(context);
-            Get.find<DashboardController>().clearErrors();
+            _validationService.resetValues();
+            // Get.find<DashboardController>().clearErrors();
           },
         ),
         backgroundColor: Colors.transparent,
@@ -56,74 +86,24 @@ class RequestForm extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Obx((){
-                      return CustomTextField(
+                    CustomTextField(
                         suffixIcon: Icons.person,
                         hintText: Get.find<DashboardController>().childName ??  'Child\'s Name',
-                        onChanged: Get.find<DashboardController>().onChangedChildNameTextField,
-                        errorText: Get.find<DashboardController>().childNameFieldError.value,
-                      );
-                      // return TextField(
-                      //     enabled: Get.find<DashboardController>().childName == null ? true : false,
-                      //     maxLength: 100,
-                      //     keyboardType: TextInputType.name,
-                      //     onChanged: Get.find<DashboardController>().onChangedChildNameTextField,
-                      //     decoration: InputDecoration(
-                      //         contentPadding: EdgeInsets.symmetric(
-                      //           vertical: SizeConfig.blockSizeVertical * 2,
-                      //           horizontal: SizeConfig.blockSizeVertical * 2,
-                      //         ),
-                      //         fillColor: Colors.grey[100],
-                      //         filled: true,
-                      //         suffixIcon: Icon(Icons.person,color: Colors.grey[500]),
-                      //         border: OutlineInputBorder(
-                      //             borderSide: BorderSide.none,
-                      //             borderRadius: BorderRadius.circular(4.0)
-                      //         ),
-                      //         floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      //         hintText: 'Child Name',
-                      //         hintStyle: TextStyle(color: Colors.grey[500]),
-                      //         counterText: '',
-                      //         errorText: Get.find<DashboardController>().childNameFieldError.value == '' ? null :
-                      //         Get.find<DashboardController>().childNameFieldError.value
-                      //     )
-                      // );
-                    }),
+                        onChanged: (String name){
+                          _validationService.onChangedName(name);
+                        }, //Get.find<DashboardController>().onChangedChildNameTextField,
+                        errorText: _validationService.name.error, //Get.find<DashboardController>().childNameFieldError.value,
+                      ),
                     SizedBox(height: SizeConfig.blockSizeVertical * 4,),
-                    Obx((){
-                      return CustomTextField(
+                     CustomTextField(
                         suffixIcon: Icons.person,
+                        maxLength: 20,
                         hintText:  Get.find<DashboardController>().contactNo ??  'Contact Number',
-                        onChanged: Get.find<DashboardController>().onChangedContactNumberTextField,
-                        errorText: Get.find<DashboardController>().contactNumberFieldError.value,
-                      );
-                      // return Container(
-                      //   child: TextField(
-                      //       maxLength: 10,
-                      //       keyboardType: TextInputType.number,
-                      //       onChanged: Get.find<DashboardController>().onChangedContactNumberTextField,
-                      //       decoration: InputDecoration(
-                      //           contentPadding: EdgeInsets.symmetric(
-                      //               vertical: SizeConfig.blockSizeVertical * 2,
-                      //               horizontal: SizeConfig.blockSizeVertical * 2,
-                      //           ),
-                      //           fillColor: Colors.grey[100],
-                      //           filled: true,
-                      //           suffixIcon: Icon(Icons.phone, color: Colors.grey[500]),
-                      //           border: OutlineInputBorder(
-                      //               borderSide: BorderSide.none,
-                      //               borderRadius: BorderRadius.circular(4.0)
-                      //           ),
-                      //           floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      //           hintText: 'Contact No.',
-                      //           hintStyle: TextStyle(color: Colors.grey[500]),
-                      //           counterText: '',
-                      //           errorText: Get.find<DashboardController>().contactNumberFieldError.value == '' ? null :
-                      //           Get.find<DashboardController>().contactNumberFieldError.value
-                      //       )
-                      //   ),
-                      // );
-                    }),
+                        onChanged: (String contactNo){
+                          _validationService.onChangedContactNumber(contactNo);
+                        },//Get.find<DashboardController>().onChangedContactNumberTextField,
+                        errorText: _validationService.contactNo.error, //Get.find<DashboardController>().contactNumberFieldError.value,
+                      )
                   ],
                 ),
               ),
@@ -146,42 +126,42 @@ class RequestForm extends StatelessWidget {
                         children: quantityList.map((element){
                           return GestureDetector(
                             onTap: (){
-                              _onQuantitySelected(element);
+
+                                _validationService.onChangedQuantity(element);
+                                print('clicking ${ _validationService.quantity.value}');
+                                print(element == _validationService.quantity.value);
+                              // _onQuantitySelected(element);
                             },
-                            child: Obx((){
-                              return Container(
+                            child: Container(
                                 width: SizeConfig.blockSizeHorizontal * 13,
                                 margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
                                 padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: element == Get.find<DashboardController>().serviceQuantity.value ? Colors.teal : Colors.grey[100]
+                                    color: element == _validationService.quantity.value ? Colors.teal : Colors.grey[100]
                                 ),
                                 child: Center(child: Text('$element')),
-                              );
-                            }),
+                              ),
                           );
                         }).toList(),
                       ),
                     ),
                     // SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-                    Obx((){
-                      return ListTile(
+                   ListTile(
                           leading: Icon(Icons.image,
-                            color: Get.find<DashboardController>().receiptUploadFieldError.value.isEmpty ? Colors.black45 : Colors.red[600],),
+                            color: _validationService.receipt.error == null ? Colors.black45 : Colors.red[600],),
                           title: Text('Bank Receipt', style: TextStyle(
-                            color: Get.find<DashboardController>().receiptUploadFieldError.value.isEmpty ? Colors.black : Colors.red[600],
+                            color: _validationService.receipt.error == null ? Colors.black : Colors.red[600],
                           ),),
-                          trailing: Get.find<DashboardController>().receiptUrl.value.isNotEmpty ?
+                          trailing: _validationService.receipt.value != null ?
                             Text('Uploaded') : Icon(Icons.upload_rounded,
-                            color: Get.find<DashboardController>().receiptUploadFieldError.value.isEmpty ? Colors.grey[500] : Colors.red[600]),
-                      onTap: () => Get.find<DashboardController>().pickReceiptImage(),
-                      );
-                    }),
+                            color: _validationService.receipt.error == null ? Colors.grey[500] : Colors.red[600]),
+                      onTap: _validationService.onChangedReceiptUrl //Get.find<DashboardController>().pickReceiptImage(),
+                      ),
                     ListTile(
                         leading: Icon(Icons.monetization_on_outlined),
                         title: Text('Total Price'),
-                        trailing: Obx(() => Text('MVR ${Get.find<DashboardController>().totalPrice.value}'),)
+                        trailing: Text('MVR ${_validationService.unitPrice.value * _validationService.quantity.value}'),
                     ),
                   ],
                 ),
@@ -192,9 +172,7 @@ class RequestForm extends StatelessWidget {
               minWidth: SizeConfig.blockSizeHorizontal * 95,
               height: SizeConfig.blockSizeVertical * 5,
               child: RaisedButton.icon(
-                onPressed: (){
-                  Get.find<DashboardController>().submitRequestForm();
-                },
+                onPressed: _validationService.isValid ? _submitRequest : null,
                 label: Text('Send Request'),
                 icon: Icon(Icons.send_rounded,),
               ),

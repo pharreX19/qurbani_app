@@ -37,7 +37,7 @@ class NameDetailsBottomSheet extends StatelessWidget {
               Navigator.of(context).pop();
               Get.find<DashboardController>().childName = name['name_en'];
               Get.find<DashboardController>().contactNo = '7654321';
-              Get.find<DashboardController>().serviceQuantity.value = 2;
+              Get.find<DashboardController>().serviceQuantity= 2;
               Get.find<DashboardController>().onServiceTypeSelectedCallback(context, 'Aqeeqah');
             },
             child: Padding(

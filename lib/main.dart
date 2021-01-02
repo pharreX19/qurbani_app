@@ -5,6 +5,7 @@ import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/providers/completed_service_visibility_provider.dart';
 import 'package:qurbani/providers/feedback_validation_provider.dart';
 import 'package:qurbani/providers/name_validation_provider.dart';
+import 'package:qurbani/providers/request_validation_provider.dart';
 import 'package:qurbani/providers/service_type_validation_provider.dart';
 import 'package:qurbani/screens/authentication/login.dart';
 import 'package:qurbani/screens/dashboard/user/dashboard.dart';
@@ -28,7 +29,9 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<FeedbackValidationProvider>(
           create: (context) => FeedbackValidationProvider()),
       ChangeNotifierProvider<CompletedServiceVisibilityProvider>(
-          create: (context) => CompletedServiceVisibilityProvider())
+          create: (context) => CompletedServiceVisibilityProvider()),
+      ChangeNotifierProvider<RequestValidationProvider>(
+          create: (context) => RequestValidationProvider())
     ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

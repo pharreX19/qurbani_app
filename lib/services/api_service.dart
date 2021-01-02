@@ -21,18 +21,18 @@ class ApiService{
 
 
   Future<dynamic> createNewRequest(String url, Map<String, dynamic> body) async{
-    const method = 'POST';
-    Uri uri = Uri.parse(Globals.BASE_URL + url);
-    http.MultipartRequest request = new http.MultipartRequest(method, uri);
-    request.fields['amount_paid'] = body['amount_paid'];
-    request.fields['quantity'] = body['quantity'];
-    request.fields['name'] = body['name'];
-    request.fields['price'] = body['price'];
-    request.fields['type'] = body['type'];
-    request.fields['date'] = body['date'];
-    request.fields['receipt_url'] = body['receipt'];
-
-    http.StreamedResponse response = await request.send();
+    // const method = 'POST';
+    // Uri uri = Uri.parse(Globals.BASE_URL + url);
+    // http.MultipartRequest request = new http.MultipartRequest(method, uri);
+    // request.fields['amount_paid'] = body['amount_paid'];
+    // request.fields['quantity'] = body['quantity'];
+    // request.fields['name'] = body['name'];
+    // request.fields['price'] = body['price'];
+    // request.fields['type'] = body['type'];
+    // request.fields['date'] = body['date'];
+    // request.fields['receipt_url'] = body['receipt'];
+    //
+    // http.StreamedResponse response = await request.send();
   }
 
   Future<dynamic> getAllNames(String url) async{

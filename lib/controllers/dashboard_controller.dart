@@ -13,16 +13,17 @@ class DashboardController extends GetxController{
   DateTime serviceDate;
   String childName;
   String contactNo;
-  RxInt serviceQuantity = 1.obs;
-  RxString receiptUrl =''.obs;
-  RxDouble totalPrice = 0.0.obs;
+  int serviceQuantity = 1;
+  // RxInt serviceQuantity = 1.obs;
+  // RxString receiptUrl =''.obs;
+  // RxDouble totalPrice = 0.0.obs;
   double unitPrice;
   RxInt serviceDay = DateTime.now().day.obs;
-  RxString childNameFieldError = ''.obs;
-  RxString contactNumberFieldError = ''.obs;
-  RxString receiptUploadFieldError = ''.obs;
+  // RxString childNameFieldError = ''.obs;
+  // RxString contactNumberFieldError = ''.obs;
+  // RxString receiptUploadFieldError = ''.obs;
   RxDouble currentMonthEarning = 0.0.obs;
-  final imagePicker = ImagePicker();
+  // final imagePicker = ImagePicker();
   RxList<dynamic>dailyRequestsStat = [].obs;
 
 //  @override
@@ -118,13 +119,13 @@ class DashboardController extends GetxController{
 
   void setUnitPrice(double price){
     unitPrice = price;
-    setTotalPrice();
+    // setTotalPrice();
   }
 
 
-  void setTotalPrice(){
-    totalPrice.value = unitPrice * serviceQuantity.value;
-  }
+  // void setTotalPrice(){
+  //   totalPrice.value = unitPrice * serviceQuantity.value;
+  // }
 
   void setRequestedServiceDate(int year, int month, int day){
 
@@ -132,78 +133,79 @@ class DashboardController extends GetxController{
     setServiceDay(day);
   }
 
-  void setServiceQuantity(int quantity){
-    serviceQuantity.value = quantity;
-    setTotalPrice();
-  }
+  // void setServiceQuantity(int quantity){
+  //   serviceQuantity.value = quantity;
+  //   setTotalPrice();
+  // }
 
   void setServiceDay(int day){
     serviceDay.value = day;
   }
 
-  void onChangedChildNameTextField(String value){
-    if(value == null || value.trim().isEmpty){
-      childNameFieldError.value = 'Child\'s name is required!';
-    }else{
-      childName = value;
-      childNameFieldError.value = '';
-    }
-  }
+  // void onChangedChildNameTextField(String value){
+  //   if(value == null || value.trim().isEmpty){
+  //     childNameFieldError.value = 'Child\'s name is required!';
+  //   }else{
+  //     childName = value;
+  //     childNameFieldError.value = '';
+  //   }
+  // }
 
-  void onChangedContactNumberTextField(String value){
-    if(value == null || value.trim().isEmpty){
-      contactNumberFieldError.value = 'Contact number is required!';
-    }else{
-      contactNo = value;
-      contactNumberFieldError.value = '';
-    }
-  }
+  // void onChangedContactNumberTextField(String value){
+  //   if(value == null || value.trim().isEmpty){
+  //     contactNumberFieldError.value = 'Contact number is required!';
+  //   }else{
+  //     contactNo = value;
+  //     contactNumberFieldError.value = '';
+  //   }
+  // }
 
-  void submitRequestForm(){
-    onChangedChildNameTextField(childName);
-    onChangedContactNumberTextField(contactNo);
+  void submitRequestForm(Map<String, dynamic> request){
+    print(request);
+    // onChangedChildNameTextField(childName);
+    // onChangedContactNumberTextField(contactNo);
 
 
-    if(receiptUrl.value == null ||  receiptUrl.value.isEmpty){
-      receiptUploadFieldError.value = 'No receipt found!';
-    }
+    // if(receiptUrl.value == null ||  receiptUrl.value.isEmpty){
+    //   receiptUploadFieldError.value = 'No receipt found!';
+    // }
 
-    if(childNameFieldError.value.isEmpty && contactNumberFieldError.value.isEmpty && receiptUploadFieldError.value.isEmpty){
+    // if(childNameFieldError.value.isEmpty && contactNumberFieldError.value.isEmpty && receiptUploadFieldError.value.isEmpty){
       try{
         ApiService.instance.createNewRequest('users/k9JyOIaImGZodviv8n41/requests', {
-          'amount_paid' : totalPrice.value.toString(),
-          'quantity' : serviceQuantity.value.toString(),
-          'receipt' : receiptUrl.value,
-          'name' : childName,
-          'price' : unitPrice.toString(),
+          'amount_paid' : request['totalPrice'],
+          'quantity' : request['quantity'],
+          'receipt' : request['receiptUrl'],
+          'name' : request['name'],
+          'price' : unitPrice,
           'type' : serviceType,
           'date' : serviceDate.toIso8601String()
         });
       }catch(e){
         print('Cannot create request, Error: $e');
-    }
-    }
-  }
-
-  void pickReceiptImage() async{
-    final PickedFile pickedImage = await imagePicker.getImage(source: ImageSource.gallery);
-    if(pickedImage.path.isNotEmpty){
-      // receiptPath.value = pickedImage.path;
-      // File receipt = File(pickedImage.path);
-      // List<int> imageBytes = receipt.readAsBytesSync();
-      // receiptUrl.value = base64Encode(imageBytes);
-      receiptUrl.value = pickedImage.path;
-      receiptUploadFieldError.value = '';
+    // }
     }
   }
 
-  void clearErrors(){
-    receiptUploadFieldError.value = '';
-    childName = '';
-    contactNo= '';
-    receiptUrl.value = '';
-    contactNumberFieldError.value = '';
-    childNameFieldError.value = '';
-    receiptUploadFieldError.value = '';
-  }
+  // void pickReceiptImage() async{
+  //   final PickedFile pickedImage = await imagePicker.getImage(source: ImageSource.gallery);
+  //   if(pickedImage.path.isNotEmpty){
+  //     // receiptPath.value = pickedImage.path;
+  //     // File receipt = File(pickedImage.path);
+  //     // List<int> imageBytes = receipt.readAsBytesSync();
+  //     // receiptUrl.value = base64Encode(imageBytes);
+  //     receiptUrl.value = pickedImage.path;
+  //     receiptUploadFieldError.value = '';
+  //   }
+  // }
+
+  // void clearErrors(){
+  //   receiptUploadFieldError.value = '';
+  //   childName = '';
+  //   contactNo= '';
+  //   receiptUrl.value = '';
+  //   contactNumberFieldError.value = '';
+  //   childNameFieldError.value = '';
+  //   receiptUploadFieldError.value = '';
+  // }
 }
