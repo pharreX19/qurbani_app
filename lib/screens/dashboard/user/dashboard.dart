@@ -77,14 +77,15 @@ class _DashboardState extends State<Dashboard> {
     return widget._services;
   }
 
-  void _onServiceTapped(BuildContext context, String serviceType){
+  void _onServiceTapped(BuildContext context, String service){
 //    widget.dashboardController.childName = null;
+    Get.find<DashboardController>().serviceName = service;
     showModalBottomSheet(shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(8.0),
       ),
     ), context: context, builder: (context){
-      return ServiceTypeBottomSheet(generateServiceTypes(serviceType));
+      return ServiceTypeBottomSheet(generateServiceTypes(service));
     });
     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => ServiceRequetForm()));
   }

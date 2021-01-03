@@ -99,6 +99,7 @@ class RequestValidationProvider extends ChangeNotifier {
   void _clearValidations(){
     _name = ValidateItem(value: null, error: null);
     _contactNo = ValidateItem(value: null, error: null);
+    _receipt = ValidateItem(value: null, error: null);
 
   }
 

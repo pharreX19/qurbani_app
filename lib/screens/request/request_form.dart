@@ -38,13 +38,14 @@ class _RequestFormState extends State<RequestForm> {
   }
 
   void _submitRequest(){
-    Get.find<DashboardController>().submitRequestForm({
+    Get.find<DashboardController>().submitRequestForm(context, {
       'name': _validationService.name.value,
       'contact': _validationService.contactNo.value,
       'quantity': _validationService.quantity.value,
       'receipt': _validationService.receipt.value,
-      'price': _validationService.quantity.value * _validationService.unitPrice.value,
-    });
+      'total_price': _validationService.quantity.value * _validationService.unitPrice.value,
+      'unit_price':_validationService.unitPrice.value,
+    }, _validationService.resetValues);
   }
 
   @override

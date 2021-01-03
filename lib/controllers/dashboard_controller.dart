@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:qurbani/controllers/requests_controller.dart';
 import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
+import 'package:qurbani/screens/dashboard/user/dashboard.dart';
+import 'package:qurbani/screens/home.dart';
 import 'package:qurbani/screens/request/request_form.dart';
 import 'package:qurbani/services/api_service.dart';
 
@@ -10,6 +15,7 @@ class DashboardController extends GetxController{
   int year = DateTime.now().year;
   int month = DateTime.now().month;
   String serviceType;
+  String serviceName;
   DateTime serviceDate;
   String childName;
   String contactNo;
@@ -160,8 +166,7 @@ class DashboardController extends GetxController{
   //   }
   // }
 
-  void submitRequestForm(Map<String, dynamic> request){
-    print(request);
+  void submitRequestForm(BuildContext context,  Map<String, dynamic> request, Function callback){
     // onChangedChildNameTextField(childName);
     // onChangedContactNumberTextField(contactNo);
 
@@ -172,15 +177,26 @@ class DashboardController extends GetxController{
 
     // if(childNameFieldError.value.isEmpty && contactNumberFieldError.value.isEmpty && receiptUploadFieldError.value.isEmpty){
       try{
-        ApiService.instance.createNewRequest('users/k9JyOIaImGZodviv8n41/requests', {
-          'amount_paid' : request['totalPrice'],
-          'quantity' : request['quantity'],
-          'receipt' : request['receiptUrl'],
+        File imageFile = File(request['receipt']);
+        List<int> imageBytes = imageFile.readAsBytesSync();
+
+        dynamic response = ApiService.instance.createNewRequest('users/k9JyOIaImGZodviv8n41/requests', {
           'name' : request['name'],
+          'contact' : request['contact'],
+          'amount_paid' : request['total_price'],
+          'quantity' : request['quantity'],
+          'image' : base64Encode(imageBytes), //request['receipt'],
           'price' : unitPrice,
-          'type' : serviceType,
+          'serviceName' : serviceName,
+          'serviceType' : serviceType,
           'date' : serviceDate.toIso8601String()
         });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Request created sucessfully')));
+        callback();
+        Future.delayed(Duration(seconds: 1), (){
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        });
+
       }catch(e){
         print('Cannot create request, Error: $e');
     // }

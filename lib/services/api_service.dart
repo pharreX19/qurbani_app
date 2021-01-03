@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:qurbani/globals/globals.dart';
 
@@ -21,18 +22,28 @@ class ApiService{
 
 
   Future<dynamic> createNewRequest(String url, Map<String, dynamic> body) async{
-    // const method = 'POST';
-    // Uri uri = Uri.parse(Globals.BASE_URL + url);
-    // http.MultipartRequest request = new http.MultipartRequest(method, uri);
-    // request.fields['amount_paid'] = body['amount_paid'];
-    // request.fields['quantity'] = body['quantity'];
-    // request.fields['name'] = body['name'];
-    // request.fields['price'] = body['price'];
-    // request.fields['type'] = body['type'];
-    // request.fields['date'] = body['date'];
-    // request.fields['receipt_url'] = body['receipt'];
-    //
-    // http.StreamedResponse response = await request.send();
+//    print(body);
+    http.Response response = await http.post(Globals.BASE_URL + url, body: jsonEncode(body));
+    return jsonDecode(response.body);
+//     const method = 'POST';
+//     Uri uri = Uri.parse(Globals.BASE_URL + url);
+//     http.MultipartRequest request = new http.MultipartRequest(method, uri);
+//     request.fields['amount_paid'] = body['amount_paid'].toString();
+//     request.fields['quantity'] = body['quantity'].toString();
+//     request.fields['name'] = body['name'];
+//     request.fields['price'] = body['price'].toString();
+//     request.fields['type'] = body['type'];
+//     request.fields['date'] = body['date'];
+//     File imageFile = File(body['receipt']);
+//     List<int> imageBytes = await imageFile.readAsBytes();
+//     request.fields['image'] = base64Encode(imageBytes);
+//
+//     request.headers[HttpHeaders.acceptHeader] = headers[HttpHeaders.acceptHeader];
+//     request.headers[HttpHeaders.contentTypeHeader] = headers[HttpHeaders.contentTypeHeader];
+//
+//      print(base64Encode(imageBytes));
+//     http.StreamedResponse response = await request.send();
+//     return http.Response.fromStream(response);
   }
 
   Future<dynamic> getAllNames(String url) async{
