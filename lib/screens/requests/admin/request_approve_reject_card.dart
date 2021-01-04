@@ -71,7 +71,7 @@ class RequestApproveRejectCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0)
               ),
               context: context, builder: (context){
-            return RequestOptionsBottomSheet();
+            return RequestOptionsBottomSheet(receiptUrl:  document.data()['receipt_url']);
           });
         },
       ),
