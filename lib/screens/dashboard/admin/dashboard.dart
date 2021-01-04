@@ -75,20 +75,20 @@ class _DashboardState extends State<Dashboard> {
       child: Obx((){
         return Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            // children: Get.find<RequestsController>().requestStats.map((element){
-            //   return Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Row(
-            //         children: [
-            //           Icon(Icons.addchart_rounded),
-            //           Text(element['count'].toString())
-            //         ],
-            //       ),
-            //       Text(element['title'])
-            //     ],
-            //   );
-            // }).toList()
+             children: Get.find<DashboardController>().requestStats.map((element){
+               return Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   Row(
+                     children: [
+                       Icon(Icons.addchart_rounded),
+                       Text(element['count'].toString())
+                     ],
+                   ),
+                   Text(element['title'])
+                 ],
+               );
+             }).toList()
         );
       })
     );
@@ -98,93 +98,67 @@ class _DashboardState extends State<Dashboard> {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 2),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-              Container(
-                height: SizeConfig.blockSizeVertical * 30,
-                child: Obx((){
-                  if(Get.find<DashboardController>().dailyRequestsStat.length > 0){
-                    return WeeklySalesChart(dailyRequests: Get.find<DashboardController>().dailyRequestsStat,);
-                  }
-                  return Center(child: CircularProgressIndicator());
-                }) ),
-            // SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-            Container(
-                padding: EdgeInsets.only(
-                  top: SizeConfig.blockSizeVertical * 2
-                ),
-                height: SizeConfig.blockSizeVertical * 30,
-                child: MonthlySalesChart()),
-            Container(
-              height: SizeConfig.blockSizeVertical * 19,
-            )
-          ],
+        child: Center(
+          child: Container(
+            width: SizeConfig.blockSizeHorizontal * 85,
+            child: Obx((){
+              if(Get.find<DashboardController>().dailyRequestsStat.length > 0){
+                return WeeklySalesChart(dailyRequests: Get.find<DashboardController>().dailyRequestsStat,);
+              }
+              return Center(child: CircularProgressIndicator());
+            }) ),
         ),
       ),
     );
   }
 
   Widget _buildUpcomingRequests(){
-    return DraggableScrollableSheet(
-      initialChildSize: 0.3,
-      maxChildSize: 0.6,
-      minChildSize: 0.2,
-      builder: (context, _scrollController){
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey[300],
-                offset: Offset(0, -1),
-                blurRadius: 4.0,
-                spreadRadius: 1.0
-              )
-            ],
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8.0),
-                topRight: Radius.circular(8.0)
-            )
-          ),
-          child: Column(
-            children: [
-              Center(
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 2),
-                  width: SizeConfig.blockSizeHorizontal * 10,
-                  height: SizeConfig.blockSizeVertical * 0.4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 1),
-                child: Text('Upcoming Requests'),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: 10,
-                  itemBuilder: (context, int index){
-                    return ListTile(
-                      leading: Icon(Icons.bubble_chart),
-                      title: Text('Index $index'),
-                      subtitle: Text('13 December 2020'),
-                      trailing: Icon(Icons.arrow_forward_ios_rounded),
-                      onTap: (){
-                        Get.find<HomeController>().setCurrentIndex(2);
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
+              child: Text('Upcoming requests'),
+            ),
+            SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+            Obx((){
+              if(Get.find<DashboardController>().requests.length > 0){
+                return Expanded(
+                    child: ListView.builder(
+                      itemCount: Get.find<DashboardController>().requests.length,
+                      itemBuilder: (context, int index){
+                        dynamic requests = Get.find<DashboardController>().requests;
+                        if(DateTime.fromMillisecondsSinceEpoch(requests[index]['date']['_seconds'] * 1000).isAfter(DateTime.now()) && requests[index]['status'].toString().toLowerCase() == 'pending'){
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              tileColor: Colors.grey[200],
+                              contentPadding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 10),
+                              title: Text(requests[index]['service']['name']),
+                              subtitle: Text(requests[index]['service']['type']),
+                              trailing: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('QTY: ${requests[index]['quantity']}'),
+                                  Text(DateTime.fromMillisecondsSinceEpoch(requests[index]['date']['_seconds'] * 1000).toLocal().toString())
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                        return Container();
                       },
-                    );
-                  },
-                ),
-              )
-            ],
-          )
-        );
-      },
+                    ));
+              }
+              return Center(child: Text('No Requests found'));
+            })
+          ],
+        ),
+      ),
     );
   }
 
@@ -199,21 +173,17 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Stack(
-          children: [
-            MainLayout(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  _buildEarnings(),
-                  _buildServiceStatByStatus(),
-                  _buildStatCharts(),
-                ],
-              ),
-            ),
-            _buildUpcomingRequests()
-          ],
+        child: MainLayout(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              _buildEarnings(),
+              _buildServiceStatByStatus(),
+              _buildStatCharts(),
+              _buildUpcomingRequests()
+            ],
+          ),
         ),
       ),
     );

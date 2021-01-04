@@ -34,23 +34,20 @@ class ViewImage extends StatelessWidget {
           )
         ],
       ),
-      body: Stack(
-        children: [
-          Center(
-            child: imageUrl == null ? Text('No Image found') :
-            Image.network(imageUrl, fit: BoxFit.cover,
-              frameBuilder: (context, Widget child, int frame, bool wasSynchronouslyLoaded ){
-                if(wasSynchronouslyLoaded){
-                  return child;
-                }
-                return frame == null ? Center(
-                  child: CircularProgressIndicator(),
-                ) : child;
-              },
-            ),
-          ),
-
-        ],
+      body: imageUrl == null ? Text('No Image found') :
+      Container(
+        height: double.infinity,
+        width: double.infinity,
+        child: Image.network(imageUrl, fit: BoxFit.cover,
+          frameBuilder: (context, Widget child, int frame, bool wasSynchronouslyLoaded ){
+            if(wasSynchronouslyLoaded){
+              return child;
+            }
+            return frame == null ? Center(
+              child: CircularProgressIndicator(),
+            ) : child;
+          },
+        ),
       )
     );
   }

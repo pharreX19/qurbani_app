@@ -16,10 +16,10 @@ class ServiceTypeBottomSheet extends StatelessWidget {
   //   {'title': 'Others', 'icon': Icons.palette_outlined},
   // ];
 
-  void _serviceTypeSelected(BuildContext context, String serviceType){
+  void _serviceTypeSelected(BuildContext context, String service){
 //    callback(selectedServiceName);
     Navigator.pop(context);
-    Get.find<DashboardController>().onServiceTypeSelectedCallback(context, serviceType);
+    Get.find<DashboardController>().onServiceTypeSelectedCallback(context, service);
 //    callback();
   }
 

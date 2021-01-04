@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:qurbani/providers/validate_item_model.dart';
 
 class RequestValidationProvider extends ChangeNotifier {
@@ -7,8 +9,8 @@ class RequestValidationProvider extends ChangeNotifier {
   ValidateItem _contactNo = ValidateItem(value: null, error: null);
   ValidateItem _quantity = ValidateItem(value: 1, error: null);
   ValidateItem _receipt = ValidateItem(value: null, error: null);
-  ValidateItem _unitPrice = ValidateItem(value: 700, error: null);
-  ValidateItem _totalPrice = ValidateItem(value: null, error: null);
+//  ValidateItem _unitPrice = ValidateItem(value: null, error: null);
+//  ValidateItem _totalPrice = ValidateItem(value: null, error: null);
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
@@ -17,8 +19,8 @@ class RequestValidationProvider extends ChangeNotifier {
   ValidateItem get contactNo => _contactNo;
   ValidateItem get quantity => _quantity;
   ValidateItem get receipt => _receipt;
-  ValidateItem get unitPrice => _unitPrice;
-  ValidateItem get totalPrice => _totalPrice;
+//  ValidateItem get unitPrice => _unitPrice;
+//  ValidateItem get totalPrice => _totalPrice;
 
 
   bool get isValid {

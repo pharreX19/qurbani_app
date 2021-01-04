@@ -31,30 +31,68 @@ class DashboardController extends GetxController{
   RxDouble currentMonthEarning = 0.0.obs;
   // final imagePicker = ImagePicker();
   RxList<dynamic>dailyRequestsStat = [].obs;
+  List<dynamic> services;
+  List<dynamic> selectedServiceTypes;
+  Map<String, dynamic> selectedService;
+  RxList<dynamic> requests = [].obs;
+   final RxList<dynamic> requestStats = [
+     {'title': 'Pending', 'icon': Icons.bar_chart, 'count': 0},
+     {'title': 'Completed', 'icon': Icons.insert_chart_outlined, 'count': 0},
+     {'title': 'Rejected', 'icon': Icons.error_outline, 'count': 0}
+   ].obs;
 
-//  @override
-//  void onInit() {
-//    super.onInit();
+  @override
+  void onInit() {
+    super.onInit();
 //    final RequestsController requestsController = Get.put(RequestsController());
-//    fetchAllRequests();
-//  }
+      fetchAllRequests();
+      fetchAllServices();
+  }
 
   Future<void> fetchAllRequests() async{
-    // await Get.find<RequestsController>().fetchAllRequests();
+    requests.assignAll(await ApiService.instance.fetchAllRequests('requests'));
     populateCurrentMonthEarning();
+    populateCompletedAndPendingUserRequests();
   }
+
+  Future<dynamic> fetchAllServices() async{
+    return services = await ApiService.instance.fetchAllServices('services');
+  }
+
+  Future<dynamic> fetchSelectedServiceTypes(Map<String, dynamic> service) async{
+    selectedServiceTypes = await ApiService.instance.fetchAllServiceTypes('services/${service['id']}/${service['name'].toString().toLowerCase()}');
+    unitPrice = (selectedServiceTypes.singleWhere((element) => element['type'].toString().toLowerCase() == serviceType.toLowerCase()))['price'] * 1.0;
+  }
+
+  void populateCompletedAndPendingUserRequests(){
+    requests.forEach((element) {
+      if(element['status'].toString().toLowerCase() == 'pending' || element['status'].toString().toLowerCase() == 'approved'){
+        requestStats[0]['count'] += 1;
+      }
+      else if(element['status'].toString().toLowerCase() == 'completed'){
+        requestStats[1]['count'] += 1;
+      }
+      else if(element['status'].toString().toLowerCase() == 'rejected'){
+        requestStats[2]['count'] += 1;
+      }
+    });
+    this.requestStats.refresh();
+  }
+
 
   void populateCurrentMonthEarning(){
     int currentYear = DateTime.now().year;
     int currentMonth = DateTime.now().month;
     int firstDayOfMonth = 1;
     var tempTotal = 0.0;
-    // Get.find<RequestsController>().requests.forEach((element) {
-    //   var requestDate = DateTime.fromMillisecondsSinceEpoch(element['date']['_seconds'] * 1000);
-    //   if(requestDate.isAfter(DateTime(currentYear, currentMonth, firstDayOfMonth)) && (element['status'] == 'approved' || element['status'] == 'completed')){
-    //     tempTotal += element['amount_paid'];
-    //   }
-    // });
+
+    requests.forEach((element) {
+       var requestDate = DateTime.fromMillisecondsSinceEpoch(element['date']['_seconds'] * 1000);
+       if(requestDate.isAfter(DateTime(currentYear, currentMonth, firstDayOfMonth)) && requestDate.isBefore(DateTime(currentYear, currentMonth + 1, firstDayOfMonth)) &&
+           (element['status'] == 'approved' || element['status'] == 'completed')){
+         tempTotal += element['amount_paid'];
+       }
+     });
     currentMonthEarning.value = tempTotal;
     populateWeeklyStats();
 
@@ -70,7 +108,7 @@ class DashboardController extends GetxController{
 
 
     while(weekStart <= weekEnd){
-      dailyRequestsStat.add({'date' : '$year-$month-$weekStart', 'pending' : 0,  'completed' : 0});
+      dailyRequestsStat.add({'date' : '$year-${month > 10 ? month : '0$month' }-${weekStart > 10 ? weekStart : '0$weekStart'}', 'pending' : 0,  'completed' : 0});
       weekStart += 1;
     }
     return dailyRequestsStat;
@@ -78,27 +116,27 @@ class DashboardController extends GetxController{
 
   void populateWeeklyStats(){
     getWeekDates().forEach((weekDate) {
-      // Get.find<RequestsController>().requests.forEach((request) {
-      //   var requestDate = DateTime.fromMillisecondsSinceEpoch(request['date']['_seconds'] * 1000).toString().substring(0, 10);
-      //   if(weekDate['date'] == requestDate){
-      //     switch(request['status'].toString().toLowerCase()){
-      //       case 'pending':
-      //       case 'approved':
-      //         weekDate['pending']+=1;
-      //         break;
-      //
-      //       case 'completed':
-      //         weekDate['completed']+=1;
-      //         break;
-      //     }
-      //   }
-      // });
+       requests.forEach((request) {
+         var requestDate = DateTime.fromMillisecondsSinceEpoch(request['date']['_seconds'] * 1000).toString().substring(0, 10);
+         if(weekDate['date'] == requestDate){
+           switch(request['status'].toString().toLowerCase()){
+             case 'pending':
+             case 'approved':
+               weekDate['pending']+=1;
+               break;
+
+             case 'completed':
+               weekDate['completed']+=1;
+               break;
+           }
+         }
+       });
     });
     this.dailyRequestsStat.refresh();
   }
 
   void onServiceTypeSelectedCallback(BuildContext context, String serviceName){
-    setRequestedServiceType(serviceName);
+    setRequestedServiceName(serviceName);
     showModalBottomSheet(shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(8.0),
@@ -118,15 +156,18 @@ class DashboardController extends GetxController{
     childName = name;
   }
 
-  void setRequestedServiceType(String serviceName){
-    serviceType = serviceName;
-    setUnitPrice(700);
+  void setRequestedServiceName(String service){
+    serviceName = service;
+    selectedService =  services.singleWhere((element) => element['name'].toString().toLowerCase()  == service.toLowerCase());
+    fetchSelectedServiceTypes(selectedService);
+
+//    setUnitPrice(700);
   }
 
-  void setUnitPrice(double price){
-    unitPrice = price;
+//  void setUnitPrice(double price){
+//    unitPrice = price;
     // setTotalPrice();
-  }
+//  }
 
 
   // void setTotalPrice(){

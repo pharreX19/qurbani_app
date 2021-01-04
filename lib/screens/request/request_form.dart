@@ -43,144 +43,150 @@ class _RequestFormState extends State<RequestForm> {
       'contact': _validationService.contactNo.value,
       'quantity': _validationService.quantity.value,
       'receipt': _validationService.receipt.value,
-      'total_price': _validationService.quantity.value * _validationService.unitPrice.value,
-      'unit_price':_validationService.unitPrice.value,
+      'total_price': _validationService.quantity.value * Get.find<DashboardController>().unitPrice, //_validationService.unitPrice.value,
+//      'unit_price':_validationService.unitPrice.value,
     }, _validationService.resetValues);
   }
 
   @override
   Widget build(BuildContext context) {
     _validationService = Provider.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: (){
-            Navigator.pop(context);
-            _validationService.resetValues();
-            // Get.find<DashboardController>().clearErrors();
-          },
+    return WillPopScope(
+      onWillPop: (){
+        _validationService.resetValues();
+        return Future.value(true);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: (){
+              Navigator.pop(context);
+              _validationService.resetValues();
+              // Get.find<DashboardController>().clearErrors();
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          iconTheme: IconThemeData(color: Colors.teal),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        iconTheme: IconThemeData(color: Colors.teal),
-      ),
-      resizeToAvoidBottomPadding: false,
-      body: Container(
-        padding: EdgeInsets.only(
-          top: SizeConfig.blockSizeVertical * 2,
-          right: SizeConfig.blockSizeVertical * 2,
-          left: SizeConfig.blockSizeVertical * 2,
-        ),
-        child: Column(
-          children: [
-            Text(Get.find<DashboardController>().serviceType),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            Text(Get.find<DashboardController>().serviceDate.toLocal().toString()),
-            SizedBox(height: SizeConfig.blockSizeVertical * 3,),
-            Card(
-              margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 0),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.blockSizeHorizontal * 6,
-                    vertical: SizeConfig.blockSizeHorizontal * 8
-                ),
-                child: Column(
-                  children: [
-                    CustomTextField(
-                        suffixIcon: Icons.person,
-                        hintText: Get.find<DashboardController>().childName ??  'Child\'s Name',
-                        onChanged: (String name){
-                          _validationService.onChangedName(name);
-                        }, //Get.find<DashboardController>().onChangedChildNameTextField,
-                        errorText: _validationService.name.error, //Get.find<DashboardController>().childNameFieldError.value,
-                      ),
-                    SizedBox(height: SizeConfig.blockSizeVertical * 4,),
-                     CustomTextField(
-                        suffixIcon: Icons.person,
-                        maxLength: 20,
-                        hintText:  Get.find<DashboardController>().contactNo ??  'Contact Number',
-                        onChanged: (String contactNo){
-                          _validationService.onChangedContactNumber(contactNo);
-                        },//Get.find<DashboardController>().onChangedContactNumberTextField,
-                        errorText: _validationService.contactNo.error, //Get.find<DashboardController>().contactNumberFieldError.value,
-                      )
-                  ],
+        resizeToAvoidBottomPadding: false,
+        body: Container(
+          padding: EdgeInsets.only(
+            top: SizeConfig.blockSizeVertical * 2,
+            right: SizeConfig.blockSizeVertical * 2,
+            left: SizeConfig.blockSizeVertical * 2,
+          ),
+          child: Column(
+            children: [
+              Text(Get.find<DashboardController>().serviceType),
+              SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+              Text(Get.find<DashboardController>().serviceDate.toLocal().toString()),
+              SizedBox(height: SizeConfig.blockSizeVertical * 3,),
+              Card(
+                margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 0),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 6,
+                      vertical: SizeConfig.blockSizeHorizontal * 8
+                  ),
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                          suffixIcon: Icons.person,
+                          hintText: Get.find<DashboardController>().childName ??  'Child\'s Name',
+                          onChanged: (String name){
+                            _validationService.onChangedName(name);
+                          }, //Get.find<DashboardController>().onChangedChildNameTextField,
+                          errorText: _validationService.name.error, //Get.find<DashboardController>().childNameFieldError.value,
+                        ),
+                      SizedBox(height: SizeConfig.blockSizeVertical * 4,),
+                       CustomTextField(
+                          suffixIcon: Icons.person,
+                          maxLength: 20,
+                          hintText:  Get.find<DashboardController>().contactNo ??  'Contact Number',
+                          onChanged: (String contactNo){
+                            _validationService.onChangedContactNumber(contactNo);
+                          },//Get.find<DashboardController>().onChangedContactNumberTextField,
+                          errorText: _validationService.contactNo.error, //Get.find<DashboardController>().contactNumberFieldError.value,
+                        )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-            Card(
-              margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 0),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.blockSizeHorizontal * 2,
-                    vertical: SizeConfig.blockSizeHorizontal * 4
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.pie_chart),
-                      title: Text('Quantity'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: quantityList.map((element){
-                          return GestureDetector(
-                            onTap: (){
+              SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+              Card(
+                margin: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 0),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.blockSizeHorizontal * 2,
+                      vertical: SizeConfig.blockSizeHorizontal * 4
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.pie_chart),
+                        title: Text('Quantity'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: quantityList.map((element){
+                            return GestureDetector(
+                              onTap: (){
 
-                                _validationService.onChangedQuantity(element);
-                                print('clicking ${ _validationService.quantity.value}');
-                                print(element == _validationService.quantity.value);
-                              // _onQuantitySelected(element);
-                            },
-                            child: Container(
-                                width: SizeConfig.blockSizeHorizontal * 13,
-                                margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
-                                padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: element == _validationService.quantity.value ? Colors.teal : Colors.grey[100]
+                                  _validationService.onChangedQuantity(element);
+                                  print('clicking ${ _validationService.quantity.value}');
+                                  print(element == _validationService.quantity.value);
+                                // _onQuantitySelected(element);
+                              },
+                              child: Container(
+                                  width: SizeConfig.blockSizeHorizontal * 13,
+                                  margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 4),
+                                  padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: element == _validationService.quantity.value ? Colors.teal : Colors.grey[100]
+                                  ),
+                                  child: Center(child: Text('$element')),
                                 ),
-                                child: Center(child: Text('$element')),
-                              ),
-                          );
-                        }).toList(),
+                            );
+                          }).toList(),
+                        ),
                       ),
-                    ),
-                    // SizedBox(height: SizeConfig.blockSizeVertical * 2,),
-                   ListTile(
-                          leading: Icon(Icons.image,
-                            color: _validationService.receipt.error == null ? Colors.black45 : Colors.red[600],),
-                          title: Text('Bank Receipt', style: TextStyle(
-                            color: _validationService.receipt.error == null ? Colors.black : Colors.red[600],
-                          ),),
-                          trailing: _validationService.receipt.value != null ?
-                            Text('Uploaded') : Icon(Icons.upload_rounded,
-                            color: _validationService.receipt.error == null ? Colors.grey[500] : Colors.red[600]),
-                      onTap: _validationService.onChangedReceiptUrl //Get.find<DashboardController>().pickReceiptImage(),
+                      // SizedBox(height: SizeConfig.blockSizeVertical * 2,),
+                     ListTile(
+                            leading: Icon(Icons.image,
+                              color: _validationService.receipt.error == null ? Colors.black45 : Colors.red[600],),
+                            title: Text('Bank Receipt', style: TextStyle(
+                              color: _validationService.receipt.error == null ? Colors.black : Colors.red[600],
+                            ),),
+                            trailing: _validationService.receipt.value != null ?
+                              Text('Uploaded') : Icon(Icons.upload_rounded,
+                              color: _validationService.receipt.error == null ? Colors.grey[500] : Colors.red[600]),
+                        onTap: _validationService.onChangedReceiptUrl //Get.find<DashboardController>().pickReceiptImage(),
+                        ),
+                      ListTile(
+                          leading: Icon(Icons.monetization_on_outlined),
+                          title: Text('Total Price'),
+                          trailing: Text('MVR ${Get.find<DashboardController>().unitPrice * _validationService.quantity.value}'),
                       ),
-                    ListTile(
-                        leading: Icon(Icons.monetization_on_outlined),
-                        title: Text('Total Price'),
-                        trailing: Text('MVR ${_validationService.unitPrice.value * _validationService.quantity.value}'),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Spacer(),
-            ButtonTheme(
-              minWidth: SizeConfig.blockSizeHorizontal * 95,
-              height: SizeConfig.blockSizeVertical * 5,
-              child: RaisedButton.icon(
-                onPressed: _validationService.isValid ? _submitRequest : null,
-                label: Text('Send Request'),
-                icon: Icon(Icons.send_rounded,),
-              ),
-              buttonColor: Colors.teal,
-              textTheme: ButtonTextTheme.primary,
-            )
-          ],
+              Spacer(),
+              ButtonTheme(
+                minWidth: SizeConfig.blockSizeHorizontal * 95,
+                height: SizeConfig.blockSizeVertical * 5,
+                child: RaisedButton.icon(
+                  onPressed: _validationService.isValid ? _submitRequest : null,
+                  label: Text('Send Request'),
+                  icon: Icon(Icons.send_rounded,),
+                ),
+                buttonColor: Colors.teal,
+                textTheme: ButtonTextTheme.primary,
+              )
+            ],
+          ),
         ),
       ),
     );

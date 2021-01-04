@@ -122,6 +122,7 @@ class _RequestsState extends State<Requests> {
                   }
                   if(snapshot.hasData){
                     userRequests = snapshot.data.documents;
+                    print(userRequests);
                     return Expanded(
                       child: Column(
                         children: [

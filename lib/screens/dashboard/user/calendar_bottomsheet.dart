@@ -40,7 +40,6 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
 
   void _shiftMonthStartDay(List<int> dates, int year, int month){
     int monthStartDayIndex = _getMonthStartDayIndex(month, year);
-    print(monthStartDayIndex);
     while(monthStartDayIndex > 0){
       dates.insert(0, 0);
       monthStartDayIndex--;
@@ -96,7 +95,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.blockSizeVertical * 2,
       ),
-      height: SizeConfig.blockSizeVertical * 50,
+      height: SizeConfig.blockSizeVertical * 54,
       child: Column(
               children: [
                 Padding(
@@ -126,17 +125,12 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 Wrap(
                   children: _dates.map((element ) {
                     var today = '$_year-${_month + 1 < 10 ? "0${_month + 1}" : "${_month + 1}" }-${element < 10 ? "0$element" : element }';
-                    print(widget.calendarPinPoints);
-                    print(today);
                     return FractionallySizedBox(
                       widthFactor: 0.13,
                       child: element == 0 ? Container() : GestureDetector(
                           onTap: (){
 //                            Navigator.pop(context);
                             _onServiceDateSelected(_year, _month+1, element);
-                            print(element);
-                            print(_month+1);
-                            print(_year);
                           },
                           child: Obx((){
                             return Stack(

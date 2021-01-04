@@ -70,22 +70,22 @@ class _DashboardState extends State<Dashboard> {
 //    super.initState();
 //  }
 
-  List<Map<String, dynamic>> generateServiceTypes(String serviceType){
+  List<Map<String, dynamic>> generateServices(String serviceType){
     if(serviceType.toLowerCase() != 'goat'){
       return widget._services.where((element) => element['name'].toString().toLowerCase() != 'aqeeqah').toList();
     }
     return widget._services;
   }
 
-  void _onServiceTapped(BuildContext context, String service){
+  void _onServiceTapped(BuildContext context, String serviceType){
 //    widget.dashboardController.childName = null;
-    Get.find<DashboardController>().serviceName = service;
+    Get.find<DashboardController>().serviceType = serviceType;
     showModalBottomSheet(shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(8.0),
       ),
     ), context: context, builder: (context){
-      return ServiceTypeBottomSheet(generateServiceTypes(service));
+      return ServiceTypeBottomSheet(generateServices(serviceType));
     });
     // Navigator.of(context).push(MaterialPageRoute(builder: (context) => ServiceRequetForm()));
   }
@@ -126,31 +126,49 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
 //              SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-              Wrap(
-                alignment: WrapAlignment.center,
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: widget._serviceTypes.map((element){
-                  return GestureDetector(
-                    onTap: (){
-                      _onServiceTapped(context, element['name']);
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.blockSizeHorizontal * 3,
-                        horizontal: SizeConfig.blockSizeHorizontal * 6
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(element['icon']),
-                          SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-                          // Text(element['title']),
-                          // SizedBox(height: SizeConfig.blockSizeVertical * 1,),
-                          Text(element['name']),
-                        ],
-                      ),
+              FutureBuilder(
+                future: Get.find<DashboardController>().fetchAllServices(),
+                builder: (context, AsyncSnapshot snapshot){
+                  if(snapshot.hasError){
+                    return Center(
+                      child: Text('An error occurred, please try again'),
+                    );
+                  }
+                  if(snapshot.hasData){
+                    return Wrap(
+                        alignment: WrapAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: widget._serviceTypes.map((element){
+                          return GestureDetector(
+                            onTap: (){
+                              _onServiceTapped(context, element['name']);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.blockSizeHorizontal * 3,
+                                  horizontal: SizeConfig.blockSizeHorizontal * 6
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(element['icon']),
+                                  SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+                                  // Text(element['title']),
+                                  // SizedBox(height: SizeConfig.blockSizeVertical * 1,),
+                                  Text(element['name']),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList()
+                    );
+                  }
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 2),
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
                   );
-                }).toList()
+                },
               )
             ],
           ),

@@ -72,6 +72,8 @@ class ApiService{
   }
 
   Future<dynamic> fetchAllServiceTypes(String url) async{
+    print(url);
+
     http.Response response = await http.get(Globals.BASE_URL + url);
     return (jsonDecode(response.body))['results'];
   }

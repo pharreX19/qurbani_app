@@ -71,7 +71,7 @@ class WeeklySalesChartState extends State<WeeklySalesChart> {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: BarChart(
                     BarChartData(
-                      maxY: 20,
+                      maxY: 10,
                       barTouchData: BarTouchData(
                           touchTooltipData: BarTouchTooltipData(
                             tooltipBgColor: Colors.transparent,
@@ -150,11 +150,11 @@ class WeeklySalesChartState extends State<WeeklySalesChart> {
                           reservedSize: 14,
                           getTitles: (value) {
                             if (value == 0) {
+                              return '01';
+                            } else if (value == 5) {
                               return '05';
                             } else if (value == 10) {
                               return '10';
-                            } else if (value == 19) {
-                              return '15';
                             } else {
                               return '';
                             }
