@@ -75,7 +75,7 @@ class WeeklySalesChartState extends State<WeeklySalesChart> {
                       barTouchData: BarTouchData(
                           touchTooltipData: BarTouchTooltipData(
                             tooltipBgColor: Colors.transparent,
-                            getTooltipItem: (_a, _b, _c, _d) => BarTooltipItem('hello', TextStyle(color: Colors.white)),
+                            getTooltipItem: (_a, _b, _c, _d) => BarTooltipItem('${_a.barRods[0].y}', TextStyle(color: Colors.white)),
                           ),
                           touchCallback: (response) {
                             if (response.spot == null) {

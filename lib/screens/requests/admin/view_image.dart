@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:qurbani/config/size_config.dart';
 
@@ -38,16 +40,18 @@ class ViewImage extends StatelessWidget {
       Container(
         height: double.infinity,
         width: double.infinity,
-        child: Image.network(imageUrl, fit: BoxFit.cover,
-          frameBuilder: (context, Widget child, int frame, bool wasSynchronouslyLoaded ){
-            if(wasSynchronouslyLoaded){
-              return child;
-            }
-            return frame == null ? Center(
-              child: CircularProgressIndicator(),
-            ) : child;
-          },
-        ),
+        child: imageUrl.startsWith('http') ?
+          Image.network(imageUrl, fit: BoxFit.cover,
+            frameBuilder: (context, Widget child, int frame, bool wasSynchronouslyLoaded ){
+              if(wasSynchronouslyLoaded){
+                return child;
+              }
+              return frame == null ? Center(
+                child: CircularProgressIndicator(),
+              ) : child;
+            },
+          ):
+          Image.file(File(imageUrl)),
       )
     );
   }

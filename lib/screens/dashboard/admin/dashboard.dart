@@ -131,7 +131,8 @@ class _DashboardState extends State<Dashboard> {
                       itemCount: Get.find<DashboardController>().requests.length,
                       itemBuilder: (context, int index){
                         dynamic requests = Get.find<DashboardController>().requests;
-                        if(DateTime.fromMillisecondsSinceEpoch(requests[index]['date']['_seconds'] * 1000).isAfter(DateTime.now()) && requests[index]['status'].toString().toLowerCase() == 'pending'){
+                        if(DateTime.fromMillisecondsSinceEpoch(requests[index]['date']['_seconds'] * 1000).isAfter(DateTime.now()) &&
+                            (requests[index]['status'].toString().toLowerCase() == 'pending' || requests[index]['status'].toString().toLowerCase() == 'approved')){
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: ListTile(
@@ -154,7 +155,7 @@ class _DashboardState extends State<Dashboard> {
                       },
                     ));
               }
-              return Center(child: Text('No Requests found'));
+              return Expanded(child: Center(child: Text('No Requests found')));
             })
           ],
         ),

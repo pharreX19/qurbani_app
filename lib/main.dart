@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/providers/completed_service_visibility_provider.dart';
 import 'package:qurbani/providers/feedback_validation_provider.dart';
+import 'package:qurbani/providers/media_upload_validation_provider.dart';
 import 'package:qurbani/providers/name_validation_provider.dart';
 import 'package:qurbani/providers/request_validation_provider.dart';
 import 'package:qurbani/providers/service_type_validation_provider.dart';
@@ -31,7 +32,9 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<CompletedServiceVisibilityProvider>(
           create: (context) => CompletedServiceVisibilityProvider()),
       ChangeNotifierProvider<RequestValidationProvider>(
-          create: (context) => RequestValidationProvider())
+          create: (context) => RequestValidationProvider()),
+      ChangeNotifierProvider<MediaUploadValidationProvider>(
+          create: (context) => MediaUploadValidationProvider())
     ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
