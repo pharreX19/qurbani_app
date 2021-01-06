@@ -105,8 +105,10 @@ class _RequestsState extends State<Requests> {
                 stream: Get.find<RequestsController>().requests,
                 builder: (context, AsyncSnapshot snapshot){
                   if(snapshot.hasError){
-                    return Center(
-                      child: Text('An error occurred, please try again later'),
+                    return Expanded(
+                      child: Center(
+                        child: Text('An error occurred, please try again later'),
+                      ),
                     );
                   }
                   if(snapshot.hasData){

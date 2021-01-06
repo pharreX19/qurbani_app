@@ -63,8 +63,10 @@ class _SettingsState extends State<Settings> {
                   stream: Get.find<ServiceSettingsController>().services,
                   builder: (context, AsyncSnapshot snapshot){
                     if(snapshot.hasError){
-                      return Center(
-                        child: CircularProgressIndicator(),
+                      return Expanded(
+                        child: Center(
+                          child: Text('An error occurred, please try again later'),
+                        ),
                       );
                     }
                     if(snapshot.hasData && _isAdmin){
