@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/requests_controller.dart';
+import 'package:qurbani/screens/media/request_service_media.dart';
 import 'package:qurbani/screens/requests/user/request_page_view.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 
@@ -78,10 +79,22 @@ class _RequestsState extends State<Requests> {
           );
         }
         else{
-          return Transform(
-              transform: Matrix4.identity()..rotateX(_currentPageValue - index),
-              child: RequestPageView(document: userRequests[index],)
+          return InkWell(
+            onTap: (){
+              if(_currentPageValue == index && userRequests[index]['status'].toString().toLowerCase() == 'approved' ){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                    RequestServiceMedia(mediaStream: userRequests[index].reference.collection('images').snapshots(),
+                      title: {
+                      'name': userRequests[index]['user']['name'],
+                        'type': userRequests[index]['service']['name'],
+                      },)));
+              }
+            },
+            child: Transform(
+                transform: Matrix4.identity()..rotateX(_currentPageValue - index),
+                child: RequestPageView(document: userRequests[index],)
 
+            ),
           );
         }
         },

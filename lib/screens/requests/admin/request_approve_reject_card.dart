@@ -9,7 +9,7 @@ import 'package:qurbani/screens/requests/admin/request_options_bottom_sheet.dart
 class RequestApproveRejectCard extends StatelessWidget {
   final bool isSelected;
   // final int index;
-  final QueryDocumentSnapshot document;
+  final dynamic document;
   RequestApproveRejectCard({this.isSelected, this.document});
 
   Widget _buildOptionButtons(BuildContext context){
@@ -71,7 +71,7 @@ class RequestApproveRejectCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0)
               ),
               context: context, builder: (context){
-            return RequestOptionsBottomSheet(receiptUrl:  document.data()['receipt_url']);
+            return RequestOptionsBottomSheet(receiptUrl:  document.data()['receipt_url'], requestId: document.id);
           });
         },
       ),

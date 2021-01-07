@@ -117,4 +117,25 @@ class ApiService{
     http.Response response = await http.patch(Globals.BASE_URL + url, body: jsonEncode(body));
     return (jsonDecode(response.body))['results'];
   }
+
+  Future<dynamic> uploadMedia(String url, Map<String, dynamic> body) async{
+    final uri = Uri.parse(Globals.BASE_URL +url);
+    const method = "PATCH";
+    final http.MultipartRequest request = new http.MultipartRequest(method, uri);
+
+    if(body['image'] is List<String>){
+      List<http.MultipartFile> imageList = [];
+      for(var image in body['image']){
+        imageList.add(await http.MultipartFile.fromPath('image', image));
+      }
+      request.files.addAll(imageList);
+    }
+
+      request.fields['title'] = body['title'];
+
+      http.StreamedResponse response = await request.send();
+      return http.Response.fromStream(response);
+//    http.Response response = await http.patch(Globals.BASE_URL + url, body: jsonEncode(body));
+//    return (jsonDecode(response.body))['results'];
+  }
 }

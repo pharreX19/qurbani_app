@@ -9,8 +9,9 @@ import 'package:qurbani/screens/requests/admin/view_image.dart';
 
 class RequestOptionsBottomSheet extends StatefulWidget {
   final String receiptUrl;
+  final String requestId;
 
-  RequestOptionsBottomSheet({this.receiptUrl});
+  RequestOptionsBottomSheet({this.receiptUrl, this.requestId});
 
   @override
   _RequestOptionsBottomSheetState createState() => _RequestOptionsBottomSheetState();
@@ -28,7 +29,7 @@ class _RequestOptionsBottomSheetState extends State<RequestOptionsBottomSheet> {
   }
 
   void _uploadImagesOrVideos(){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UploadImagesVideos()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UploadImagesVideos(requestId: widget.requestId,)));
 
   }
 

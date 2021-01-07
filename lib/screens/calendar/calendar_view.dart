@@ -5,6 +5,7 @@ import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/calendar_controller.dart';
 import 'package:qurbani/controllers/feedback_controller.dart';
 import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
+import 'package:qurbani/screens/requests/admin/request_detail.dart';
 import 'package:qurbani/screens/requests/admin/requests.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 
@@ -79,7 +80,7 @@ class CalendarView extends StatelessWidget {
                                             child: ListTile(
                                               // tileColor: Colors.teal[50],
                                                 onTap: (){
-                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => Requests()));
+                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestDetail(document: requests[index],)));
                                                 },
                                                 title: Text(
                                                     requests[index]['service']['name']),

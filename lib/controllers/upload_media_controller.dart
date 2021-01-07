@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/providers/media_upload_validation_provider.dart';
 import 'package:qurbani/services/api_service.dart';
@@ -11,7 +13,7 @@ class UploadMediaController extends GetxController{
   RxList<dynamic> images = [].obs;
   List<String> allowedImageExtensions = ['jpg', 'png', 'jpeg'];
   List<String> allowedVideoExtensions = ['mp4', 'avi', 'mpg', 'mov'];
-
+  RxBool isUploadingImages = false.obs;
 
 //  void pickVideo() async{
 //    FilePickerResult result = await FilePicker.platform.pickFiles(allowMultiple: true, type: FileType.video);
@@ -22,6 +24,10 @@ class UploadMediaController extends GetxController{
 //      // User canceled the picker
 //    }
 //  }
+
+  Stream<QuerySnapshot> fetchRequestImages(String id){
+    return FirebaseFirestore.instance.collection('requests').doc(id).collection('images').snapshots();
+  }
 
   void pickImage(MediaUploadValidationProvider validationService) async{
     List<String> allowedExtensions = [...allowedImageExtensions, ...allowedVideoExtensions];
@@ -42,14 +48,25 @@ class UploadMediaController extends GetxController{
     validationService.setMediaCount(images.length);
   }
 
-  Future<void> uploadMedia(String title) async{
-    List<String> base64Images = [];
+  Future<void> uploadMedia(String title, String id, MediaUploadValidationProvider validationService) async{
+    List<String> mediaList = [];
     images.forEach((image) {
-      List<int> imageBytes = File(image).readAsBytesSync();
-      String base64Image = base64Encode(imageBytes);
-        base64Images.add(base64Image);
+      mediaList.add(image);
+//      List<int> imageBytes = File(image).readAsBytesSync();
+//      String base64Image = base64Encode(imageBytes);
+//        base64Images.add(base64Image);
     });
-    ApiService.instance.updateRequest('requests/LsoyOKR7TU8L57QcCXHl/upload', {'title': title,  'images': base64Images});
+    print(mediaList);
+    try{
+      isUploadingImages.value = true;
+      dynamic response = await ApiService.instance.uploadMedia('requests/$id/upload', {'title': title,  'image': mediaList});
+      images.assignAll([]);
+      validationService.setMediaCount(0);
+      isUploadingImages.value = false;
+//      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Files upload successfully')));
+    }catch(e){
+      print('Exception while uploading images $e');
+    }
   }
 
 }
