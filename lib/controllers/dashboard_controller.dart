@@ -45,8 +45,14 @@ class DashboardController extends GetxController{
   void onInit() {
     super.onInit();
 //    final RequestsController requestsController = Get.put(RequestsController());
-      fetchAllRequests();
-      fetchAllServices();
+//       fetchAllRequests();
+//       fetchAllServices();
+  }
+
+  void initController(){
+    dailyRequestsStat.assignAll([]);
+    fetchAllRequests();
+    fetchAllServices();
   }
 
   Future<void> fetchAllRequests() async{
@@ -132,6 +138,7 @@ class DashboardController extends GetxController{
          }
        });
     });
+    print('====> $dailyRequestsStat');
     this.dailyRequestsStat.refresh();
   }
 

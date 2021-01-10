@@ -11,6 +11,7 @@ import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
 import 'package:qurbani/screens/dashboard/user/service_type_bottomsheet.dart';
 import 'package:qurbani/screens/names/names.dart';
 import 'package:qurbani/screens/request/request_form.dart';
+import 'package:qurbani/screens/requests/admin/request_detail.dart';
 import 'package:qurbani/screens/requests/admin/requests.dart';
 import 'package:qurbani/widgets/common/main_layout.dart';
 import 'package:qurbani/widgets/dashboard/main_card.dart';
@@ -136,6 +137,9 @@ class _DashboardState extends State<Dashboard> {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: ListTile(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestDetail(document: requests[index],)));
+                              },
                               tileColor: Colors.grey[200],
                               contentPadding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeHorizontal * 10),
                               title: Text(requests[index]['service']['name']),
@@ -167,6 +171,12 @@ class _DashboardState extends State<Dashboard> {
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+  }
+
+  @override
+  void initState() {
+    Get.find<DashboardController>().initController();
+    super.initState();
   }
 
   @override

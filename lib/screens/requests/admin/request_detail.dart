@@ -5,7 +5,7 @@ import 'package:qurbani/screens/requests/admin/request_approve_reject_card.dart'
 import 'package:qurbani/widgets/common/main_layout.dart';
 
 class RequestDetail extends StatelessWidget {
-  final DocumentSnapshot document;
+  final dynamic document;
 
   RequestDetail({this.document});
 
@@ -27,7 +27,7 @@ class RequestDetail extends StatelessWidget {
               Text('${document['user']['name']}\'s Request'),
               SizedBox(height: SizeConfig.blockSizeVertical * 3,),
               Container(
-                height: SizeConfig.blockSizeVertical * 28,
+                height: SizeConfig.blockSizeVertical * 26,
                 child: RequestApproveRejectCard(
                   isSelected: false,
                   document: document,

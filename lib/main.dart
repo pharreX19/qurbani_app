@@ -12,6 +12,19 @@ import 'package:qurbani/screens/authentication/login.dart';
 import 'package:qurbani/screens/dashboard/user/dashboard.dart';
 import 'package:qurbani/screens/home.dart';
 
+Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message)async {
+  print('MESSAGING PLEASE');
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+  }
+}
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

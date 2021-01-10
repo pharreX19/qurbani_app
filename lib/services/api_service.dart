@@ -83,6 +83,13 @@ class ApiService{
     return (jsonDecode(response.body))['results'];
   }
 
+  Future<dynamic> updateUser(String url, Map<dynamic, dynamic> body) async{
+    print('UPDATING USER TOKEN $body');
+    http.Response response = await http.patch(Globals.BASE_URL + url, body: jsonEncode(body));
+    print(jsonDecode(response.body));
+    return (jsonDecode(response.body))['results'];
+  }
+
   Future<dynamic> fetchAllRequests(String url) async{
     http.Response response = await http.get(Globals.BASE_URL + url);
     return (jsonDecode(response.body))['results'];

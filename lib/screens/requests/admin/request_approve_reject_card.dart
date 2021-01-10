@@ -92,7 +92,8 @@ class RequestApproveRejectCard extends StatelessWidget {
               vertical: SizeConfig.blockSizeVertical * 1),
           child: Text('Quantity ${document['quantity']}'),//${Get.find<RequestsController>().requests[index]['quantity']}'),
         ),
-        Text(DateTime.fromMillisecondsSinceEpoch(document['date'].seconds * 1000).toString()),
+        document is DocumentSnapshot ?  Text(DateTime.fromMillisecondsSinceEpoch(document['date'].seconds * 1000).toString()) :
+        Text(DateTime.fromMillisecondsSinceEpoch(document['date']['_seconds'] * 1000).toString()),
         SizedBox(
           height: SizeConfig.blockSizeVertical * 2,
         ),

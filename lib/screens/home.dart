@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
-import 'package:qurbani/controllers/homeController.dart';
+// import 'package:qurbani/controllers/homeController.dart';
+import 'package:qurbani/controllers/home_controller.dart';
 import 'package:qurbani/screens/authentication/login.dart';
 import 'package:qurbani/screens/dashboard/admin/dashboard.dart' as admin;
 import 'package:qurbani/screens/dashboard/user/dashboard.dart' as user;
