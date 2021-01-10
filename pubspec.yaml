@@ -34,6 +34,10 @@ dependencies:
   http: ^0.12.2
   url_launcher: ^5.7.10
   provider: ^4.3.2+3
+  flutter_ffmpeg: ^0.3.0
+  chewie: ^0.12.1+1
+  video_player: ^1.0.1
+  google_fonts: ^1.1.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
