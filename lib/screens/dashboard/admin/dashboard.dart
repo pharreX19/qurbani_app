@@ -10,7 +10,7 @@ import 'package:qurbani/screens/dashboard/admin/weekly_sales_chart.dart';
 import 'package:qurbani/screens/dashboard/user/calendar_bottomsheet.dart';
 import 'package:qurbani/screens/dashboard/user/service_type_bottomsheet.dart';
 import 'package:qurbani/screens/names/names.dart';
-import 'package:qurbani/screens/notifications.dart';
+import 'package:qurbani/screens/notifications/notifications.dart';
 import 'package:qurbani/screens/request/request_form.dart';
 import 'package:qurbani/screens/requests/admin/request_detail.dart';
 import 'package:qurbani/screens/requests/admin/requests.dart';

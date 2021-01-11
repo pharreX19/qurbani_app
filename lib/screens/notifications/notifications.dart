@@ -28,10 +28,19 @@ class Notifications extends StatelessWidget {
                   List<DocumentSnapshot> notifications = snapshot.data.documents;
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: 5,
+                      itemCount: notifications.length,
                       itemBuilder: (context, int index){
-                        return Text('Notification $index');
+                        return ListTile(
+                          contentPadding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 2, horizontal: SizeConfig.blockSizeHorizontal * 1),
+                          tileColor: notifications[index]['is_read'] ? Colors.transparent : Colors.teal[50],
+                          title: Text(notifications[index]['title']),
+                          subtitle: Text(notifications[index]['body'], maxLines: 2, overflow: TextOverflow.ellipsis, softWrap: false,),
+                          leading: Icon(Icons.playlist_add),
+                        );
                       },
+//                      separatorBuilder: (context, index){
+//                        return Divider();
+//                      },
                     ),
                   );
                 }
