@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/controllers/homeController.dart';
 import 'package:qurbani/services/api_service.dart';
+import 'package:qurbani/services/local_notification.dart';
 import 'package:qurbani/services/push_message.dart';
 
 class HomeController extends GetxController{
@@ -14,6 +15,7 @@ class HomeController extends GetxController{
     print('INITIALIZING HOME CONTROLLER');
     super.onInit();
     _pushMessage.getToken().then((token) => setFirebaseToken(token));
+    LocalNotification.instance.initialize();
   }
 
   void setCurrentIndex(int index){

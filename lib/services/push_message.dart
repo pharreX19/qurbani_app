@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:qurbani/main.dart';
+import 'package:qurbani/services/local_notification.dart';
 
 class PushMessage{
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -10,6 +11,7 @@ class PushMessage{
      _firebaseMessaging.configure(
        onMessage: (Map<String, dynamic> message) async {
          print("onMessage: $message");
+         LocalNotification.instance.showNotification();
          // _showItemDialog(message);
        },
        onBackgroundMessage: backgroundMessageHandler,

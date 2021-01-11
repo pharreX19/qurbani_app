@@ -16,7 +16,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  static const List<String> SERVICES = ['Sadaqat', 'Aqeeqah', 'Others', 'Udhiya'];
+  static const List<String> SERVICES = ['Sadaqah', 'Aqeeqah', 'Others', 'Udhiya'];
   bool _isAdmin = true;
 
   Widget _buildCategory(BuildContext context, String name, Widget detailPage){
