@@ -20,6 +20,14 @@ class ApiService{
     HttpHeaders.contentTypeHeader : 'application/json'
   };
 
+  Future<dynamic> updateAdmin(String url, Map<dynamic, dynamic> body) async{
+    // print(body);
+    // print(Globals.BASE_URL + url);
+    http.Response response = await http.post(Globals.BASE_URL + url, body: jsonEncode(body));
+    // print(response);
+    // print("DONE");
+    return (jsonDecode(response.body))['results'];
+  }
 
   Future<dynamic> createNewRequest(String url, Map<String, dynamic> body) async{
 //    print(body);

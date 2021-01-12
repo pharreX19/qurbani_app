@@ -4,13 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/screens/home.dart';
+import 'package:qurbani/services/api_service.dart';
+import 'package:qurbani/services/secure_storage.dart';
 
 class LoginController extends GetxController{
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController contactNumberController =  TextEditingController();
+  final TextEditingController passwordController =  TextEditingController();
+  final TextEditingController emailController =  TextEditingController();
+
   final MethodChannel _methodChannel = MethodChannel('flutter/qurbani_app');
+
   RxString fullNameFieldError = ''.obs;
   RxString contactNumberFieldError = ''.obs;
+  RxString emailFieldError = ''.obs;
+  RxString passwordFieldError = ''.obs;
+
   RxBool isSubmitting = false.obs;
   FirebaseAuth auth = FirebaseAuth.instance;
   RxBool _manualCodeEnter = false.obs;
@@ -27,6 +36,8 @@ class LoginController extends GetxController{
   void dispose() {
     fullNameController.dispose();
     contactNumberController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -64,6 +75,44 @@ class LoginController extends GetxController{
     } else {
       contactNumberFieldError.value = '';
     }
+  }
+
+  void onChangedEmailTextField(String value){
+    if(value.trim().isEmpty){
+      fullNameFieldError.value = 'Email is required!';
+    }
+    else{
+      fullNameFieldError.value = '';
+    }
+  }
+
+  void onChangedPasswordTextField(String value){
+    if(value.trim().isEmpty){
+      fullNameFieldError.value = 'Password is required!';
+    }
+    else{
+      fullNameFieldError.value = '';
+    }
+  }
+
+  void onSubmitAdminLogin(BuildContext context, Map<String, dynamic> credentials) async{
+    try{
+      isSubmitting.value = true;
+      String fbToken = await SecureStorage.instance.read(key: "FB_TOKEN");
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(email: credentials['email'], password: credentials['password']);
+      // print(credentials);
+      // print(userCredential);
+      credentials.putIfAbsent('device_token', () => fbToken);
+      credentials.remove('password');
+      dynamic response = await ApiService.instance.updateAdmin('admins', credentials);
+      // print(response);
+    }catch(e){
+      print('Email and/or password is incorrect $e');
+    }finally{
+      isSubmitting.value = false;
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+    }
+
   }
 
   void onSubmitLogin(BuildContext context) async{

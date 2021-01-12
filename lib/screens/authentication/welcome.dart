@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
+import 'package:qurbani/controllers/home_controller.dart';
 import 'package:qurbani/screens/authentication/admin/login.dart' as admin;
 import 'package:qurbani/screens/authentication/user/login.dart' as user;
 import 'package:qurbani/screens/authentication/login_button.dart';
@@ -7,9 +9,11 @@ import 'package:qurbani/screens/home.dart';
 import 'package:qurbani/widgets/common/submit_button.dart';
 
 class Welcome extends StatelessWidget {
+  final HomeController _homeController = Get.put(HomeController());
+
 
   void _loginWithPhoneNumber(context){
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => user.Login()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => user.Login()));
   }
 
   void _continueAsGuest(context){
@@ -19,6 +23,7 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+
 
     return Scaffold(
       body: Column(

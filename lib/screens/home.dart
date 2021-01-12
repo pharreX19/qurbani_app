@@ -13,7 +13,6 @@ import 'package:qurbani/screens/requests/user/requests.dart' as user;
 import 'package:qurbani/screens/settings/settings.dart';
 
 class Home extends StatefulWidget {
-  final HomeController _homeController = Get.put(HomeController());
   @override
   _HomeState createState() => _HomeState();
 }

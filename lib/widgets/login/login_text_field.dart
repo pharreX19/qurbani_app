@@ -8,6 +8,7 @@ class LoginTextField extends StatelessWidget {
   final Function onChanged;
   final int maxLength;
   final TextInputType keyboardType;
+  final bool obscureText;
 
   LoginTextField(
       {
@@ -17,7 +18,8 @@ class LoginTextField extends StatelessWidget {
       @required this.errorText,
       @required this.onChanged,
       @required this.maxLength,
-      @required this.keyboardType
+      @required this.keyboardType,
+        this.obscureText
       });
 
   @override
@@ -25,6 +27,7 @@ class LoginTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      obscureText: obscureText ?? false,
       decoration: InputDecoration(
           fillColor: Colors.grey[100],
           filled: true,
