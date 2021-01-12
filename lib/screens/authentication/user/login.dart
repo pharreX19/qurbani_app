@@ -15,7 +15,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -30,7 +29,7 @@ class _LoginState extends State<Login> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                         vertical: SizeConfig.blockSizeVertical * 2,
-                        horizontal: SizeConfig.blockSizeVertical * 6),
+                        horizontal: SizeConfig.blockSizeVertical * 2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -42,28 +41,28 @@ class _LoginState extends State<Login> {
                         Padding(
                           padding: EdgeInsets.only(
                               top: SizeConfig.blockSizeVertical* 10,
-                              bottom: SizeConfig.blockSizeVertical* 3
+                              bottom: SizeConfig.blockSizeVertical* 1.5
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Proceed with your'),
-                              Text('Login'),
+                              Text('Enter your phone number'),
+                              // Text('Login'),
                             ],
                           ),
                         ),
-                        LoginTextField(
-                          controller: data.fullNameController,
-                          title: 'Full Name',
-                          icon: Icons.perm_identity,
-                          errorText: data.fullNameFieldError.value == '' ? null : data.fullNameFieldError.value,
-                          onChanged: data.onChangedFullNameTextField,
-                          maxLength: 100,
-                          keyboardType: TextInputType.name,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.blockSizeVertical * 2,
-                        ),
+                        // LoginTextField(
+                        //   controller: data.fullNameController,
+                        //   title: 'Full Name',
+                        //   icon: Icons.perm_identity,
+                        //   errorText: data.fullNameFieldError.value == '' ? null : data.fullNameFieldError.value,
+                        //   onChanged: data.onChangedFullNameTextField,
+                        //   maxLength: 100,
+                        //   keyboardType: TextInputType.name,
+                        // ),
+                        // SizedBox(
+                        //   height: SizeConfig.blockSizeVertical * 2,
+                        // ),
                         LoginTextField(
                           controller: data.contactNumberController,
                           title: 'Contact Number',
@@ -79,20 +78,20 @@ class _LoginState extends State<Login> {
                         InkWell(
                           onTap: (){
                             FocusScope.of(context).unfocus();
-                            data.onSubmitLogin();
+                            data.onSubmitLogin(context);
                           },
                           child: Container(
-                            height: SizeConfig.blockSizeVertical * 6.5,
+                            height: SizeConfig.blockSizeVertical * 4,
                             decoration: BoxDecoration(
-                                color: Colors.teal,
-                                borderRadius: BorderRadius.circular(50.0)),
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(5.0)),
                             child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.lock_open_outlined),
-                                      SizedBox(width: SizeConfig.blockSizeHorizontal * 2),
-                                      Text('Login'),
+                                      // Icon(Icons.lock_open_outlined),
+                                      // SizedBox(width: SizeConfig.blockSizeHorizontal * 2),
+                                      Text('Continue'),
                                     ],
                                   )
                           ),

@@ -1,15 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:qurbani/screens/home.dart';
 
 class LoginController extends GetxController{
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController contactNumberController =  TextEditingController();
+  final MethodChannel _methodChannel = MethodChannel('flutter/qurbani_app');
   RxString fullNameFieldError = ''.obs;
   RxString contactNumberFieldError = ''.obs;
   RxBool isSubmitting = false.obs;
   FirebaseAuth auth = FirebaseAuth.instance;
+  RxBool _manualCodeEnter = false.obs;
+  String _verificationId;
+  String contactNumber;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchPhoneNumber();
+  }
 
   @override
   void dispose() {
@@ -17,6 +29,25 @@ class LoginController extends GetxController{
     contactNumberController.dispose();
     super.dispose();
   }
+
+  Future<void> fetchPhoneNumber() async {
+    isSubmitting.value = true;
+    Future.delayed(Duration(seconds: 2), () async {
+    try{
+      Map<String, String> phoneNumberDetails = await _methodChannel.invokeMapMethod("fetchContactNumber");
+      print(phoneNumberDetails);
+      if(phoneNumberDetails['phone_number'].trim() != null || phoneNumberDetails['phone_number'].trim().isNotEmpty){
+        contactNumberController.text = phoneNumberDetails['phone_number'];
+      }
+    }on PlatformException catch(e){
+      print('Exception occurred $e');
+    }finally{
+      isSubmitting.value = false;
+      print('Contact Number is $contactNumber');
+    }
+    });
+  }
+
 
   void onChangedFullNameTextField(String value){
     if(value.trim().isEmpty){
@@ -35,16 +66,16 @@ class LoginController extends GetxController{
     }
   }
 
-  void onSubmitLogin() async{
+  void onSubmitLogin(BuildContext context) async{
     print('FROM controller ${fullNameController.text}');
-    onChangedFullNameTextField(fullNameController.text);
+    // onChangedFullNameTextField(fullNameController.text);
     onChangedContactNumberTextField(contactNumberController.text);
 
-    if(fullNameFieldError.value.isEmpty && contactNumberFieldError.value.isEmpty){
+    if(/*fullNameFieldError.value.isEmpty &&*/ contactNumberFieldError.value.isEmpty){
       isSubmitting.value = true;
       await auth.verifyPhoneNumber(
         phoneNumber: '+9607700601',
-        verificationCompleted:  verificationCompleted, //(PhoneAuthCredential credential) {},
+        verificationCompleted:  (context) => verificationCompleted, //(PhoneAuthCredential credential) {},
         verificationFailed: verificationFailed, //(FirebaseAuthException e) {},
         codeSent: verificationCodeSent, //(String verificationId, int resendToken) {},
         codeAutoRetrievalTimeout: verificationCodeAutoRetrievalTimeout, //(String verificationId) {},
@@ -54,8 +85,12 @@ class LoginController extends GetxController{
     }
   }
 
-  void verificationCompleted(PhoneAuthCredential credential) async{
-    await auth.signInWithCredential(credential);
+  void verificationCompleted(BuildContext context, PhoneAuthCredential credential) async{
+    UserCredential userCredential = await auth.signInWithCredential(credential);
+    User authUser = userCredential.user;
+    if(authUser != null){
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+    }
     print('SIGNED IN SUCCESS automatically');
   }
 
@@ -66,6 +101,8 @@ class LoginController extends GetxController{
   void verificationCodeSent(String verificationId, int resendToken) async{
     print('Verification ID $verificationId');
     print('resend token $resendToken');
+    _manualCodeEnter.value = true;
+    _verificationId =  verificationId;
   }
 
   void verificationCodeAutoRetrievalTimeout(String verificationId) {
@@ -80,5 +117,13 @@ class LoginController extends GetxController{
     }catch(e){
       print('Error Logging in User and error is $e');
     }
+  }
+
+  void onTokenVerificationSubmit(BuildContext context)async {
+    print('manual verification happens here!');
+    final PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: _verificationId, smsCode: '1234');
+    verificationCompleted(context, phoneAuthCredential);
+    // final UserCredential userCredential = await auth.signInWithCredential(credential);
+
   }
 }

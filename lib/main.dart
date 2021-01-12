@@ -9,7 +9,8 @@ import 'package:qurbani/providers/media_upload_validation_provider.dart';
 import 'package:qurbani/providers/name_validation_provider.dart';
 import 'package:qurbani/providers/request_validation_provider.dart';
 import 'package:qurbani/providers/service_type_validation_provider.dart';
-import 'package:qurbani/screens/authentication/login.dart';
+import 'package:qurbani/screens/authentication/user/login.dart';
+import 'package:qurbani/screens/authentication/welcome.dart';
 import 'package:qurbani/screens/dashboard/user/dashboard.dart';
 import 'package:qurbani/screens/home.dart';
 
@@ -32,29 +33,7 @@ void main() async{
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final MethodChannel _methodChannel = MethodChannel('flutter/qurbani_app');
-  String contactNumber;
-
-  Future<void> _getContactNumber() async {
-    try{
-      contactNumber = await _methodChannel.invokeMethod("fetchContactNumber");
-    }on PlatformException catch(e){
-      print('Exception $e');
-    }
-    print('Contact Number is $contactNumber');
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _getContactNumber();
-  }
+class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +66,7 @@ class _MyAppState extends State<MyApp> {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
-        home: Login(),
+        home: Welcome(),
       ),
     );
   }
