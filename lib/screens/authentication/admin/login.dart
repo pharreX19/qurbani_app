@@ -109,10 +109,17 @@ class _LoginState extends State<Login> {
                           maxLength: 20,
                           keyboardType: TextInputType.number,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 4),
-                          child: Text('Password and/or email is incorrect!'),
-                        ),
+                        Obx((){
+                          if(controller.loginError.value != null || controller.loginError.value.isNotEmpty){
+                            return Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 2),
+                                child: Text(controller.loginError.value, style: TextStyle(color: Colors.red),),
+                              ),
+                            );
+                          }
+                          return Container();
+                        }),
                         InkWell(
                           onTap: _validationService.isValid ? _submitLogin : null,
                           child: Container(

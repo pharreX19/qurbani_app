@@ -21,8 +21,8 @@ class ApiService{
   };
 
   Future<dynamic> updateAdmin(String url, Map<dynamic, dynamic> body) async{
-    // print(body);
-    // print(Globals.BASE_URL + url);
+    print(body);
+    print(Globals.BASE_URL + url);
     http.Response response = await http.post(Globals.BASE_URL + url, body: jsonEncode(body));
     // print(response);
     // print("DONE");

@@ -26,6 +26,8 @@ class LoginController extends GetxController{
   String _verificationId;
   String contactNumber;
 
+  RxString loginError = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -97,20 +99,21 @@ class LoginController extends GetxController{
 
   void onSubmitAdminLogin(BuildContext context, Map<String, dynamic> credentials) async{
     try{
+      print(credentials);
+
       isSubmitting.value = true;
       String fbToken = await SecureStorage.instance.read(key: "FB_TOKEN");
       UserCredential userCredential = await auth.signInWithEmailAndPassword(email: credentials['email'], password: credentials['password']);
-      // print(credentials);
-      // print(userCredential);
+      print('=====> USER CREDENTIALS $userCredential');
       credentials.putIfAbsent('device_token', () => fbToken);
       credentials.remove('password');
       dynamic response = await ApiService.instance.updateAdmin('admins', credentials);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
       // print(response);
     }catch(e){
-      print('Email and/or password is incorrect $e');
+      loginError.value = 'Email and/or password is incorrect';
     }finally{
       isSubmitting.value = false;
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
     }
 
   }
