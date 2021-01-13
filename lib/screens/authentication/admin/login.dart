@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
           'email': _validationService.email.value,
           'password' : _validationService.password.value,
           'contact' : _validationService.contact.value
-        }, );
+        }, _validationService.resetValues);
     // data.onSubmitLogin(context);
   }
 

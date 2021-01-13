@@ -28,35 +28,38 @@ class Welcome extends StatelessWidget {
 
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Spacer(),
-          Image.asset('assets/images/logo.png', height: SizeConfig.blockSizeHorizontal * 15,),
-          SizedBox(height: SizeConfig.blockSizeVertical * 3,),
-          Text('Welcome to Qurbai'),
-          Spacer(),
-          LoginButton(icon: Icons.call, title: 'Login with phone number', callback: (){
-            _loginWithPhoneNumber(context);
-          },),
-          LoginButton(title: 'Continue as Guest', backgroundColor: Colors.white, callback: (){
-            _continueAsGuest(context);
-          },),
-          // InkWell(
-          //
-              Padding(
-                padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2, top: SizeConfig.blockSizeVertical * 1),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => admin.Login()));
-                  },
-                  child: Text('Admin Login', style: TextStyle(color: Colors.teal, fontStyle: FontStyle.italic),),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.blockSizeVertical * 1),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Spacer(),
+            Image.asset('assets/images/logo.png', height: SizeConfig.blockSizeHorizontal * 15,),
+            SizedBox(height: SizeConfig.blockSizeVertical * 3,),
+            Text('Welcome to Qurbai'),
+            Spacer(),
+            LoginButton(icon: Icons.call, title: 'Login with phone number', callback: (){
+              _loginWithPhoneNumber(context);
+            },),
+            LoginButton(title: 'Continue as Guest', backgroundColor: Colors.white, callback: (){
+              _continueAsGuest(context);
+            },),
+            // InkWell(
+            //
+                Padding(
+                  padding: EdgeInsets.only(bottom: SizeConfig.blockSizeVertical * 2, top: SizeConfig.blockSizeVertical * 1),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => admin.Login()));
+                    },
+                    child: Text('Admin Login', style: TextStyle(color: Colors.teal, fontStyle: FontStyle.italic),),
+                  )
                 )
-              )
-            // },
-          // )
-        ],
+              // },
+            // )
+          ],
+        ),
       ),
     );
   }

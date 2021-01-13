@@ -97,18 +97,21 @@ class LoginController extends GetxController{
     }
   }
 
-  void onSubmitAdminLogin(BuildContext context, Map<String, dynamic> credentials) async{
+  void onSubmitAdminLogin(BuildContext context, Map<String, dynamic> credentials, Function callback) async{
     try{
       print(credentials);
 
       isSubmitting.value = true;
       String fbToken = await SecureStorage.instance.read(key: "FB_TOKEN");
+      print(fbToken);
       UserCredential userCredential = await auth.signInWithEmailAndPassword(email: credentials['email'], password: credentials['password']);
       print('=====> USER CREDENTIALS $userCredential');
       credentials.putIfAbsent('device_token', () => fbToken);
       credentials.remove('password');
       SecureStorage.instance.write(key: "USER_UID", value: userCredential.user.uid);
       dynamic response = await ApiService.instance.updateAdmin('admins', credentials);
+      SecureStorage.instance.write(key: "USER_ID", value: response['id']);
+      callback();
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
       // print(response);
     }catch(e){
@@ -135,7 +138,7 @@ class LoginController extends GetxController{
         verificationFailed: verificationFailed, //(FirebaseAuthException e) {},
         codeSent: verificationCodeSent, //(String verificationId, int resendToken) {},
         codeAutoRetrievalTimeout: verificationCodeAutoRetrievalTimeout, //(String verificationId) {},
-        timeout: const Duration(seconds: 5)
+        timeout: const Duration(seconds: 120)
       );
       print('Veruifical method clalled');
     }

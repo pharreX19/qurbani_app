@@ -70,7 +70,15 @@ class DashboardController extends GetxController{
     unitPrice = (selectedServiceTypes.singleWhere((element) => element['type'].toString().toLowerCase() == serviceType.toLowerCase()))['price'] * 1.0;
   }
 
+  void clearRequestStatsCount(){
+    requestStats.forEach((requestStat) {
+      requestStat['count'] = 0;
+    });
+  }
+
   void populateCompletedAndPendingUserRequests(){
+    clearRequestStatsCount();
+    
     requests.forEach((element) {
       if(element['status'].toString().toLowerCase() == 'pending' || element['status'].toString().toLowerCase() == 'approved'){
         requestStats[0]['count'] += 1;

@@ -153,4 +153,10 @@ class ApiService{
 //    http.Response response = await http.patch(Globals.BASE_URL + url, body: jsonEncode(body));
 //    return (jsonDecode(response.body))['results'];
   }
+
+  Future<dynamic> logout(String url) async{
+    print(Globals.BASE_URL + url);
+    http.Response response = await http.post(Globals.BASE_URL + url);
+    return (jsonDecode(response.body))['results'];
+  }
 }

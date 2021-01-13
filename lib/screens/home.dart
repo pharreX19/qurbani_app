@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
 
-  int _currentIndex = 0;
+  // int _currentIndex = 0;
 
   void _onCurrentIndexChanged(int index){
 //    showDialog(context: context, builder: (context){
@@ -24,9 +24,9 @@ class _HomeState extends State<Home> {
 //        content: Login(),
 //      );
 //    });
-    setState(() {
-      _currentIndex = index;
-    });
+//     setState(() {
+//       _currentIndex = index;
+//     });
   }
 
   @override
@@ -41,17 +41,38 @@ class _HomeState extends State<Home> {
       init: HomeController(),
       builder: (controller){
         if(controller.items.length > 0){
-          return Scaffold(
-            body: Obx((){
-              return controller.screens[Get.find<HomeController>().currentIndex.value];
-            }),
-            bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.shifting,
-              selectedItemColor: Colors.teal,
-              unselectedItemColor: Colors.grey,
-              onTap: Get.find<HomeController>().setCurrentIndex,
-              items: controller.items,
-            ),
+          print(controller.items);
+          return Stack(
+            children: [
+              Scaffold(
+                body: Obx((){
+                  return controller.screens[Get.find<HomeController>().currentIndex.value];
+                }),
+                bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.shifting,
+                  selectedItemColor: Colors.teal,
+                  unselectedItemColor: Colors.grey,
+                  onTap: Get.find<HomeController>().setCurrentIndex,
+                  items: controller.items,
+                ),
+              ),
+              Obx((){
+                return controller.isSubmitting.value ? Container(
+                  width: SizeConfig.blockSizeHorizontal * 100,
+                  height: SizeConfig.blockSizeVertical * 100,
+                  child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: SizeConfig.blockSizeVertical * 4,),
+                          Text('Please wait...', style: TextStyle(decoration: TextDecoration.none, fontWeight: FontWeight.normal, fontSize: SizeConfig.blockSizeHorizontal * 4, color: Colors.white),),
+                        ],
+                      )),
+                  color: Colors.black.withOpacity(0.8),
+                ) : Container();
+              })
+            ],
           );
         }
         return Center(
