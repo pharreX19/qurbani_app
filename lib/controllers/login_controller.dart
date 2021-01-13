@@ -107,11 +107,15 @@ class LoginController extends GetxController{
       print('=====> USER CREDENTIALS $userCredential');
       credentials.putIfAbsent('device_token', () => fbToken);
       credentials.remove('password');
+      SecureStorage.instance.write(key: "USER_UID", value: userCredential.user.uid);
       dynamic response = await ApiService.instance.updateAdmin('admins', credentials);
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
       // print(response);
     }catch(e){
-      loginError.value = 'Email and/or password is incorrect';
+      if(e is FirebaseAuthException){
+        loginError.value = 'Email and/or password is incorrect';
+      }
+      print('INVALID STILL ${e.runtimeType}');
     }finally{
       isSubmitting.value = false;
     }

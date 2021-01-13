@@ -13,6 +13,7 @@ import 'package:qurbani/widgets/common/custom_text_field.dart';
 
 class RequestForm extends StatefulWidget {
 
+
   @override
   _RequestFormState createState() => _RequestFormState();
 }
@@ -50,6 +51,7 @@ class _RequestFormState extends State<RequestForm> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(DashboardController());
     _validationService = Provider.of(context);
     return WillPopScope(
       onWillPop: (){
