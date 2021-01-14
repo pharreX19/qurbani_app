@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:qurbani/screens/authentication/user/token.dart';
 import 'package:qurbani/screens/home.dart';
 import 'package:qurbani/services/api_service.dart';
 import 'package:qurbani/services/secure_storage.dart';
@@ -27,6 +28,7 @@ class LoginController extends GetxController{
   String contactNumber;
 
   RxString loginError = ''.obs;
+  BuildContext buildContext;
 
   @override
   void onInit() {
@@ -126,6 +128,7 @@ class LoginController extends GetxController{
   }
 
   void onSubmitLogin(BuildContext context) async{
+    buildContext = context;
     print('FROM controller ${fullNameController.text}');
     // onChangedFullNameTextField(fullNameController.text);
     onChangedContactNumberTextField(contactNumberController.text);
@@ -162,6 +165,7 @@ class LoginController extends GetxController{
     print('resend token $resendToken');
     _manualCodeEnter.value = true;
     _verificationId =  verificationId;
+    Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (context) => Token()));
   }
 
   void verificationCodeAutoRetrievalTimeout(String verificationId) {

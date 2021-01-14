@@ -5,6 +5,7 @@ import 'package:qurbani/controllers/home_controller.dart';
 import 'package:qurbani/screens/authentication/admin/login.dart' as admin;
 import 'package:qurbani/screens/authentication/user/login.dart' as user;
 import 'package:qurbani/screens/authentication/login_button.dart';
+import 'package:qurbani/screens/authentication/user/token.dart';
 import 'package:qurbani/screens/home.dart';
 import 'package:qurbani/services/secure_storage.dart';
 import 'package:qurbani/widgets/common/submit_button.dart';
@@ -14,7 +15,7 @@ class Welcome extends StatelessWidget {
 
 
   void _loginWithPhoneNumber(context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => user.Login()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Token())); //user.Login()));
   }
 
   void _continueAsGuest(context){
