@@ -15,7 +15,7 @@ class Welcome extends StatelessWidget {
 
 
   void _loginWithPhoneNumber(context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Token())); //user.Login()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => user.Login()));
   }
 
   void _continueAsGuest(context){

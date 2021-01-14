@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/screens/profile/admin/profile.dart' as admin;
+import 'package:qurbani/screens/profile/user/profile.dart' as user;
 import 'package:qurbani/screens/settings/settings.dart' as admin;
 import 'package:qurbani/services/local_notification.dart';
 import 'package:qurbani/services/push_message.dart';
@@ -48,6 +49,8 @@ class HomeController extends GetxController{
     user.Requests(),
     // admin.Settings(),
     user.Feedback(),
+    user.Profile(),
+
     // admin.Feedback()
   ];
 

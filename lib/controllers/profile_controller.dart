@@ -20,6 +20,7 @@ class ProfileController extends GetxController{
 
   Future<DocumentSnapshot> profile(String collectionName) async{
     String userId = await getUserIdFromStorage();
+    print(userId);
     return FirebaseFirestore.instance.collection(collectionName).doc(userId).get();
   }
 
@@ -29,7 +30,7 @@ class ProfileController extends GetxController{
       String userId = await getUserIdFromStorage();
       dynamic response = await ApiService.instance.logout('$collection/$userId/logout');
       if(response){
-        await FirebaseAuth.instance.signOut();
+        // await FirebaseAuth.instance.signOut();
         // await SecureStorage.instance.deleteAll();
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Welcome()));
       }

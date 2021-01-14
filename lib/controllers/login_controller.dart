@@ -151,6 +151,13 @@ class LoginController extends GetxController{
     UserCredential userCredential = await auth.signInWithCredential(credential);
     User authUser = userCredential.user;
     if(authUser != null){
+      String fbToken = await SecureStorage.instance.read(key: "FB_TOKEN");
+      print(fbToken);
+      print(authUser);
+      dynamic response = await ApiService.instance.createUser('users', {'name': 'User', 'contact': authUser.phoneNumber, 'device_token' : fbToken});
+      print(response);
+      SecureStorage.instance.write(key: "USER_ID", value: response['id']);
+
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
     }
     print('SIGNED IN SUCCESS automatically');
@@ -165,26 +172,26 @@ class LoginController extends GetxController{
     print('resend token $resendToken');
     _manualCodeEnter.value = true;
     _verificationId =  verificationId;
-    Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (context) => Token()));
+    Navigator.of(buildContext).pushReplacement(MaterialPageRoute(builder: (context) => Token(submitCallback: onTokenVerificationSubmit,)));
   }
 
   void verificationCodeAutoRetrievalTimeout(String verificationId) {
     print('Retrieeval code $verificationId');
   }
 
-  void signInWithPhoneNumber(String verificationId, String smsCode)async{
-    try{
-      final AuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
-      final User user = (await auth.signInWithCredential(credential)).user;
-      print('COOl, finally logged iN');
-    }catch(e){
-      print('Error Logging in User and error is $e');
-    }
-  }
+  // void signInWithPhoneNumber(String verificationId, String smsCode)async{
+  //   try{
+  //     final AuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+  //     final User user = (await auth.signInWithCredential(credential)).user;
+  //     print('COOl, finally logged iN');
+  //   }catch(e){
+  //     print('Error Logging in User and error is $e');
+  //   }
+  // }
 
   void onTokenVerificationSubmit(BuildContext context)async {
     print('manual verification happens here!');
-    final PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: _verificationId, smsCode: '1234');
+    final PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: _verificationId, smsCode: '123456');
     verificationCompleted(context, phoneAuthCredential);
     // final UserCredential userCredential = await auth.signInWithCredential(credential);
 

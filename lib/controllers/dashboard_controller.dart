@@ -250,7 +250,8 @@ class DashboardController extends GetxController{
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Request created sucessfully')));
         callback();
         Future.delayed(Duration(seconds: 1), (){
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.of(context).pop();
+          // Navigator.of(context).popUntil((route) => route.isFirst);
         });
 
       }catch(e){
