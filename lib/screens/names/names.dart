@@ -88,12 +88,16 @@ class _NamesState extends State<Names> {
                       )
                     ],
                   ),
-                  isFavoriteIconEnabled ?  SizedBox(width: SizeConfig.blockSizeHorizontal* 8,) : Container(),
-                  isFavoriteIconEnabled ? IconButton(icon: Icon(document['is_favorite'] == true ?
-                  Icons.favorite : Icons.favorite_border, color: Colors.red[700],),
-                      onPressed: (){
-                        Get.find<NamesController>().toggleFavoriteName(document.id, !document['is_favorite']);
-                      }) : Container(),
+                  // isFavoriteIconEnabled ?  SizedBox(width: SizeConfig.blockSizeHorizontal* 8,) : Container(),
+                  Obx((){
+                    bool nameIsFavorite = Get.find<NamesController>().favoriteNames.contains(document.id);
+
+                    return isFavoriteIconEnabled ?   //IconButton(icon: Icon(document['is_favorite'] == true ?
+                    IconButton(icon: Icon(nameIsFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.red[700],),
+                        onPressed: (){
+                          Get.find<NamesController>().toggleFavoriteName(document.id, nameIsFavorite ? false : true );
+                        }) : Container();
+                  })
                 ],
               ),
               Divider(height: SizeConfig.blockSizeVertical * 4, color: Colors.teal,),
@@ -149,7 +153,7 @@ class _NamesState extends State<Names> {
               }
               if(snapshot.hasData){
                 List<DocumentSnapshot> nameList = snapshot.data.documents;
-                _populateFavoriteNameList(nameList);
+                // _populateFavoriteNameList(nameList);
                 return TabBarView(
                   children: [
                     ListView.builder(itemCount: nameList.length, itemBuilder: (context, int index){
@@ -166,13 +170,30 @@ class _NamesState extends State<Names> {
                         return _generateNameListWidget(nameList[index]);
                       },),
 
-                    favoriteNameList.length == 0 ?
-                    Center(
-                      child: Text('No favorites'),
-                    ) :
-                    ListView.builder(itemCount: favoriteNameList.length, itemBuilder: (context, int index){
-                        return _generateNameListWidget(favoriteNameList[index], false);
-                      },)
+                    // favoriteNameList.length == 0 ?
+                    // Center(
+                    //   child: Text('No favorites'),
+                    // ) :
+                    Obx((){
+                      if(Get.find<NamesController>().favoriteNames.length == 0){
+                        return Center(child: Text('No favorite name'));
+                      }
+                      return ListView.builder(
+                        itemCount: Get.find<NamesController>().favoriteNames.length,
+                        itemBuilder: (context, int index){
+                          DocumentSnapshot name =  nameList.singleWhere((element) => element.id == Get.find<NamesController>().favoriteNames[index]);
+                          // print(Get.find<NamesController>().favoriteNames[index]);
+                          // return Text('Cool $name');
+                          // DocumentSnapshot name =  nameList.singleWhere((element){
+                          //   print(element);
+                          //   return null;
+                          // });
+                          return _generateNameListWidget(name, false);
+                        },);
+                    })
+                    // ListView.builder(itemCount: favoriteNameList.length, itemBuilder: (context, int index){
+                    //     return _generateNameListWidget(favoriteNameList[index], false);
+                    //   },)
                   ],
                 );
               }

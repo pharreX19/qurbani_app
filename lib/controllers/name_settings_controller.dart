@@ -155,7 +155,7 @@ class NameSettingsController extends GetxController{
 
   void updateName(BuildContext context, Map<String, dynamic> name) async {
      try{
-       print(name);
+       // print(name);
 
         await ApiService.instance.updateName('names/${name['id']}', {'name_en':  name['name_en'], 'name_ar':  name['name_ar'], 'name_dh':  name['name_dh'], 'meaning':  name['meaning']});
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Name updated successfully'),));

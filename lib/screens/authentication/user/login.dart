@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/login_controller.dart';
+import 'package:qurbani/providers/login_validation_provider.dart';
 import 'package:qurbani/screens/home.dart';
 import 'package:qurbani/widgets/login/login_text_field.dart';
 
@@ -12,15 +14,29 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  LoginValidationProvider _validationService;
+
+  @override
+  void initState() {
+    super.initState();
+    // _validationService.onNameChanged('User');
+    // _validationService.onEmailChanged('user@user.com');
+    // _validationService.onPasswordChanged('password');
+  }
+
+  void _submitLogin(){
+    FocusScope.of(context).unfocus();
+    Get.find<LoginController>().onSubmitLogin(context, _validationService.contact.value ?? Get.find<LoginController>().contactNumber.value);
+    }
 
   @override
   Widget build(BuildContext context) {
-
+    _validationService = Provider.of<LoginValidationProvider>(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: GetX<LoginController>(
           init: LoginController(),
-          builder: (data) {
+          builder: (controller) {
             return Stack(
               children: [
                 Container(
@@ -63,23 +79,32 @@ class _LoginState extends State<Login> {
                         // SizedBox(
                         //   height: SizeConfig.blockSizeVertical * 2,
                         // ),
-                        LoginTextField(
-                          controller: data.contactNumberController,
-                          title: 'Contact Number',
-                          icon: Icons.phone_in_talk,
-                          errorText: data.contactNumberFieldError.value == '' ? null : data.contactNumberFieldError.value,
-                          onChanged: data.onChangedContactNumberTextField,
-                          maxLength: 20,
-                          keyboardType: TextInputType.number,
+                        Stack(
+                          children: [
+                            LoginTextField(
+                              prefix: Get.find<LoginController>().phoneNumberCountryCode.value,
+                              controller: _validationService.contactController, //data.contactNumberController,
+                              title: controller.contactNumber.value,
+                              // hintText: controller.contactNumber.value,
+                              icon: Icons.phone_in_talk,
+                              errorText: _validationService.contact.error, //data.contactNumberFieldError.value == '' ? null : data.contactNumberFieldError.value,
+                              onChanged: (String contact){
+                                _validationService.onContactChanged(contact);
+                              }, //data.onChangedContactNumberTextField,
+                              maxLength: 20,
+                              keyboardType: TextInputType.number,
+                            ),
+                            Positioned(
+                                top: 21,
+                                left: 48,
+                                child: Text(Get.find<LoginController>().phoneNumberCountryCode.value))
+                          ],
                         ),
                         SizedBox(
                           height: SizeConfig.blockSizeVertical * 4,
                         ),
                         InkWell(
-                          onTap: (){
-                            FocusScope.of(context).unfocus();
-                            data.onSubmitLogin(context);
-                          },
+                          onTap: _submitLogin, //_validationService.isValid ? _submitLogin : null,
                           child: Container(
                             height: SizeConfig.blockSizeVertical * 4,
                             decoration: BoxDecoration(
@@ -118,7 +143,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                data.isSubmitting.value ? Container(
+                controller.isSubmitting.value ? Container(
                   width: SizeConfig.blockSizeHorizontal * 100,
                   height: SizeConfig.blockSizeVertical * 100,
                   child: Center(

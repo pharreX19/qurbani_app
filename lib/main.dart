@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,7 @@ import 'package:qurbani/screens/authentication/user/login.dart';
 import 'package:qurbani/screens/authentication/welcome.dart';
 import 'package:qurbani/screens/dashboard/user/dashboard.dart';
 import 'package:qurbani/screens/home.dart';
+import 'package:qurbani/services/local_storage.dart';
 
 Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message)async {
   print('MESSAGING PLEASE');
@@ -30,7 +32,12 @@ Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message)async {
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
+  FirebaseAuth.instance.authStateChanges().listen((event) {
+    print('=========> AUTH STATE CHANGED $event');
+  });
+  await LocalStorage.init();
   runApp(MyApp());
 }
 

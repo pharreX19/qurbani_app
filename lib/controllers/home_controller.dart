@@ -28,7 +28,6 @@ class HomeController extends GetxController{
     // BottomNavigationBarItem(label: 'Settings', icon: Icon(Icons.feedback)),
     BottomNavigationBarItem(label: 'Feedback', icon: Icon(Icons.feedback)),
     BottomNavigationBarItem(label: 'Profile', icon: Icon(Icons.account_circle)),
-
   ];
 
   List<Widget> _adminScreens = [
@@ -59,7 +58,7 @@ class HomeController extends GetxController{
 
   @override
   void onInit() {
-    print('INITIALIZING HOME CONTROLLER');
+    // print('INITIALIZING HOME CONTROLLER');
     super.onInit();
     _pushMessage.getToken().then((token) => setFirebaseTokenInLocalStorage(token));
     LocalNotification.instance.initialize();
@@ -79,7 +78,7 @@ class HomeController extends GetxController{
       }
       update();
     });
-    print(items);
+    // print(items);
   }
 
   void setScreens(String user){
@@ -89,16 +88,16 @@ class HomeController extends GetxController{
     }else{
       screens.addAll(_userScreens);
     }
-    print(screens);
+    // print(screens);
   }
 
   void setCurrentIndex(int index){
-    print(index);
+    // print(index);
     currentIndex.value = index;
   }
   
   void setFirebaseTokenInLocalStorage(String token){
-    print('SUE ROTKEN IS $token');
+    // print('SUE ROTKEN IS $token');
     SecureStorage.instance.write(key: "FB_TOKEN", value: token);
     // ApiService.instance.updateUser('users/k9JyOIaImGZodviv8n41', {'device_token' : token});
   }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:qurbani/services/api_service.dart';
 
 class FeedbackController extends GetxController{
@@ -21,7 +22,7 @@ class FeedbackController extends GetxController{
   }
 
   Future<void> updateFeedback(String id) async{
-    print(id);
+    // print(id);
     dynamic response = await ApiService.instance.updateFeedback('feedback/$id', {
       'is_complete' : true
     });
@@ -44,7 +45,7 @@ class FeedbackController extends GetxController{
       try{
         // questionOrNamesFieldError.value = '';
         dynamic response = await ApiService.instance.createFeedback('feedback', {
-          'contact': '9909009',
+          'contact': Get.find<DashboardController>().contactNo,
           'message': message
         });
 //        message = '';

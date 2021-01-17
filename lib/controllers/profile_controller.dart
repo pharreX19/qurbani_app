@@ -20,7 +20,7 @@ class ProfileController extends GetxController{
 
   Future<DocumentSnapshot> profile(String collectionName) async{
     String userId = await getUserIdFromStorage();
-    print(userId);
+    // print(userId);
     return FirebaseFirestore.instance.collection(collectionName).doc(userId).get();
   }
 
@@ -30,13 +30,15 @@ class ProfileController extends GetxController{
       String userId = await getUserIdFromStorage();
       dynamic response = await ApiService.instance.logout('$collection/$userId/logout');
       if(response){
-        // await FirebaseAuth.instance.signOut();
-        // await SecureStorage.instance.deleteAll();
+        await FirebaseAuth.instance.signOut();
+        await SecureStorage.instance.delete(key: 'USER_ID');
+        await SecureStorage.instance.delete(key: 'USER_UID');
+        await SecureStorage.instance.delete(key: 'FB_TOKEN');
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Welcome()));
       }
     }catch(e){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred, please try again later')));
-      print('An error $e');
+      // print('An error $e');
     }finally{
         Get.find<HomeController>().isSubmitting.value = false;
     }

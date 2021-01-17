@@ -10,6 +10,7 @@ import 'package:qurbani/screens/dashboard/user/dashboard.dart';
 import 'package:qurbani/screens/home.dart';
 import 'package:qurbani/screens/request/request_form.dart';
 import 'package:qurbani/services/api_service.dart';
+import 'package:qurbani/services/secure_storage.dart';
 
 class DashboardController extends GetxController{
   int year = DateTime.now().year;
@@ -146,7 +147,7 @@ class DashboardController extends GetxController{
          }
        });
     });
-    print('====> $dailyRequestsStat');
+    // print('====> $dailyRequestsStat');
     this.dailyRequestsStat.refresh();
   }
 
@@ -222,7 +223,12 @@ class DashboardController extends GetxController{
   //   }
   // }
 
-  void submitRequestForm(BuildContext context,  Map<String, dynamic> request, Function callback){
+  Future<String> getUserIdFromStorage() async{
+    return await SecureStorage.instance.read(key: 'USER_ID');
+  }
+
+  void submitRequestForm(BuildContext context,  Map<String, dynamic> request, Function callback) async{
+    String userId = await getUserIdFromStorage();
     // onChangedChildNameTextField(childName);
     // onChangedContactNumberTextField(contactNo);
 
@@ -236,9 +242,10 @@ class DashboardController extends GetxController{
         File imageFile = File(request['receipt']);
         List<int> imageBytes = imageFile.readAsBytesSync();
 
-        dynamic response = ApiService.instance.createNewRequest('users/k9JyOIaImGZodviv8n41/requests', {
+        dynamic response = ApiService.instance.createNewRequest('users/$userId/requests', {
           'name' : request['name'],
           'contact' : request['contact'],
+          'registeredContact': contactNo,
           'amount_paid' : request['total_price'],
           'quantity' : request['quantity'],
           'image' : base64Encode(imageBytes), //request['receipt'],

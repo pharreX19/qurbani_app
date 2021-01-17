@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qurbani/config/size_config.dart';
 import 'package:qurbani/controllers/dashboard_controller.dart';
+import 'package:qurbani/controllers/home_controller.dart';
 
 
 class NameDetailsBottomSheet extends StatelessWidget {
@@ -36,9 +37,10 @@ class NameDetailsBottomSheet extends StatelessWidget {
             onTap: (){
               Navigator.of(context).pop();
               Get.find<DashboardController>().childName = name['name_en'];
-              Get.find<DashboardController>().contactNo = '7654321';
+              Get.find<DashboardController>().contactNo = Get.find<DashboardController>().contactNo;
               Get.find<DashboardController>().serviceQuantity= 2;
               Get.find<DashboardController>().onServiceTypeSelectedCallback(context, 'Aqeeqah');
+              Get.find<DashboardController>().serviceType = 'goat';
             },
             child: Padding(
               padding: EdgeInsets.all(SizeConfig.blockSizeVertical * 2),

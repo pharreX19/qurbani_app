@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qurbani/controllers/dashboard_controller.dart';
 import 'package:qurbani/services/api_service.dart';
 
 class RequestsController extends GetxController {
@@ -29,7 +30,7 @@ class RequestsController extends GetxController {
   }
 
   Stream<QuerySnapshot> get userRequests {
-    return requestCollection.where('user.contact', isEqualTo: '7654321').snapshots();
+    return requestCollection.where('contact', isEqualTo: Get.find<DashboardController>().contactNo).snapshots();
   }
 
   // Future<void> fetchAllUserRequests() async{

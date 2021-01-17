@@ -79,14 +79,19 @@ class RequestApproveRejectCard extends StatelessWidget {
   }
 
   Widget _buildCardContent(BuildContext context){
+    print(document);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(document['user']['name']),//Get.find<RequestsController>().requests[index]['user']['name']),
-        SizedBox(
-          height: SizeConfig.blockSizeVertical * 1,
-        ),
-        Text(document['service']['name']),//Get.find<RequestsController>().requests[index]['service']['name']),
+        // SizedBox(
+        //   height: SizeConfig.blockSizeVertical * 1,
+        // ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 1),
+          child: Text(document['service']['name']),
+        ),//Get.find<RequestsController>().requests[index]['service']['name']),
+        Text('${document['contact']} ${document['contact'] != document['user']['contact'] ? "${(document['user']['contact'])}" : ''}'),
         Padding(
           padding: EdgeInsets.symmetric(
               vertical: SizeConfig.blockSizeVertical * 1),

@@ -29,7 +29,7 @@ class CalendarController extends GetxController{
     requests.forEach((element) {
       requestDates.add(DateTime.fromMillisecondsSinceEpoch(element['date'].seconds * 1000).toString().substring(0, 10));
     });
-    print(requestDates);
+    // print(requestDates);
     return requestDates.toList();
   }
 

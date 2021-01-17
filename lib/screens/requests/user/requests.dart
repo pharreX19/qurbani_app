@@ -81,7 +81,7 @@ class _RequestsState extends State<Requests> {
         else{
           return InkWell(
             onTap: (){
-              if(_currentPageValue == index && userRequests[index]['status'].toString().toLowerCase() == 'approved' ){
+              if(_currentPageValue == index && userRequests[index]['status'].toString().toLowerCase() == 'completed' ){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
                     RequestServiceMedia(mediaStream: userRequests[index].reference.collection('images').snapshots(),
                       title: {

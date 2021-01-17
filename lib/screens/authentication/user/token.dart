@@ -14,7 +14,7 @@ class Token extends StatefulWidget {
 }
 
 class _TokenState extends State<Token> {
-  final List<FocusNode> focusNode = [FocusNode(), FocusNode(), FocusNode(), FocusNode()];
+  final List<FocusNode> focusNode = List.generate(6, (index) => FocusNode());
 
   final List<TextEditingController> textEditingController = [
     TextEditingController(text: '0'),
@@ -42,9 +42,9 @@ class _TokenState extends State<Token> {
             Spacer(),
             Center(child: Text('Your 6 digit Code')),
             Wrap(
-              children: List.generate(4, (index){
+              children: List.generate(6, (index){
                 return FractionallySizedBox(
-                  widthFactor: 0.25,
+                  widthFactor: 0.10,
                   // height: SizeConfig.blockSizeHorizontal * 20,
                   child: Container(
                     child: TextField(
@@ -63,7 +63,7 @@ class _TokenState extends State<Token> {
                       maxLength: 1,
                       onChanged: (value){
                         print(value);
-                        if(value.isNotEmpty && index < 3){
+                        if(value.isNotEmpty && index < 5){
                           FocusScope.of(context).requestFocus(focusNode[index+1]);
                         }else if(value.isEmpty && index > 0){
                           FocusScope.of(context).requestFocus(focusNode[index-1]);

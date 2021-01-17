@@ -110,7 +110,7 @@ class _LoginState extends State<Login> {
                           keyboardType: TextInputType.number,
                         ),
                         Obx((){
-                          if(controller.loginError.value != null || controller.loginError.value.isNotEmpty){
+                          if(controller.loginError.value != null && controller.loginError.value.isNotEmpty){
                             return Center(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 2),

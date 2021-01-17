@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:qurbani/globals/globals.dart';
+import 'package:qurbani/globals/contstants.dart';
 
 class ApiService{
   static final ApiService _instance = ApiService._internal();
@@ -21,6 +21,7 @@ class ApiService{
   };
 
   Future<dynamic> createUser(String url,  Map<String, dynamic> body) async{
+    print(Globals.BASE_URL + url);
     http.Response response = await http.post(Globals.BASE_URL + url, body: jsonEncode(body));
     return (jsonDecode(response.body)['results']);
   }

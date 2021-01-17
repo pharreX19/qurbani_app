@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "948707408958-74hpi3ha0sp745q5ofsnud5t3qbsjgfh.apps.googleusercontent.com",
+          "client_id": "948707408958-uc7svrl3i9c8g6fjf8itun5tq3e9ke8n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.qurbani.qurbani",
-            "certificate_hash": "4701cc4f51d0d421696972822b85070df76b5560"
+            "certificate_hash": "952ff0a29231a7f45d9981b35782a068fc40ccd1"
           }
         },
         {

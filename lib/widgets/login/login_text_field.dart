@@ -9,6 +9,7 @@ class LoginTextField extends StatelessWidget {
   final int maxLength;
   final TextInputType keyboardType;
   final bool obscureText;
+  final String prefix;
 
   LoginTextField(
       {
@@ -19,7 +20,8 @@ class LoginTextField extends StatelessWidget {
       @required this.onChanged,
       @required this.maxLength,
       @required this.keyboardType,
-        this.obscureText
+        this.obscureText,
+        this.prefix
       });
 
   @override
@@ -29,6 +31,8 @@ class LoginTextField extends StatelessWidget {
       keyboardType: keyboardType,
       obscureText: obscureText ?? false,
       decoration: InputDecoration(
+          prefix: prefix == null ? null : Text('$prefix '),
+        // prefixStyle: TextStyle(color: Colors.grey[400]),
           fillColor: Colors.grey[100],
           filled: true,
           labelText: title,
